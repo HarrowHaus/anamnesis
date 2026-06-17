@@ -1,0 +1,136 @@
+---
+// The Lineage — figures index (handoff A1; mirrors dictionary/index.astro).
+// Browse the people who carried the image, by tier or by name.
+import { getCollection } from "astro:content";
+import SiteLayout from "../../layouts/SiteLayout.astro";
+import FacetBar from "../../components/FacetBar.astro";
+import FigureCard from "../../components/FigureCard.astro";
+import EmptyState from "../../components/states/EmptyState.astro";
+
+// Founders → ancestors → peers → backbone reads as a transmission order.
+const tierOrder = { founder: 0, ancestor: 1, peer: 2, backbone: 3 } as const;
+const figures = (await getCollection("figures")).map((e) => e.data).sort(
+  (a, b) => tierOrder[a.tier] - tierOrder[b.tier] || a.name.localeCompare(b.name)
+);
+
+const tiersPresent = [...new Set(figures.map((f) => f.tier))].sort((a, b) => tierOrder[a] - tierOrder[b]);
+const tierLabel = { founder: "Founders", ancestor: "Ancestors", peer: "Living peers", backbone: "Scholarly backbone" };
+const facetGroups = [
+  { key: "tier", label: "Role", options: tiersPresent.map((t) => ({ value: t, label: tierLabel[t] })) },
+];
+---
+
+<SiteLayout
+  title="The Lineage | ANAMNESIS"
+  description="The people who carried the image: founders, ancestors, living peers, and the scholarly backbone of the symbol-reading tradition — with their claims and works, attributed."
+  active="figures"
+>
+  <header class="fx-head u-container">
+    <p class="u-eyebrow">Who carried the image</p>
+    <h1 class="fx-title">The Lineage</h1>
+    <p class="fx-lede u-measure">From the originating sources to the living scene — each figure's stated claims and published work, attributed. Browse by role, or by name.</p>
+
+    <div class="fx-filter">
+      <label class="u-visually-hidden" for="fx-q">Filter figures</label>
+      <span class="fx-filter__icon" aria-hidden="true">⌕</span>
+      <input id="fx-q" class="fx-filter__input" type="search" placeholder="Filter the lineage…" autocomplete="off" data-filter />
+      <p class="fx-count" data-count aria-live="polite">{figures.length} figures</p>
+    </div>
+  </header>
+
+  <div class="u-container">
+    <FacetBar groups={facetGroups} />
+  </div>
+
+  <section class="fx-wall u-container" aria-label="All figures">
+    <ul class="fx-grid" data-grid role="list">
+      {figures.map((f) => (
+        <li class="fx-cell" data-tier={f.tier} data-name={f.name}>
+          <FigureCard figure={f} />
+        </li>
+      ))}
+    </ul>
+    <div class="fx-empty" data-empty hidden>
+      <EmptyState
+        title="No figures match that filter"
+        message="Loosen the filter, or start with a founder."
+        suggestions={[{ label: "Clear filter", href: "/figures" }]}
+      />
+    </div>
+  </section>
+</SiteLayout>
+
+<style>
+  .fx-head { padding-block: var(--space-xl) var(--space-l); }
+  .fx-title { font-size: var(--step-4); margin-block: var(--space-2xs); }
+  .fx-lede { color: var(--color-text-muted); font-size: var(--step-1); }
+
+  .fx-filter { position: relative; display: flex; align-items: center; gap: var(--space-s); margin-block-start: var(--space-l); flex-wrap: wrap; }
+  .fx-filter__icon { position: absolute; inset-inline-start: var(--space-s); color: var(--color-text-muted); pointer-events: none; }
+  .fx-filter__input {
+    flex: 1 1 18rem; font: inherit; font-family: var(--font-ui);
+    padding: 0.7em 0.9em 0.7em 2.4em;
+    background: var(--color-surface);
+    border: var(--border-w) solid var(--color-border-strong);
+    border-radius: var(--radius-m); color: var(--color-text);
+  }
+  .fx-count { font-family: var(--font-ui); font-size: var(--step--1); color: var(--color-text-muted); margin: 0; white-space: nowrap; }
+
+  .fx-wall { padding-block: var(--space-l) var(--space-2xl); }
+  .fx-grid { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-s); grid-template-columns: 1fr; }
+  @media (min-width: 40rem) { .fx-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 60rem) { .fx-grid { grid-template-columns: repeat(3, 1fr); } }
+  .fx-cell.is-hidden { display: none; }
+</style>
+
+<script>
+  const grid = document.querySelector<HTMLElement>("[data-grid]");
+  const input = document.querySelector<HTMLInputElement>("[data-filter]");
+  const countEl = document.querySelector<HTMLElement>("[data-count]");
+  const emptyEl = document.querySelector<HTMLElement>("[data-empty]");
+  if (grid) {
+    const cells = Array.from(grid.querySelectorAll<HTMLElement>(".fx-cell"));
+    let facets: Record<string, string> = {};
+    let q = "";
+
+    const apply = () => {
+      let shown = 0;
+      cells.forEach((cell) => {
+        let ok = true;
+        for (const [k, v] of Object.entries(facets)) {
+          if ((cell.dataset as Record<string, string>)[k] !== v) { ok = false; break; }
+        }
+        if (ok && q) ok = (cell.textContent ?? "").toLowerCase().includes(q);
+        cell.classList.toggle("is-hidden", !ok);
+        if (ok) shown++;
+      });
+      if (countEl) countEl.textContent = `${shown} figure${shown === 1 ? "" : "s"}`;
+      if (emptyEl) emptyEl.hidden = shown !== 0;
+    };
+
+    document.addEventListener("anamnesis:facet", (e) => {
+      facets = (e as CustomEvent).detail ?? {};
+      apply();
+    });
+
+    input?.addEventListener("input", () => {
+      q = input.value.trim().toLowerCase();
+      const url = new URL(location.href);
+      if (q) url.searchParams.set("q", q); else url.searchParams.delete("q");
+      history.replaceState(null, "", url.toString());
+      apply();
+    });
+
+    const params = new URLSearchParams(location.search);
+    const q0 = params.get("q");
+    if (q0 && input) { input.value = q0; q = q0.toLowerCase(); }
+    const t0 = params.get("tier");
+    if (t0) {
+      facets.tier = t0;
+      const chip = document.querySelector<HTMLButtonElement>(`[data-facet="tier"][data-value="${t0}"]`);
+      chip?.classList.add("is-on");
+      chip?.setAttribute("aria-pressed", "true");
+    }
+    apply();
+  }
+</script>

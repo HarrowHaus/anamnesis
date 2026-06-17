@@ -1,0 +1,93 @@
+---
+// Figure profile — detail page (handoff A1; mirrors dictionary/[symbol].astro).
+import { getCollection, render } from "astro:content";
+import SiteLayout from "../../layouts/SiteLayout.astro";
+import EntrySurface from "../../components/EntrySurface.astro";
+import FigureProfile from "../../components/FigureProfile.astro";
+import Breadcrumbs from "../../components/Breadcrumbs.astro";
+import PrevNext from "../../components/PrevNext.astro";
+import { buildPool } from "../../lib/graph";
+import type { WhereNextItem } from "../../lib/relations";
+
+export async function getStaticPaths() {
+  const figures = await getCollection("figures");
+  return figures.map((e) => ({ params: { figure: e.data.slug } }));
+}
+
+const humanize = (s: string) => s.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+
+const figs = await getCollection("figures");
+const byName = [...figs].sort((a, b) => a.data.name.localeCompare(b.data.name));
+const figuresBySlug = new Map(figs.map((f) => [f.data.slug, f.data]));
+
+const slug = Astro.params.figure;
+const idx = byName.findIndex((e) => e.data.slug === slug);
+const entry = byName[idx];
+const { Content } = await render(entry);
+
+// reverse graph: symbols this figure decodes, casebook decodes they teach
+const symbols = (await getCollection("symbols")).map((e) => e.data);
+const pool = buildPool(symbols);
+const decodedSymbols: WhereNextItem[] = symbols
+  .filter((s) => (s.decoded_by ?? []).includes(slug))
+  .map((s) => pool.find((p) => p.slug === s.slug))
+  .filter(Boolean)
+  .map((item) => ({ item: item!, relation: "Decoded", score: 1 }))
+  .slice(0, 4);
+
+const workedDecodes = (await getCollection("casebook"))
+  .filter((c) => (c.data.who_made_this_claim ?? []).includes(slug))
+  .map((c) => ({ slug: c.data.slug, title: c.data.title }));
+
+// TODO(D1): when the library collection is populated, resolve key_works to
+// /library/[slug] for internal links. Until then it's empty, so we avoid
+// querying it (Astro warns on empty collections) and link out / show plain.
+const keyWorks = (entry.data.key_works ?? []).map((w) =>
+  w.url ? { title: w.title, year: w.year, href: w.url, external: true } : { title: w.title, year: w.year }
+);
+
+const resolveLinks = (slugs?: string[]) =>
+  (slugs ?? []).map((s) => ({ slug: s, name: figuresBySlug.get(s)?.name ?? humanize(s), exists: figuresBySlug.has(s) }));
+
+const prev = byName[(idx - 1 + byName.length) % byName.length];
+const next = byName[(idx + 1) % byName.length];
+---
+
+<SiteLayout
+  title={entry.data.seo_title}
+  description={entry.data.seo_description}
+  active="figures"
+>
+  <div class="u-container head">
+    <Breadcrumbs crumbs={[
+      { label: "Home", href: "/" },
+      { label: "Figures", href: "/figures" },
+      { label: entry.data.name },
+    ]} />
+  </div>
+
+  <EntrySurface variant="full">
+    <FigureProfile
+      data={entry.data}
+      keyWorks={keyWorks}
+      decodedSymbols={decodedSymbols}
+      workedDecodes={workedDecodes}
+      influencedBy={resolveLinks(entry.data.influenced_by)}
+      influenced={resolveLinks(entry.data.influenced)}
+    >
+      <Content />
+    </FigureProfile>
+  </EntrySurface>
+
+  <div class="u-container foot">
+    <PrevNext
+      prev={{ label: prev.data.name, href: `/figures/${prev.data.slug}` }}
+      next={{ label: next.data.name, href: `/figures/${next.data.slug}` }}
+    />
+  </div>
+</SiteLayout>
+
+<style>
+  .head { padding-block: var(--space-l) 0; }
+  .foot { padding-block: 0 var(--space-2xl); }
+</style>

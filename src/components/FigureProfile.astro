@@ -1,0 +1,159 @@
+---
+// The Figure profile body (blueprint §4 "FIGURE PROFILE"; handoff A1). Mirrors
+// SymbolEntry's structure: a hero, the RL-1 body via slot, then the linkage foot
+// (claims, works, decodes, influence, sources). The graph resolves both ways —
+// the symbols/decodes that name this figure are surfaced here (§0.9).
+import WhereNext from "./WhereNext.astro";
+import SourceRow from "./SourceRow.astro";
+import type { WhereNextItem } from "../lib/relations";
+
+interface FigureData {
+  name: string;
+  slug: string;
+  aka?: string[];
+  dates?: string;
+  tier: "founder" | "ancestor" | "peer" | "backbone";
+  one_line?: string;
+  role_in_lineage?: string;
+  core_claims?: string[];
+  signature_examples?: string[];
+  status_note?: string;
+  sources?: { title: string; author?: string; year?: number; tier: "A" | "B" | "C"; type?: string; url?: string }[];
+}
+interface Link { slug: string; name: string; exists: boolean }
+interface Work { title: string; year?: number; href?: string; external?: boolean }
+interface Props {
+  data: FigureData;
+  keyWorks?: Work[];
+  decodedSymbols?: WhereNextItem[];   // symbols whose decoded_by names this figure
+  workedDecodes?: { slug: string; title: string }[]; // casebook who_made_this_claim
+  influencedBy?: Link[];
+  influenced?: Link[];
+}
+const { data, keyWorks = [], decodedSymbols = [], workedDecodes = [], influencedBy = [], influenced = [] } = Astro.props;
+const tierLabel = { founder: "Founder", ancestor: "Ancestor", peer: "Living peer", backbone: "Scholarly backbone" }[data.tier];
+const meta = [tierLabel, data.dates].filter(Boolean).join(" · ");
+const linkChip = (l: Link) =>
+  l.exists
+    ? `<a class="fp__chip fp__chip--link" href="/figures/${l.slug}">${l.name}</a>`
+    : `<span class="fp__chip">${l.name}</span>`;
+---
+
+<div class="fp">
+  <header class="fp__hero">
+    <p class="u-eyebrow">{meta}</p>
+    <h1 class="fp__name">{data.name}</h1>
+    {data.aka && data.aka.length > 0 && <p class="fp__aka">{data.aka.join(" · ")}</p>}
+    {data.one_line && <p class="fp__line u-measure">{data.one_line}</p>}
+    {data.role_in_lineage && <p class="fp__role u-measure">{data.role_in_lineage}</p>}
+  </header>
+
+  <div class="fp__body u-measure"><slot /></div>
+
+  {data.core_claims && data.core_claims.length > 0 && (
+    <section class="fp__block">
+      <h2 class="u-eyebrow">Core claims</h2>
+      <ul class="fp__claims">{data.core_claims.map((c) => <li>{c}</li>)}</ul>
+    </section>
+  )}
+
+  {keyWorks.length > 0 && (
+    <section class="fp__block">
+      <h2 class="u-eyebrow">Key works</h2>
+      <ul class="fp__works" role="list">
+        {keyWorks.map((w) => (
+          <li>
+            {w.href
+              ? <a href={w.href} rel={w.external ? "noopener" : undefined}>{w.title}</a>
+              : <span>{w.title}</span>}
+            {w.year && <span class="fp__year"> · {w.year}</span>}
+          </li>
+        ))}
+      </ul>
+    </section>
+  )}
+
+  {data.signature_examples && data.signature_examples.length > 0 && (
+    <section class="fp__block">
+      <h2 class="u-eyebrow">Signature decodes</h2>
+      <ul class="fp__claims">{data.signature_examples.map((s) => <li>{s}</li>)}</ul>
+    </section>
+  )}
+
+  <!-- linkage foot — the graph as calm lists, both directions -->
+  <section class="fp__links">
+    {(workedDecodes.length > 0 || influencedBy.length > 0 || influenced.length > 0) && (
+      <div class="fp__connections">
+        {workedDecodes.length > 0 && (
+          <div class="fp__conn">
+            <p class="u-eyebrow">Worked decodes</p>
+            <ul class="fp__chips" role="list">
+              {workedDecodes.map((c) => (
+                <li><a class="fp__chip fp__chip--link" href={`/casebook/${c.slug}`}>{c.title}</a></li>
+              ))}
+            </ul>
+          </div>
+        )}
+        {influencedBy.length > 0 && (
+          <div class="fp__conn">
+            <p class="u-eyebrow">Influenced by</p>
+            <ul class="fp__chips" role="list">{influencedBy.map((l) => <li set:html={linkChip(l)} />)}</ul>
+          </div>
+        )}
+        {influenced.length > 0 && (
+          <div class="fp__conn">
+            <p class="u-eyebrow">Influenced</p>
+            <ul class="fp__chips" role="list">{influenced.map((l) => <li set:html={linkChip(l)} />)}</ul>
+          </div>
+        )}
+      </div>
+    )}
+
+    {decodedSymbols.length > 0 && <WhereNext items={decodedSymbols} heading="Symbols they decode" />}
+
+    {data.sources && data.sources.length > 0 && (
+      <div class="fp__sources">
+        <h2 class="fp__sources-h">Sources</h2>
+        {data.sources.map((s) => <SourceRow source={s} />)}
+      </div>
+    )}
+
+    {data.status_note && (
+      <p class="fp__status"><span class="u-eyebrow">Status</span> {data.status_note}</p>
+    )}
+  </section>
+</div>
+
+<style>
+  .fp { display: flex; flex-direction: column; gap: var(--space-2xl); }
+  .fp__name { font-size: var(--step-4); margin-block: var(--space-2xs); }
+  .fp__aka { font-family: var(--font-ui); font-size: var(--step--1); color: var(--color-text-muted); margin: 0 0 var(--space-s); }
+  .fp__line { font-size: var(--step-1); color: var(--color-text); margin-bottom: var(--space-2xs); }
+  .fp__role { color: var(--color-text-muted); margin: 0; }
+  .fp__body :global(p) { margin-bottom: var(--space-m); }
+
+  .fp__block h2 { margin-bottom: var(--space-2xs); }
+  .fp__claims { margin: 0; padding-inline-start: 1.1em; display: flex; flex-direction: column; gap: var(--space-2xs); }
+  .fp__claims li { padding-inline-start: var(--space-3xs); }
+  .fp__works { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-3xs); }
+  .fp__works a { text-decoration-color: var(--color-border-strong); }
+  .fp__year { color: var(--color-text-muted); font-family: var(--font-ui); font-size: var(--step--1); }
+
+  .fp__links { display: flex; flex-direction: column; gap: var(--space-xl); }
+  .fp__connections {
+    display: grid; gap: var(--space-l);
+    border-block-start: var(--border-w) solid var(--color-border);
+    padding-block-start: var(--space-l);
+  }
+  @media (min-width: 40rem) { .fp__connections { grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr)); } }
+  .fp__chips { list-style: none; margin: var(--space-2xs) 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--space-2xs); }
+  .fp__chip {
+    display: inline-block; font-family: var(--font-ui); font-size: var(--step--1);
+    padding: 0.35em 0.8em; border: var(--border-w) solid var(--color-border-strong);
+    border-radius: 999px; color: var(--color-text-muted); text-decoration: none;
+  }
+  .fp__chip--link:hover { color: var(--color-text); border-color: var(--color-text); }
+  .fp__sources-h { font-size: var(--step-1); }
+  .fp__status { font-size: var(--step--1); color: var(--color-text-muted); }
+  .fp__status .u-eyebrow { display: inline; margin-inline-end: 0.4em; }
+</style>
