@@ -1,0 +1,134 @@
+---
+// §3.7 — Reading-level body. The dual-audience engine. Three strata revealed by
+// reading depth:
+//   RL-0  the lead (name + essence) — the wanderer's hook
+//   RL-1  the body (the MDX essay)  — default slot
+//   RL-2  the apparatus (cross-refs + sources) — the expert's layer
+// RL-2 gently rises into view on scroll; with reduced motion / no JS it is just
+// present. Nothing is hidden from assistive tech or from a static reader.
+import TierBadge from "./TierBadge.astro";
+import SourceRow from "./SourceRow.astro";
+import { plateUrl } from "../lib/plates";
+
+interface Source { title: string; author?: string; year?: number; tier: "A" | "B" | "C"; type?: string; url?: string }
+interface Props {
+  name: string;
+  one_line: string;
+  tier: "A" | "B" | "C";
+  aka?: string[];
+  tradition?: string;
+  era?: string;
+  category?: string;
+  glyph?: string;        // when set, RL-0 shows the large specimen plate
+  decoded_by?: string[];
+  sources?: Source[];
+  showLevels?: boolean;  // RL-0/1/2 eyebrow labels (gallery only; off on real pages)
+}
+const {
+  name, one_line, tier, aka = [], tradition, era, category, glyph,
+  decoded_by = [], sources = [], showLevels = false,
+} = Astro.props;
+const heroImg = plateUrl(glyph);
+const facts = [
+  tradition && { k: "Tradition", v: tradition },
+  era && { k: "Era", v: era },
+  aka.length && { k: "Also known as", v: aka.join(", ") },
+  decoded_by.length && { k: "Decoded by", v: decoded_by.join(", ") },
+].filter(Boolean) as { k: string; v: string }[];
+---
+
+<article class="rb">
+  <header class="rb__lead" data-rl="0">
+    {showLevels && <p class="u-eyebrow">RL-0 · the lead</p>}
+    {heroImg && (
+      <figure class="rb__hero">
+        <img class="u-plate" src={heroImg} alt={`Plate for ${name}`} />
+      </figure>
+    )}
+    {category && <p class="rb__cat u-eyebrow">{category}</p>}
+    <h1 class="rb__name">{name}</h1>
+    <p class="rb__essence u-measure">{one_line}</p>
+    <TierBadge tier={tier} />
+  </header>
+
+  <div class="rb__body u-measure" data-rl="1">
+    {showLevels && <p class="u-eyebrow">RL-1 · the body</p>}
+    <slot />
+  </div>
+
+  <aside class="rb__apparatus" data-rl="2" data-reveal>
+    {showLevels && <p class="u-eyebrow">RL-2 · the apparatus</p>}
+    {facts.length > 0 && (
+      <dl class="rb__facts">
+        {facts.map((f) => (
+          <div class="rb__fact"><dt>{f.k}</dt><dd>{f.v}</dd></div>
+        ))}
+      </dl>
+    )}
+    {sources.length > 0 && (
+      <div class="rb__sources">
+        <h2 class="rb__sources-h">Sources</h2>
+        {sources.map((s) => <SourceRow source={s} />)}
+      </div>
+    )}
+  </aside>
+</article>
+
+<style>
+  .rb { display: flex; flex-direction: column; gap: var(--space-xl); }
+  .rb__hero {
+    margin: 0 0 var(--space-m);
+    aspect-ratio: 3 / 2;
+    border-radius: var(--radius-l);
+    overflow: hidden;
+    background: var(--color-surface-sunk);
+  }
+  .rb__cat { margin-bottom: var(--space-3xs); }
+  .rb__name { font-size: var(--step-4); margin-block: var(--space-2xs); }
+  .rb__essence { font-size: var(--step-1); color: var(--color-text-muted); margin-bottom: var(--space-s); }
+  .rb__body :global(h2) { font-size: var(--step-2); margin-block: var(--space-l) var(--space-2xs); }
+  .rb__body :global(p) { margin-bottom: var(--space-m); }
+
+  .rb__apparatus {
+    border-block-start: var(--border-w) solid var(--color-border);
+    padding-block-start: var(--space-l);
+  }
+  .rb__facts { display: grid; gap: var(--space-2xs); margin: 0 0 var(--space-l); }
+  .rb__fact { display: grid; grid-template-columns: 10rem 1fr; gap: var(--space-s); }
+  .rb__fact dt {
+    font-family: var(--font-ui);
+    font-size: var(--step--1);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+  .rb__fact dd { margin: 0; }
+  .rb__sources-h { font-size: var(--step-1); }
+
+  @media (max-width: 32rem) {
+    .rb__fact { grid-template-columns: 1fr; gap: 0; }
+  }
+
+  /* progressive reveal of RL-2 (enhancement only; default is visible) */
+  [data-reveal].is-armed { opacity: 0; transform: translateY(12px); }
+  [data-reveal].is-in {
+    opacity: 1; transform: none;
+    transition: opacity var(--dur-reveal) var(--ease-reveal),
+      transform var(--dur-reveal) var(--ease-reveal);
+  }
+</style>
+
+<script>
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (!reduce && "IntersectionObserver" in window) {
+    document.querySelectorAll<HTMLElement>("[data-reveal]").forEach((el) => {
+      el.classList.add("is-armed");
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) { e.target.classList.add("is-in"); io.unobserve(e.target); }
+        });
+      }, { threshold: 0.15 });
+      io.observe(el);
+    });
+  }
+</script>

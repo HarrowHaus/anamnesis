@@ -1,0 +1,112 @@
+---
+// §3.3 — Facet bar. Filters live in-grid, URL-synced (?cat=…&tier=…); never
+// navigates away. Presentational + a client toggle that flips active state and
+// updates the URL via history.replaceState (no reload). Real grid-filtering
+// binds in the index phase; here it demonstrates state + URL sync.
+interface Group { key: string; label: string; options: { value: string; label: string }[] }
+interface Props {
+  groups: Group[];
+  active?: Record<string, string>;
+}
+const { groups, active = {} } = Astro.props;
+---
+
+<div class="facets" role="region" aria-label="Filters" data-facets>
+  {groups.map((g) => (
+    <div class="facets__group">
+      <span class="facets__label u-eyebrow">{g.label}</span>
+      <div class="facets__chips">
+        {g.options.map((o) => (
+          <button
+            type="button"
+            class:list={["chip", { "is-on": active[g.key] === o.value }]}
+            data-facet={g.key}
+            data-value={o.value}
+            aria-pressed={active[g.key] === o.value ? "true" : "false"}
+          >{o.label}</button>
+        ))}
+      </div>
+    </div>
+  ))}
+  <button type="button" class="facets__clear" data-clear>Clear</button>
+</div>
+
+<style>
+  .facets {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-m);
+    align-items: flex-end;
+    padding: var(--space-s) 0;
+    border-block: var(--border-w) solid var(--color-border);
+  }
+  .facets__group { display: flex; flex-direction: column; gap: var(--space-2xs); }
+  .facets__label { margin: 0; }
+  .facets__chips { display: flex; flex-wrap: wrap; gap: var(--space-2xs); }
+  .chip {
+    font-family: var(--font-ui);
+    font-size: var(--step--1);
+    padding: 0.35em 0.8em;
+    border: var(--border-w) solid var(--color-border-strong);
+    border-radius: 999px;
+    background: var(--color-surface);
+    color: var(--color-text-muted);
+  }
+  .chip:hover { color: var(--color-text); }
+  .chip.is-on {
+    background: var(--color-accent);
+    color: var(--color-accent-text);
+    border-color: var(--color-accent);
+  }
+  .facets__clear {
+    margin-inline-start: auto;
+    align-self: center;
+    background: none;
+    border: none;
+    font-family: var(--font-ui);
+    font-size: var(--step--1);
+    color: var(--color-text-muted);
+    text-decoration: underline;
+  }
+</style>
+
+<script>
+  document.querySelectorAll("[data-facets]").forEach((bar) => {
+    const url = new URL(window.location.href);
+    const emit = () => {
+      const active: Record<string, string> = {};
+      bar.querySelectorAll<HTMLButtonElement>('[data-facet][aria-pressed="true"]').forEach((c) => {
+        active[c.dataset.facet!] = c.dataset.value!;
+      });
+      bar.dispatchEvent(new CustomEvent("anamnesis:facet", { bubbles: true, detail: active }));
+    };
+    const writeUrl = () => { history.replaceState(null, "", url.toString()); emit(); };
+    bar.querySelectorAll<HTMLButtonElement>("[data-facet]").forEach((chip) => {
+      chip.addEventListener("click", () => {
+        const key = chip.dataset.facet!;
+        const val = chip.dataset.value!;
+        const on = chip.getAttribute("aria-pressed") === "true";
+        // single-select per group
+        bar.querySelectorAll<HTMLButtonElement>(`[data-facet="${key}"]`).forEach((c) => {
+          c.classList.remove("is-on");
+          c.setAttribute("aria-pressed", "false");
+        });
+        if (on) { url.searchParams.delete(key); }
+        else {
+          chip.classList.add("is-on");
+          chip.setAttribute("aria-pressed", "true");
+          url.searchParams.set(key, val);
+        }
+        writeUrl();
+      });
+    });
+    bar.querySelector("[data-clear]")?.addEventListener("click", () => {
+      bar.querySelectorAll<HTMLButtonElement>("[data-facet]").forEach((c) => {
+        c.classList.remove("is-on");
+        c.setAttribute("aria-pressed", "false");
+      });
+      [...url.searchParams.keys()].forEach((k) => url.searchParams.delete(k));
+      writeUrl();
+    });
+  });
+</script>

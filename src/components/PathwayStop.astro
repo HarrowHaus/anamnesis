@@ -1,0 +1,50 @@
+---
+// §3.11 — Pathway stop. A card plus the connective copy that carries the reader
+// from the previous stop. The card itself is passed as a slot so any entry type
+// can be a stop.
+interface Props {
+  step: number;
+  total: number;
+  connective?: string; // the bridge line shown before this stop
+  last?: boolean;
+}
+const { step, total, connective, last = false } = Astro.props;
+---
+
+<div class="stop">
+  {connective && <p class="stop__bridge u-measure">{connective}</p>}
+  <div class="stop__row">
+    <div class="stop__rail" aria-hidden="true">
+      <span class="stop__dot">{step}</span>
+      {!last && <span class="stop__line"></span>}
+    </div>
+    <div class="stop__card">
+      <p class="u-eyebrow">Stop {step} of {total}</p>
+      <slot />
+    </div>
+  </div>
+</div>
+
+<style>
+  .stop__bridge {
+    color: var(--color-text-muted);
+    font-style: italic;
+    margin-block: 0 var(--space-s);
+    padding-inline-start: calc(2rem + var(--space-s));
+  }
+  .stop__row { display: grid; grid-template-columns: 2rem 1fr; gap: var(--space-s); }
+  .stop__rail { display: flex; flex-direction: column; align-items: center; }
+  .stop__dot {
+    display: grid;
+    place-items: center;
+    inline-size: 2rem; block-size: 2rem;
+    border-radius: 50%;
+    background: var(--color-accent);
+    color: var(--color-accent-text);
+    font-family: var(--font-ui);
+    font-weight: 700;
+    flex: none;
+  }
+  .stop__line { flex: 1; inline-size: 2px; background: var(--color-border-strong); margin-block-start: var(--space-2xs); }
+  .stop__card { padding-block-end: var(--space-l); }
+</style>

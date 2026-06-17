@@ -1,0 +1,46 @@
+---
+// §3.5 — Source row (sibling). One citation in the apparatus / library.
+import TierBadge from "./TierBadge.astro";
+
+interface Source {
+  title: string;
+  author?: string;
+  year?: number;
+  tier: "A" | "B" | "C";
+  type?: string;
+  url?: string;
+}
+interface Props {
+  source: Source;
+}
+const { source } = Astro.props;
+const meta = [source.author, source.year, source.type].filter(Boolean).join(" · ");
+---
+
+<div class="src">
+  <div class="src__main">
+    {source.url
+      ? <a class="src__title" href={source.url} rel="noopener">{source.title}</a>
+      : <span class="src__title">{source.title}</span>}
+    {meta && <span class="src__meta">{meta}</span>}
+  </div>
+  <TierBadge tier={source.tier} size="sm" />
+</div>
+
+<style>
+  .src {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-s);
+    padding: var(--space-2xs) 0;
+    border-block-end: var(--border-w) solid var(--color-border);
+  }
+  .src__main { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .src__title { font-family: var(--font-body); }
+  .src__meta {
+    font-family: var(--font-ui);
+    font-size: var(--step--1);
+    color: var(--color-text-muted);
+  }
+</style>

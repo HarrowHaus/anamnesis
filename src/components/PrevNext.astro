@@ -1,0 +1,49 @@
+---
+// §3.10 — Prev / Next sequential wayfinding.
+interface Link { label: string; href: string }
+interface Props { prev?: Link; next?: Link }
+const { prev, next } = Astro.props;
+---
+
+<nav class="pn" aria-label="Previous and next">
+  {prev
+    ? <a class="pn__link pn__prev" href={prev.href}>
+        <span class="pn__dir">← Previous</span>
+        <span class="pn__label">{prev.label}</span>
+      </a>
+    : <span></span>}
+  {next
+    ? <a class="pn__link pn__next" href={next.href}>
+        <span class="pn__dir">Next →</span>
+        <span class="pn__label">{next.label}</span>
+      </a>
+    : <span></span>}
+</nav>
+
+<style>
+  .pn {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-s);
+    border-block-start: var(--border-w) solid var(--color-border);
+    padding-block-start: var(--space-m);
+  }
+  .pn__link {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3xs);
+    text-decoration: none;
+    color: inherit;
+    max-width: 48%;
+  }
+  .pn__next { text-align: end; }
+  .pn__dir {
+    font-family: var(--font-ui);
+    font-size: var(--step--1);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+  .pn__label { font-family: var(--font-display); }
+  .pn__link:hover .pn__label { text-decoration: underline; }
+</style>

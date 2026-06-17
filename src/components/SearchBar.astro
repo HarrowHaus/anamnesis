@@ -1,0 +1,114 @@
+---
+// §3.2 — Global search. Type-ahead over all collections; routes to /search.
+// Presentational shell here (the index + island land in a later phase); the
+// type-ahead panel is wired to a static demo result set so it renders live.
+interface Result { kind: string; name: string; slug: string; href: string }
+interface Props {
+  placeholder?: string;
+  demoResults?: Result[];
+}
+const { placeholder = "Search symbols, figures, decodes…", demoResults = [] } = Astro.props;
+---
+
+<form class="search" role="search" action="/search" method="get" data-search>
+  <label class="u-visually-hidden" for="q">Search ANAMNESIS</label>
+  <span class="search__icon" aria-hidden="true">⌕</span>
+  <input
+    class="search__input"
+    type="search"
+    id="q"
+    name="q"
+    placeholder={placeholder}
+    autocomplete="off"
+    aria-expanded="false"
+    aria-controls="search-panel"
+  />
+  <ul class="search__panel" id="search-panel" data-panel hidden>
+    {demoResults.map((r) => (
+      <li class="search__result">
+        <a href={r.href}>
+          <span class="search__kind">{r.kind}</span>
+          <span class="search__name">{r.name}</span>
+        </a>
+      </li>
+    ))}
+  </ul>
+</form>
+
+<style>
+  .search { position: relative; display: flex; align-items: center; }
+  .search__icon {
+    position: absolute;
+    inset-inline-start: var(--space-s);
+    color: var(--color-text-muted);
+    pointer-events: none;
+  }
+  .search__input {
+    width: 100%;
+    font: inherit;
+    font-family: var(--font-ui);
+    padding: 0.7em 0.9em 0.7em 2.4em;
+    background: var(--color-surface);
+    border: var(--border-w) solid var(--color-border-strong);
+    border-radius: var(--radius-m);
+    color: var(--color-text);
+  }
+  .search__panel {
+    position: absolute;
+    inset-block-start: calc(100% + var(--space-2xs));
+    inset-inline: 0;
+    margin: 0; padding: var(--space-2xs);
+    list-style: none;
+    background: var(--color-surface);
+    border: var(--border-w) solid var(--color-border);
+    border-radius: var(--radius-m);
+    box-shadow: var(--shadow-card);
+    z-index: var(--z-overlay);
+  }
+  .search__panel[hidden] { display: none; }
+  .search__result a {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-s);
+    padding: var(--space-2xs) var(--space-xs);
+    border-radius: var(--radius-s);
+    text-decoration: none;
+    color: inherit;
+  }
+  .search__result a:hover { background: var(--color-surface-sunk); }
+  .search__kind {
+    font-family: var(--font-ui);
+    font-size: var(--step--1);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    min-width: 5.5em;
+  }
+</style>
+
+<script>
+  // Lightweight type-ahead demo: filter the pre-rendered results by label.
+  document.querySelectorAll("[data-search]").forEach((form) => {
+    const input = form.querySelector<HTMLInputElement>(".search__input");
+    const panel = form.querySelector<HTMLElement>("[data-panel]");
+    if (!input || !panel) return;
+    const items = Array.from(panel.querySelectorAll<HTMLElement>(".search__result"));
+    const sync = () => {
+      const q = input.value.trim().toLowerCase();
+      let shown = 0;
+      items.forEach((li) => {
+        const hit = !q || (li.textContent ?? "").toLowerCase().includes(q);
+        li.hidden = !hit;
+        if (hit) shown++;
+      });
+      const open = q.length > 0 && shown > 0;
+      panel.hidden = !open;
+      input.setAttribute("aria-expanded", String(open));
+    };
+    input.addEventListener("input", sync);
+    input.addEventListener("focus", sync);
+    document.addEventListener("click", (e) => {
+      if (!form.contains(e.target as Node)) { panel.hidden = true; input.setAttribute("aria-expanded", "false"); }
+    });
+  });
+</script>

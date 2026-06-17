@@ -1,0 +1,188 @@
+---
+// Symbol Dictionary index ★ (blueprint §4). The flagship specimen wall: browse
+// by sight or by filter. Facets + the filter field act live in the grid (never
+// a separate search page); a card opens the entry as a bottom-sheet drawer that
+// keeps the browse context, and is a real link to the full page without JS.
+import { getCollection, render } from "astro:content";
+import SiteLayout from "../../layouts/SiteLayout.astro";
+import FacetBar from "../../components/FacetBar.astro";
+import SpecimenCard from "../../components/SpecimenCard.astro";
+import EntrySurface from "../../components/EntrySurface.astro";
+import SymbolEntry from "../../components/SymbolEntry.astro";
+import EmptyState from "../../components/states/EmptyState.astro";
+import { buildPool, relatedFor, appearsInFor } from "../../lib/graph";
+
+const humanize = (s: string) => s.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+
+const symbolEntries = (await getCollection("symbols")).sort((a, b) => a.data.name.localeCompare(b.data.name));
+const symbols = symbolEntries.map((e) => e.data);
+const casebook = await getCollection("casebook");
+const casebookBySlug = new Map(casebook.map((c) => [c.data.slug, { slug: c.data.slug, title: c.data.title }]));
+const pool = buildPool(symbols);
+
+// pre-render each entry's body so the drawers carry identical, fully-styled content
+const rendered = await Promise.all(
+  symbolEntries.map(async (e) => ({
+    data: e.data,
+    Content: (await render(e)).Content,
+    related: relatedFor(e.data, pool),
+    appearsIn: appearsInFor(e.data.appears_in, casebookBySlug),
+  }))
+);
+
+// facets derived from the actual data
+const tierWord = { A: "asserted", B: "attributed", C: "contextual" } as const;
+const cats = [...new Set(symbols.map((s) => s.category))].sort();
+const trads = [...new Set(symbols.map((s) => s.tradition).filter(Boolean))].sort() as string[];
+const tiers = [...new Set(symbols.map((s) => s.tier))].sort();
+const facetGroups = [
+  { key: "cat", label: "Category", options: cats.map((c) => ({ value: c, label: humanize(c) })) },
+  { key: "tradition", label: "Tradition", options: trads.map((t) => ({ value: t, label: t })) },
+  { key: "tier", label: "Sourcing", options: tiers.map((t) => ({ value: t, label: `${t} · ${tierWord[t]}` })) },
+];
+
+// a quiet curated shelf before the raw grid (invisible guidance)
+const shelf = symbols.filter((s) => ["all-seeing-eye", "saturn-and-the-black-cube"].includes(s.slug));
+---
+
+<SiteLayout
+  title="The Symbol Dictionary | ANAMNESIS"
+  description="The decoder. Browse the engineered symbols by sight or by filter — documented origin, the attributed reading, and where each one hides today."
+  active="dictionary"
+>
+  <header class="dx-head u-container">
+    <p class="u-eyebrow">The flagship · browse by sight</p>
+    <h1 class="dx-title">The Symbol Dictionary</h1>
+    <p class="dx-lede u-measure">Every glyph you've held and never read. Enter by sight, or narrow by category, tradition, and how the reading is sourced.</p>
+
+    <div class="dx-filter">
+      <label class="u-visually-hidden" for="dx-q">Filter symbols</label>
+      <span class="dx-filter__icon" aria-hidden="true">⌕</span>
+      <input id="dx-q" class="dx-filter__input" type="search" placeholder="Filter the dictionary…" autocomplete="off" data-filter />
+      <p class="dx-count" data-count aria-live="polite">{symbols.length} symbols</p>
+    </div>
+  </header>
+
+  {shelf.length > 0 && (
+    <section class="dx-shelf u-container" aria-label="Curated shelf">
+      <p class="u-eyebrow">Hiding in your wallet</p>
+      <div class="dx-shelf__row">
+        {shelf.map((s) => <SpecimenCard symbol={s} variant="grid" openDrawer={`d-${s.slug}`} />)}
+      </div>
+    </section>
+  )}
+
+  <div class="u-container">
+    <FacetBar groups={facetGroups} />
+  </div>
+
+  <section class="dx-wall u-container" aria-label="All symbols">
+    <ul class="dx-grid" data-grid role="list">
+      {symbols.map((s) => (
+        <li class="dx-cell"><SpecimenCard symbol={s} variant="grid" openDrawer={`d-${s.slug}`} /></li>
+      ))}
+    </ul>
+    <div class="dx-empty" data-empty hidden>
+      <EmptyState
+        title="No symbols match those filters"
+        message="Loosen a filter, or let a curated route show you the way in."
+        suggestions={[{ label: "Clear filters", href: "/dictionary" }]}
+      />
+    </div>
+  </section>
+
+  {/* the bottom-sheet drawers — one per symbol, opened from any matching card */}
+  {rendered.map((r) => (
+    <EntrySurface variant="drawer" id={`d-${r.data.slug}`} label={r.data.name}>
+      <SymbolEntry data={r.data} related={r.related} appearsIn={r.appearsIn}>
+        <r.Content />
+      </SymbolEntry>
+    </EntrySurface>
+  ))}
+</SiteLayout>
+
+<style>
+  .dx-head { padding-block: var(--space-xl) var(--space-l); }
+  .dx-title { font-size: var(--step-4); margin-block: var(--space-2xs); }
+  .dx-lede { color: var(--color-text-muted); font-size: var(--step-1); }
+
+  .dx-filter { position: relative; display: flex; align-items: center; gap: var(--space-s); margin-block-start: var(--space-l); flex-wrap: wrap; }
+  .dx-filter__icon { position: absolute; inset-inline-start: var(--space-s); color: var(--color-text-muted); pointer-events: none; }
+  .dx-filter__input {
+    flex: 1 1 18rem;
+    font: inherit; font-family: var(--font-ui);
+    padding: 0.7em 0.9em 0.7em 2.4em;
+    background: var(--color-surface);
+    border: var(--border-w) solid var(--color-border-strong);
+    border-radius: var(--radius-m);
+    color: var(--color-text);
+  }
+  .dx-count { font-family: var(--font-ui); font-size: var(--step--1); color: var(--color-text-muted); margin: 0; white-space: nowrap; }
+
+  .dx-shelf { padding-block: var(--space-l) 0; }
+  .dx-shelf__row { display: grid; gap: var(--space-s); grid-template-columns: 1fr; margin-block-start: var(--space-s); }
+  @media (min-width: 34rem) { .dx-shelf__row { grid-template-columns: repeat(2, 1fr); } }
+
+  .dx-wall { padding-block: var(--space-l) var(--space-2xl); }
+  .dx-grid { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-s); grid-template-columns: 1fr; }
+  @media (min-width: 34rem) { .dx-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 56rem) { .dx-grid { grid-template-columns: repeat(3, 1fr); } }
+  .dx-cell.is-hidden { display: none; }
+</style>
+
+<script>
+  const grid = document.querySelector<HTMLElement>("[data-grid]");
+  const input = document.querySelector<HTMLInputElement>("[data-filter]");
+  const countEl = document.querySelector<HTMLElement>("[data-count]");
+  const emptyEl = document.querySelector<HTMLElement>("[data-empty]");
+  if (grid) {
+    const cells = Array.from(grid.querySelectorAll<HTMLElement>(".dx-cell"));
+    let facets: Record<string, string> = {};
+    let q = "";
+
+    const apply = () => {
+      let shown = 0;
+      cells.forEach((cell) => {
+        const card = cell.querySelector<HTMLElement>(".spec")!;
+        let ok = true;
+        for (const [k, v] of Object.entries(facets)) {
+          if ((card.dataset as Record<string, string>)[k] !== v) { ok = false; break; }
+        }
+        if (ok && q) ok = (card.textContent ?? "").toLowerCase().includes(q);
+        cell.classList.toggle("is-hidden", !ok);
+        if (ok) shown++;
+      });
+      if (countEl) countEl.textContent = `${shown} symbol${shown === 1 ? "" : "s"}`;
+      if (emptyEl) emptyEl.hidden = shown !== 0;
+    };
+
+    // facet changes come from the FacetBar via a bubbling custom event
+    document.addEventListener("anamnesis:facet", (e) => {
+      facets = (e as CustomEvent).detail ?? {};
+      apply();
+    });
+
+    // live text filter, URL-synced (?q=)
+    input?.addEventListener("input", () => {
+      q = input.value.trim().toLowerCase();
+      const url = new URL(location.href);
+      if (q) url.searchParams.set("q", q); else url.searchParams.delete("q");
+      history.replaceState(null, "", url.toString());
+      apply();
+    });
+
+    // hydrate initial state from the URL (deep links / back-forward)
+    const params = new URLSearchParams(location.search);
+    const q0 = params.get("q");
+    if (q0 && input) { input.value = q0; q = q0.toLowerCase(); }
+    ["cat", "tradition", "tier"].forEach((k) => {
+      const v = params.get(k);
+      if (!v) return;
+      facets[k] = v;
+      const chip = document.querySelector<HTMLButtonElement>(`[data-facet="${k}"][data-value="${v}"]`);
+      chip?.classList.add("is-on");
+      chip?.setAttribute("aria-pressed", "true");
+    });
+    apply();
+  }
+</script>

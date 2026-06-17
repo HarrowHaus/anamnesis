@@ -1,0 +1,122 @@
+/* =======================================================================
+   ANAMNESIS — DESIGN TOKENS (placeholder)
+   -----------------------------------------------------------------------
+   NEUTRAL, SWAPPABLE PLACEHOLDERS ONLY. The final duotone/skin and the
+   per-section wayfinding palette are deferred (CLAUDE.md "Palette" + docs/02).
+   Do NOT treat any value here as the brand. Every component must read color,
+   type, and space from these variables so the real palette can drop in later
+   by editing this one file — never a component.
+   ======================================================================= */
+
+:root {
+  /* --- Neutral ramp (grayscale; stand-in for the future duotone) -------- */
+  --c-ink-900: #14151a; /* near-black text / plate shadow */
+  --c-ink-800: #24262e;
+  --c-ink-700: #3a3d47;
+  --c-ink-500: #6b6f7b; /* muted text, captions */
+  --c-ink-300: #b7bac3;
+  --c-ink-100: #e7e8ec;
+  --c-paper-50: #f7f7f4; /* page background (warm paper) */
+  --c-paper-0:  #ffffff;
+
+  /* --- Semantic surface roles (point components at these, not the ramp) - */
+  --color-bg:            var(--c-paper-50);
+  --color-surface:       var(--c-paper-0);
+  --color-surface-sunk:  var(--c-ink-100);
+  --color-text:          var(--c-ink-900);
+  --color-text-muted:    var(--c-ink-500);
+  --color-border:        var(--c-ink-100);
+  --color-border-strong: var(--c-ink-300);
+
+  /* Single neutral accent — a true accent hue is part of the deferred palette. */
+  --color-accent:        var(--c-ink-800);
+  --color-accent-text:   var(--c-paper-0);
+
+  /* Dark surfaces behind full-bleed plates + the drawer scrim. */
+  --color-plate-bg:      var(--c-ink-900);
+  --color-scrim:         var(--c-ink-900);
+
+  /* Sourcing-tier badge tints (quiet; final colors set at palette phase). */
+  --color-tier-a: var(--c-ink-700); /* asserted */
+  --color-tier-b: var(--c-ink-500); /* attributed */
+  --color-tier-c: var(--c-ink-300); /* sparing */
+
+  /* Wayfinding hooks — one slot per section, all neutral for now. Swapping
+     the duotone later means assigning real hues to these eight. */
+  --way-dictionary: var(--c-ink-700);
+  --way-figures:    var(--c-ink-700);
+  --way-pillars:    var(--c-ink-700);
+  --way-casebook:   var(--c-ink-700);
+  --way-timeline:   var(--c-ink-700);
+  --way-library:    var(--c-ink-700);
+  --way-pathways:   var(--c-ink-700);
+  --way-start:      var(--c-ink-700);
+
+  /* --- Typography (placeholder system stacks; real faces chosen later) -- */
+  --font-serif: Georgia, "Times New Roman", "Iowan Old Style", serif;
+  --font-sans:  system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-mono:  ui-monospace, "Cascadia Code", "SFMono-Regular", Menlo, Consolas, monospace;
+
+  --font-display: var(--font-serif); /* headings / mastheads */
+  --font-body:    var(--font-serif); /* editorial reading body */
+  --font-ui:      var(--font-sans);  /* nav, facets, labels, badges */
+
+  /* Fluid type scale (mobile-first; clamps grow to a desktop ceiling). */
+  --step--1: clamp(0.80rem, 0.76rem + 0.18vw, 0.89rem);
+  --step-0:  clamp(1.00rem, 0.95rem + 0.25vw, 1.13rem);
+  --step-1:  clamp(1.25rem, 1.16rem + 0.45vw, 1.50rem);
+  --step-2:  clamp(1.56rem, 1.40rem + 0.80vw, 2.00rem);
+  --step-3:  clamp(1.95rem, 1.68rem + 1.35vw, 2.66rem);
+  --step-4:  clamp(2.44rem, 2.00rem + 2.20vw, 3.55rem);
+  --step-5:  clamp(3.05rem, 2.35rem + 3.50vw, 4.74rem); /* hero / scrollytelling lines */
+
+  --leading-tight: 1.12;
+  --leading-snug:  1.30;
+  --leading-body:  1.62;
+  --tracking-tight: -0.01em;
+  --tracking-wide:   0.08em; /* labels, eyebrows */
+
+  /* --- Spacing scale (8px base) ---------------------------------------- */
+  --space-3xs: 0.25rem;
+  --space-2xs: 0.5rem;
+  --space-xs:  0.75rem;
+  --space-s:   1rem;
+  --space-m:   1.5rem;
+  --space-l:   2rem;
+  --space-xl:  3rem;
+  --space-2xl: 4.5rem;
+  --space-3xl: 7rem;
+
+  /* --- Layout ----------------------------------------------------------- */
+  --measure: 66ch;          /* ideal reading line length */
+  --container-max: 72rem;
+  --container-wide: 90rem;
+  --gutter: clamp(1rem, 4vw, 2.5rem);
+
+  /* --- Radius, border, shadow ------------------------------------------ */
+  --radius-s: 4px;
+  --radius-m: 8px;
+  --radius-l: 14px;
+  --border-w: 1px;
+  --shadow-card: 0 1px 2px rgba(20, 21, 26, 0.06), 0 4px 16px rgba(20, 21, 26, 0.08);
+  --shadow-sheet: 0 -2px 24px rgba(20, 21, 26, 0.18); /* bottom-sheet drawer */
+
+  /* --- Motion (docs/02 §5; honor prefers-reduced-motion globally) ------ */
+  --ease-reveal: cubic-bezier(0.2, 0.7, 0.2, 1); /* enter-reveals */
+  --dur-reveal: 0.6s;
+  --dur-fast: 0.18s;
+
+  /* --- Z layers --------------------------------------------------------- */
+  --z-nav: 100;
+  --z-drawer: 200;
+  --z-overlay: 300;
+}
+
+/* Reduced-motion: neutralize motion-token durations so anything reading them
+   degrades to instant. Set-piece pins/scrubs are disabled in JS as well. */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-reveal: 0s;
+    --dur-fast: 0s;
+  }
+}

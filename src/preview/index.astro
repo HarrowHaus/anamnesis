@@ -1,0 +1,335 @@
+---
+// /_preview — the component gallery. Renders all 15 kit pieces (docs/02 §3)
+// against the REAL content-demo symbols + coherent sibling fixtures. Served via
+// an injected route (see astro.config.mjs) so it stays out of the real IA.
+import { getCollection, render } from "astro:content";
+import Base from "../layouts/Base.astro";
+
+import Masthead from "../components/Masthead.astro";
+import SearchBar from "../components/SearchBar.astro";
+import FacetBar from "../components/FacetBar.astro";
+import SpecimenCard from "../components/SpecimenCard.astro";
+import FigureCard from "../components/FigureCard.astro";
+import CasebookCard from "../components/CasebookCard.astro";
+import SourceRow from "../components/SourceRow.astro";
+import PathwayCard from "../components/PathwayCard.astro";
+import FeatureBlock from "../components/FeatureBlock.astro";
+import ReadingBody from "../components/ReadingBody.astro";
+import TierBadge from "../components/TierBadge.astro";
+import WhereNext from "../components/WhereNext.astro";
+import Breadcrumbs from "../components/Breadcrumbs.astro";
+import PrevNext from "../components/PrevNext.astro";
+import PathwayStop from "../components/PathwayStop.astro";
+import TimelineNode from "../components/TimelineNode.astro";
+import EntrySurface from "../components/EntrySurface.astro";
+import ShareCard from "../components/ShareCard.astro";
+import SkeletonGrid from "../components/states/SkeletonGrid.astro";
+import EmptyState from "../components/states/EmptyState.astro";
+import NotFound from "../components/states/NotFound.astro";
+
+import { whereNext, type Relatable } from "../lib/relations";
+import * as fx from "../data/preview-fixtures";
+
+// --- real demo data -----------------------------------------------------
+const symbolEntries = (await getCollection("symbols")).sort((a, b) =>
+  a.data.name.localeCompare(b.data.name)
+);
+const symbols = symbolEntries.map((e) => e.data);
+const eye = symbolEntries.find((e) => e.data.slug === "all-seeing-eye") ?? symbolEntries[0];
+const saturn = symbolEntries.find((e) => e.data.slug === "saturn-and-the-black-cube") ?? symbolEntries[0];
+const { Content: EyeBody } = await render(eye);
+const { Content: SaturnBody } = await render(saturn);
+
+const pool: Relatable[] = symbols.map((s) => ({
+  slug: s.slug, name: s.name, category: s.category, tradition: s.tradition,
+  decoded_by: s.decoded_by, ...{ one_line: s.one_line, tier: s.tier, glyph: s.glyph },
+}));
+const nextForEye = whereNext({ slug: eye.data.slug, name: eye.data.name, category: eye.data.category, tradition: eye.data.tradition, decoded_by: eye.data.decoded_by }, pool);
+
+// gallery section index
+const sections = [
+  ["masthead", "1 · Masthead / Nav"],
+  ["search", "2 · Search"],
+  ["facets", "3 · Facet bar"],
+  ["specimen", "4 · Specimen card ★"],
+  ["siblings", "5 · Card siblings"],
+  ["feature", "6 · Feature block"],
+  ["reading", "7 · Reading-level body"],
+  ["badge", "8 · Tier badge"],
+  ["wherenext", "9 · Where-next"],
+  ["wayfinding", "10 · Breadcrumb + Prev/Next"],
+  ["pathstop", "11 · Pathway stop"],
+  ["timeline", "12 · Timeline node"],
+  ["entry", "13 · Entry surface"],
+  ["share", "14 · Share-card"],
+  ["states", "15 · States"],
+];
+---
+
+<Base title="ANAMNESIS — component kit preview">
+  <Masthead active="dictionary" />
+
+  <main class="pv u-container">
+    <header class="pv__head">
+      <p class="u-eyebrow">Internal · placeholder tokens only</p>
+      <h1>The 15-component kit</h1>
+      <p class="u-measure pv__lede">
+        Every piece from <code>docs/02 §3</code>, mobile-first, rendered against the three
+        finished <code>content-demo</code> symbols and coherent sibling fixtures. No final
+        colors: the whole gallery is greyscale-neutral and reads only from the design tokens.
+      </p>
+      <nav class="pv__toc" aria-label="Components">
+        <ul>{sections.map(([id, label]) => <li><a href={`#${id}`}>{label}</a></li>)}</ul>
+      </nav>
+    </header>
+
+    <!-- 1 — Masthead -->
+    <section id="masthead" class="pv__sec">
+      <h2 class="pv__sec-h">1 · Masthead / Nav <span>sticky · Dictionary emphasized · mobile sheet</span></h2>
+      <p class="pv__hint">Shown sticky at the top of the page; on a phone the links collapse into the ≡ sheet.</p>
+    </section>
+
+    <!-- 2 — Search -->
+    <section id="search" class="pv__sec">
+      <h2 class="pv__sec-h">2 · Search <span>type-ahead over collections</span></h2>
+      <div class="pv__demo pv__demo--narrow">
+        <SearchBar demoResults={fx.searchResults} />
+        <p class="pv__hint">Type “eye”, “saturn”, or “maxwell”.</p>
+      </div>
+    </section>
+
+    <!-- 3 — Facets -->
+    <section id="facets" class="pv__sec">
+      <h2 class="pv__sec-h">3 · Facet bar <span>URL-synced, never navigates</span></h2>
+      <div class="pv__demo">
+        <FacetBar groups={fx.facetGroups} active={{ tier: "B" }} />
+        <p class="pv__hint">Toggling a chip updates the <code>?cat=…&tier=…</code> query without a reload.</p>
+      </div>
+    </section>
+
+    <!-- 4 — Specimen card -->
+    <section id="specimen" class="pv__sec">
+      <h2 class="pv__sec-h">4 · Specimen card ★ <span>grid · related · search · pathway-stop</span></h2>
+
+      <p class="pv__hint">Variant: <b>grid</b></p>
+      <div class="pv__grid">
+        {symbols.map((s) => <SpecimenCard symbol={s} />)}
+      </div>
+
+      <p class="pv__hint">Variant: <b>related</b> (compact)</p>
+      <div class="pv__col">
+        {symbols.map((s) => <SpecimenCard symbol={s} variant="related" note="Same tradition" />)}
+      </div>
+
+      <p class="pv__hint">Variant: <b>search</b> & <b>pathway-stop</b></p>
+      <div class="pv__grid">
+        <SpecimenCard symbol={symbols[0]} variant="search" note="…hidden on the money in your pocket." />
+        <SpecimenCard symbol={symbols[1]} variant="pathway-stop" step={2} note="The next plate in the walk." />
+      </div>
+    </section>
+
+    <!-- 5 — Siblings -->
+    <section id="siblings" class="pv__sec">
+      <h2 class="pv__sec-h">5 · Card siblings <span>figure · casebook · source · pathway</span></h2>
+      <p class="pv__hint">Figure cards</p>
+      <div class="pv__col">{fx.figures.map((f) => <FigureCard figure={f} />)}</div>
+      <p class="pv__hint">Casebook card</p>
+      <div class="pv__grid">{fx.casebook.map((c) => <CasebookCard entry={c} />)}</div>
+      <p class="pv__hint">Pathway card</p>
+      <div class="pv__grid"><PathwayCard pathway={fx.pathway} /></div>
+      <p class="pv__hint">Source rows</p>
+      <div class="pv__demo">{eye.data.sources.map((s) => <SourceRow source={s} />)}</div>
+    </section>
+
+    <!-- 6 — Feature block -->
+    <section id="feature" class="pv__sec">
+      <h2 class="pv__sec-h">6 · Feature block <span>the lead story</span></h2>
+      <FeatureBlock
+        eyebrow="Featured decode"
+        title={eye.data.name}
+        deck={eye.data.one_line}
+        glyph={eye.data.glyph}
+        href={`/dictionary/${eye.data.slug}`}
+      />
+    </section>
+
+    <!-- 7 — Reading-level body -->
+    <section id="reading" class="pv__sec">
+      <h2 class="pv__sec-h">7 · Reading-level body <span>RL-0 / RL-1 / RL-2</span></h2>
+      <div class="pv__demo">
+        <ReadingBody
+          name={eye.data.name}
+          one_line={eye.data.one_line}
+          tier={eye.data.tier}
+          aka={eye.data.aka}
+          tradition={eye.data.tradition}
+          era={eye.data.era}
+          decoded_by={eye.data.decoded_by}
+          sources={eye.data.sources}
+          showLevels
+        >
+          <EyeBody />
+        </ReadingBody>
+      </div>
+    </section>
+
+    <!-- 8 — Tier badge -->
+    <section id="badge" class="pv__sec">
+      <h2 class="pv__sec-h">8 · Tier badge <span>A asserted · B attributed · C contextual</span></h2>
+      <div class="pv__demo pv__badges">
+        <TierBadge tier="A" /><TierBadge tier="B" /><TierBadge tier="C" />
+      </div>
+    </section>
+
+    <!-- 9 — Where-next -->
+    <section id="wherenext" class="pv__sec">
+      <h2 class="pv__sec-h">9 · Where-next <span>scored · capped · stagger-reveal</span></h2>
+      <div class="pv__demo"><WhereNext items={nextForEye} /></div>
+    </section>
+
+    <!-- 10 — Wayfinding -->
+    <section id="wayfinding" class="pv__sec">
+      <h2 class="pv__sec-h">10 · Breadcrumb + Prev/Next</h2>
+      <div class="pv__demo">
+        <Breadcrumbs crumbs={[
+          { label: "Home", href: "/" },
+          { label: "Dictionary", href: "/dictionary" },
+          { label: eye.data.name },
+        ]} />
+        <div style="margin-top:var(--space-l)">
+          <PrevNext
+            prev={{ label: "As Above, So Below", href: "/dictionary/as-above-so-below" }}
+            next={{ label: "Saturn & the Black Cube", href: "/dictionary/saturn-and-the-black-cube" }}
+          />
+        </div>
+      </div>
+    </section>
+
+    <!-- 11 — Pathway stop -->
+    <section id="pathstop" class="pv__sec">
+      <h2 class="pv__sec-h">11 · Pathway stop <span>card + connective copy</span></h2>
+      <div class="pv__demo">
+        {fx.pathway.stops.map((stop, i) => {
+          const sym = symbols.find((s) => s.slug === stop.slug)!;
+          return (
+            <PathwayStop step={i + 1} total={fx.pathway.stops.length} connective={stop.connective} last={i === fx.pathway.stops.length - 1}>
+              <SpecimenCard symbol={sym} variant="related" />
+            </PathwayStop>
+          );
+        })}
+      </div>
+    </section>
+
+    <!-- 12 — Timeline node -->
+    <section id="timeline" class="pv__sec">
+      <h2 class="pv__sec-h">12 · Timeline node <span>date · event · why-it-matters</span></h2>
+      <div class="pv__demo">{fx.timelineNodes.map((n) => <TimelineNode {...n} />)}</div>
+    </section>
+
+    <!-- 13 — Entry surface -->
+    <section id="entry" class="pv__sec">
+      <h2 class="pv__sec-h">13 · Entry surface <span>full page + bottom-sheet drawer</span></h2>
+      <p class="pv__hint">Variant: <b>full</b> (same content, page container)</p>
+      <div class="pv__demo pv__framed">
+        <EntrySurface variant="full">
+          <h2>{saturn.data.name}</h2>
+          <p class="u-measure" style="color:var(--color-text-muted)">{saturn.data.one_line}</p>
+          <SaturnBody />
+        </EntrySurface>
+      </div>
+      <p class="pv__hint">Variant: <b>drawer</b> (opens over the grid)</p>
+      <button class="pv__btn" type="button" data-open="demo-drawer">Open entry drawer →</button>
+      <EntrySurface variant="drawer" id="demo-drawer" label={saturn.data.name}>
+        <h2>{saturn.data.name}</h2>
+        <p class="u-measure" style="color:var(--color-text-muted)">{saturn.data.one_line}</p>
+        <SaturnBody />
+      </EntrySurface>
+    </section>
+
+    <!-- 14 — Share-card -->
+    <section id="share" class="pv__sec">
+      <h2 class="pv__sec-h">14 · Share-card (OG) <span>glyph + one line</span></h2>
+      <div class="pv__demo">
+        <ShareCard name={eye.data.name} share_line={eye.data.share_line ?? eye.data.one_line} glyph={eye.data.glyph} />
+      </div>
+    </section>
+
+    <!-- 15 — States -->
+    <section id="states" class="pv__sec">
+      <h2 class="pv__sec-h">15 · States <span>skeleton · empty · 404</span></h2>
+      <p class="pv__hint">Skeleton (grid loading)</p>
+      <SkeletonGrid count={3} />
+      <p class="pv__hint">Empty / no-results</p>
+      <EmptyState suggestions={[
+        { label: "The Eye on the Dollar", href: "/pathways/the-eye-on-the-dollar" },
+        { label: "Start Here", href: "/start" },
+      ]} />
+      <p class="pv__hint">404</p>
+      <NotFound />
+    </section>
+
+    <footer class="pv__foot"><p>ANAMNESIS · component kit · placeholder tokens</p></footer>
+  </main>
+</Base>
+
+<style>
+  .pv { padding-block: var(--space-l) var(--space-3xl); }
+  .pv__head { padding-block: var(--space-l); }
+  .pv__lede { color: var(--color-text-muted); font-size: var(--step-1); }
+  .pv__toc {
+    margin-block-start: var(--space-l);
+    border: var(--border-w) solid var(--color-border);
+    border-radius: var(--radius-l);
+    padding: var(--space-s);
+  }
+  .pv__toc ul {
+    list-style: none; margin: 0; padding: 0;
+    display: grid; gap: var(--space-2xs);
+    grid-template-columns: 1fr;
+    font-family: var(--font-ui);
+    font-size: var(--step--1);
+  }
+  @media (min-width: 36rem) { .pv__toc ul { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 56rem) { .pv__toc ul { grid-template-columns: repeat(3, 1fr); } }
+  .pv__toc a { text-decoration: none; color: var(--color-text-muted); }
+  .pv__toc a:hover { color: var(--color-text); }
+
+  .pv__sec { padding-block: var(--space-xl); border-block-start: var(--border-w) solid var(--color-border); scroll-margin-top: 72px; }
+  .pv__sec-h { font-size: var(--step-2); display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-s); }
+  .pv__sec-h span {
+    font-family: var(--font-ui);
+    font-size: var(--step--1);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    font-weight: 400;
+  }
+  .pv__hint { font-family: var(--font-ui); font-size: var(--step--1); color: var(--color-text-muted); margin-block: var(--space-m) var(--space-2xs); }
+  .pv__demo { margin-block-start: var(--space-s); }
+  .pv__demo--narrow { max-width: 32rem; }
+  .pv__framed { border: var(--border-w) dashed var(--color-border-strong); border-radius: var(--radius-l); }
+  .pv__badges { display: flex; gap: var(--space-l); flex-wrap: wrap; }
+
+  .pv__grid {
+    display: grid; gap: var(--space-s);
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 34rem) { .pv__grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 52rem) { .pv__grid { grid-template-columns: repeat(3, 1fr); } }
+  .pv__col { display: grid; gap: var(--space-s); max-width: 36rem; }
+
+  .pv__btn {
+    font-family: var(--font-ui);
+    font-size: var(--step--1);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    padding: 0.7em 1.2em;
+    border: var(--border-w) solid var(--color-text);
+    border-radius: var(--radius-m);
+    background: none;
+  }
+  .pv__btn:hover { background: var(--color-accent); color: var(--color-accent-text); border-color: var(--color-accent); }
+
+  .pv__foot { padding-block: var(--space-2xl) 0; color: var(--color-text-muted); font-family: var(--font-ui); font-size: var(--step--1); }
+  code { font-family: var(--font-mono); font-size: 0.9em; background: var(--color-surface-sunk); padding: 0.1em 0.35em; border-radius: var(--radius-s); }
+</style>

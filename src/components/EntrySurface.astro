@@ -1,0 +1,129 @@
+---
+// §3.13 — Entry surface. The same entry content in two containers:
+//   full   — a full-page article (direct navigation)
+//   drawer — a bottom-sheet that preserves the browse grid behind it
+// A drawer is opened by any element with [data-open="<id>"]. Closes on
+// backdrop click, the close button, or Escape. The slide uses a motion token,
+// so reduced motion makes it appear instantly.
+interface Props {
+  variant?: "full" | "drawer";
+  id?: string;
+  label?: string; // accessible name for the drawer dialog
+}
+const { variant = "full", id = "entry-drawer", label = "Entry" } = Astro.props;
+---
+
+{variant === "full" ? (
+  <article class="entry u-container">
+    <slot />
+  </article>
+) : (
+  <div class="drawer" id={id} data-drawer hidden>
+    <div class="drawer__backdrop" data-close></div>
+    <div class="drawer__sheet" role="dialog" aria-modal="true" aria-label={label}>
+      <div class="drawer__grip" aria-hidden="true"></div>
+      <button class="drawer__close" type="button" data-close aria-label="Close">✕</button>
+      <div class="drawer__content">
+        <slot />
+      </div>
+    </div>
+  </div>
+)}
+
+<style>
+  .entry { padding-block: var(--space-xl); }
+
+  .drawer { position: fixed; inset: 0; z-index: var(--z-drawer); }
+  .drawer[hidden] { display: none; }
+  .drawer__backdrop {
+    position: absolute; inset: 0;
+    background: color-mix(in srgb, var(--color-scrim) 45%, transparent);
+  }
+  .drawer__sheet {
+    position: absolute;
+    inset-inline: 0;
+    inset-block-end: 0;
+    max-height: 88vh;
+    overflow-y: auto;
+    background: var(--color-surface);
+    border-start-start-radius: var(--radius-l);
+    border-start-end-radius: var(--radius-l);
+    box-shadow: var(--shadow-sheet);
+    padding: var(--space-s) var(--gutter) var(--space-xl);
+    transform: translateY(100%);
+    transition: transform var(--dur-reveal) var(--ease-reveal);
+  }
+  .drawer.is-open .drawer__sheet { transform: translateY(0); }
+  .drawer__grip {
+    inline-size: 2.5rem; block-size: 4px;
+    border-radius: 999px;
+    background: var(--color-border-strong);
+    margin: 0 auto var(--space-s);
+  }
+  .drawer__close {
+    position: absolute;
+    inset-block-start: var(--space-s);
+    inset-inline-end: var(--gutter);
+    background: var(--color-surface-sunk);
+    border: none;
+    border-radius: 50%;
+    inline-size: 2rem; block-size: 2rem;
+    line-height: 1;
+  }
+  .drawer__content { max-width: var(--container-max); margin-inline: auto; }
+
+  @media (min-width: 48rem) {
+    .drawer__sheet { inset-inline: auto; inset-inline-end: 0; max-inline-size: 40rem; max-height: 100vh; border-radius: 0; transform: translateX(100%); }
+    .drawer.is-open .drawer__sheet { transform: translateX(0); }
+  }
+</style>
+
+<script>
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let lastFocus: HTMLElement | null = null;
+  function openDrawer(d: HTMLElement, pushHistory = true) {
+    lastFocus = document.activeElement as HTMLElement;
+    d.hidden = false;
+    // next frame so the transform transition can play (skipped under reduce)
+    if (reduce) d.classList.add("is-open");
+    else requestAnimationFrame(() => d.classList.add("is-open"));
+    document.body.style.overflow = "hidden";
+    d.querySelector<HTMLElement>(".drawer__close")?.focus();
+    // Back button / swipe-back closes the drawer instead of leaving the page.
+    if (pushHistory) history.pushState({ drawer: d.id }, "");
+  }
+  function closeDrawer(d: HTMLElement, fromPop = false) {
+    d.classList.remove("is-open");
+    document.body.style.overflow = "";
+    const finish = () => { d.hidden = true; };
+    if (reduce) finish();
+    else {
+      const sheet = d.querySelector<HTMLElement>(".drawer__sheet");
+      const done = () => { finish(); sheet?.removeEventListener("transitionend", done); };
+      sheet?.addEventListener("transitionend", done);
+    }
+    lastFocus?.focus?.();
+    // unwind the history entry we pushed, unless this close *is* the popstate
+    if (!fromPop && history.state?.drawer === d.id) history.back();
+  }
+  document.querySelectorAll<HTMLElement>("[data-open]").forEach((trigger) => {
+    trigger.addEventListener("click", (e) => {
+      const d = document.getElementById(trigger.dataset.open!);
+      if (!d) return;
+      e.preventDefault(); // an <a> trigger still navigates if JS is absent
+      openDrawer(d);
+    });
+  });
+  document.querySelectorAll<HTMLElement>("[data-drawer]").forEach((d) => {
+    d.querySelectorAll<HTMLElement>("[data-close]").forEach((c) =>
+      c.addEventListener("click", () => closeDrawer(d))
+    );
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key !== "Escape") return;
+    document.querySelectorAll<HTMLElement>("[data-drawer].is-open").forEach((d) => closeDrawer(d));
+  });
+  window.addEventListener("popstate", () => {
+    document.querySelectorAll<HTMLElement>("[data-drawer].is-open").forEach((d) => closeDrawer(d, true));
+  });
+</script>

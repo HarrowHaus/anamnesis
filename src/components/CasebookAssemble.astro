@@ -1,0 +1,210 @@
+---
+// §5.4 — the Casebook "aha assembles" set-piece. The artifact pins; as you
+// scroll, each component symbol's marker lights on the artifact and its card
+// lifts into the symbol-lineage row beneath it, each linked to the Dictionary.
+//
+// MOTION MODEL: the CSS default state is the *finished* assembly — every marker
+// and card visible. That means with no JS, or with prefers-reduced-motion, the
+// reader gets a clean static annotated diagram + lineage list (the §5.4
+// fallback) for free. GSAP only runs when motion is allowed: it hides the
+// pieces, pins the stage, and scrubs them back in linearly with scroll.
+import { plateUrl } from "../lib/plates";
+
+interface Item {
+  slug: string;
+  name: string;
+  glyph?: string;
+  resolved: boolean;
+  x: number;
+  y: number;
+  blurb?: string;
+}
+interface Props {
+  artifactGlyph?: string;
+  artifactAlt?: string;
+  items: Item[];
+}
+const { artifactGlyph, artifactAlt = "The artifact", items } = Astro.props;
+const artImg = plateUrl(artifactGlyph);
+---
+
+<section class="asm" data-asm aria-label="The decode, assembled">
+  <div class="asm__stage" data-asm-stage>
+    <div class="asm__intro">
+      <p class="u-eyebrow">The symbol lineage</p>
+      <h2 class="asm__h">Broken into its symbols</h2>
+      <p class="asm__lede u-measure">The artifact is a stack of inherited symbols. <span class="asm__cue" data-asm-cue>Scroll to lift each one out ↓</span></p>
+    </div>
+
+    <div class="asm__grid">
+      <figure class="asm__artifact">
+        {artImg
+          ? <img class="u-plate" src={artImg} alt={artifactAlt} />
+          : <div class="u-plate-fallback" role="presentation"></div>}
+        {items.map((it, i) => (
+          <span
+            class="asm__marker"
+            data-asm-marker
+            style={`left:${it.x}%; top:${it.y}%`}
+            aria-hidden="true"
+          >{i + 1}</span>
+        ))}
+      </figure>
+
+      <ol class="asm__cards" data-asm-cards>
+        {items.map((it, i) => {
+          const img = plateUrl(it.glyph);
+          const inner = (
+            <>
+              <span class="asm__card-plate">
+                {img
+                  ? <img class="u-plate" src={img} alt="" loading="lazy" />
+                  : <div class="u-plate-fallback" role="presentation"></div>}
+              </span>
+              <span class="asm__card-text">
+                <span class="asm__card-name">{it.name}</span>
+                {it.blurb && <span class="asm__card-blurb">{it.blurb}</span>}
+                <span class="asm__card-cta">{it.resolved ? "In the Dictionary →" : "Documented component"}</span>
+              </span>
+            </>
+          );
+          return (
+            <li class="asm__card" data-asm-card>
+              <span class="asm__num" aria-hidden="true">{i + 1}</span>
+              {it.resolved
+                ? <a class="asm__card-link" href={`/dictionary/${it.slug}`}>{inner}</a>
+                : <div class="asm__card-link asm__card-link--static">{inner}</div>}
+            </li>
+          );
+        })}
+      </ol>
+    </div>
+  </div>
+</section>
+
+<style>
+  .asm { container-type: inline-size; }
+  /* default (no-JS / reduced-motion): a clean static annotated diagram */
+  .asm__stage { padding-block: var(--space-l); }
+  .asm__stage.is-animated {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-block: var(--space-xl);
+  }
+  .asm__intro { margin-bottom: var(--space-l); }
+  .asm__h { font-size: var(--step-2); margin-block: var(--space-2xs); }
+  .asm__lede { color: var(--color-text-muted); }
+  /* the scroll cue is only meaningful when motion runs */
+  .asm__cue { display: none; }
+  .asm__stage.is-animated .asm__cue { display: inline; }
+
+  .asm__grid { display: grid; gap: var(--space-l); grid-template-columns: 1fr; align-items: start; }
+  @container (min-width: 46rem) {
+    .asm__grid { grid-template-columns: 1.1fr 1fr; gap: var(--space-xl); align-items: center; }
+  }
+
+  .asm__artifact {
+    position: relative;
+    margin: 0;
+    aspect-ratio: 4 / 3;
+    border-radius: var(--radius-l);
+    overflow: hidden;
+    background: var(--color-surface-sunk);
+  }
+  .asm__marker {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    inline-size: 2rem;
+    block-size: 2rem;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: var(--color-accent);
+    color: var(--color-accent-text);
+    font-family: var(--font-ui);
+    font-weight: 700;
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-bg) 60%, transparent);
+  }
+
+  .asm__cards { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-s); }
+  .asm__card { position: relative; display: grid; grid-template-columns: 1.6rem 1fr; gap: var(--space-2xs); align-items: stretch; }
+  .asm__num {
+    align-self: start;
+    margin-block-start: var(--space-2xs);
+    display: grid; place-items: center;
+    inline-size: 1.6rem; block-size: 1.6rem;
+    border-radius: 50%;
+    border: var(--border-w) solid var(--color-border-strong);
+    font-family: var(--font-ui); font-size: var(--step--1); color: var(--color-text-muted);
+  }
+  .asm__card-link {
+    display: grid;
+    grid-template-columns: 64px 1fr;
+    gap: var(--space-s);
+    align-items: center;
+    padding: var(--space-2xs);
+    border: var(--border-w) solid var(--color-border);
+    border-radius: var(--radius-m);
+    background: var(--color-surface);
+    text-decoration: none;
+    color: inherit;
+  }
+  a.asm__card-link:hover { border-color: var(--color-text); transform: translateY(-1px); }
+  .asm__card-link--static { border-style: dashed; }
+  .asm__card-plate { aspect-ratio: 1; border-radius: var(--radius-s); overflow: hidden; background: var(--color-surface-sunk); }
+  .asm__card-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .asm__card-name { font-family: var(--font-display); font-size: var(--step-0); }
+  .asm__card-blurb { font-family: var(--font-ui); font-size: var(--step--1); color: var(--color-text-muted); }
+  .asm__card-cta { font-family: var(--font-ui); font-size: var(--step--1); letter-spacing: var(--tracking-wide); text-transform: uppercase; color: var(--color-text-muted); margin-block-start: 2px; }
+</style>
+
+<script>
+  import { gsap } from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const section = document.querySelector<HTMLElement>("[data-asm]");
+  const stage = document.querySelector<HTMLElement>("[data-asm-stage]");
+
+  // No JS-driven motion under reduced-motion: leave the static assembled diagram.
+  if (section && stage && !reduce) {
+    gsap.registerPlugin(ScrollTrigger);
+
+    const markers = gsap.utils.toArray<HTMLElement>("[data-asm-marker]");
+    const cards = gsap.utils.toArray<HTMLElement>("[data-asm-card]");
+    const n = Math.max(markers.length, cards.length);
+
+    if (n > 0) {
+      stage.classList.add("is-animated");
+
+      // hide the pieces, then scrub them back in (this is the opt-in path only)
+      gsap.set(markers, { opacity: 0, scale: 0.2, transformOrigin: "50% 50%" });
+      gsap.set(cards, { opacity: 0, x: -16 });
+
+      const isWide = window.matchMedia("(min-width: 48rem)").matches;
+      const factor = isWide ? 1 : 0.7; // shorter pins on mobile (§5)
+
+      const tl = gsap.timeline({
+        defaults: { ease: "none" }, // scrubbed sections track scroll linearly (§5)
+        scrollTrigger: {
+          trigger: section,
+          start: "top top",
+          end: () => "+=" + window.innerHeight * n * factor,
+          pin: stage,
+          scrub: true,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+        },
+      });
+
+      for (let i = 0; i < n; i++) {
+        if (markers[i]) tl.to(markers[i], { opacity: 1, scale: 1, duration: 0.4 });
+        if (markers[i]) tl.to(markers[i], { scale: 1.18, duration: 0.12, yoyo: true, repeat: 1 }, "<0.05");
+        if (cards[i]) tl.to(cards[i], { opacity: 1, x: 0, duration: 0.5 }, "<0.05");
+        tl.to({}, { duration: 0.3 }); // a beat of hold before the next lift
+      }
+    }
+  }
+</script>

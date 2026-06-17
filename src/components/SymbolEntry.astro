@@ -1,0 +1,119 @@
+---
+// The Symbol entry body (blueprint §4 "SYMBOL ENTRY"). Composed from kit pieces
+// so it renders identically as a full page and inside a bottom-sheet drawer.
+// The MDX body (## Documented origin / ## The reading / ## Where it hides today)
+// is forwarded through the default slot into ReadingBody's RL-1 region.
+import ReadingBody from "./ReadingBody.astro";
+import WhereNext from "./WhereNext.astro";
+import ShareCard from "./ShareCard.astro";
+import type { WhereNextItem } from "../lib/relations";
+
+interface SymbolData {
+  name: string;
+  slug: string;
+  one_line: string;
+  category: string;
+  tradition?: string;
+  era?: string;
+  tier: "A" | "B" | "C";
+  glyph?: string;
+  aka?: string[];
+  decoded_by?: string[];
+  timeline?: string;
+  share_line?: string;
+  sources?: { title: string; author?: string; year?: number; tier: "A" | "B" | "C"; type?: string; url?: string }[];
+}
+interface Props {
+  data: SymbolData;
+  related?: WhereNextItem[];
+  appearsIn?: { slug: string; title: string }[];
+}
+const { data, related = [], appearsIn = [] } = Astro.props;
+const humanize = (s: string) => s.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+---
+
+<div class="se">
+  <ReadingBody
+    name={data.name}
+    one_line={data.one_line}
+    tier={data.tier}
+    aka={data.aka}
+    tradition={data.tradition}
+    era={data.era}
+    category={data.category}
+    glyph={data.glyph}
+    decoded_by={data.decoded_by}
+    sources={data.sources}
+  >
+    <slot />
+  </ReadingBody>
+
+  <!-- L6 — the linkage foot: calm curated lists, never a graph -->
+  <section class="se__links">
+    {(data.decoded_by?.length || appearsIn.length || data.timeline) && (
+      <div class="se__connections">
+        {data.decoded_by && data.decoded_by.length > 0 && (
+          <div class="se__conn">
+            <p class="u-eyebrow">Decoded by</p>
+            <ul class="se__chips" role="list">
+              {data.decoded_by.map((f) => <li class="se__chip">{humanize(f)}</li>)}
+            </ul>
+          </div>
+        )}
+        {appearsIn.length > 0 && (
+          <div class="se__conn">
+            <p class="u-eyebrow">Appears in</p>
+            <ul class="se__chips" role="list">
+              {appearsIn.map((c) => (
+                <li><a class="se__chip se__chip--link" href={`/casebook/${c.slug}`}>{c.title}</a></li>
+              ))}
+            </ul>
+          </div>
+        )}
+        {data.timeline && (
+          <div class="se__conn">
+            <p class="u-eyebrow">On the timeline</p>
+            <ul class="se__chips" role="list">
+              <li><a class="se__chip se__chip--link" href={`/timeline#${data.timeline}`}>{humanize(data.timeline)}</a></li>
+            </ul>
+          </div>
+        )}
+      </div>
+    )}
+
+    {related.length > 0 && <WhereNext items={related} heading="Where next" />}
+  </section>
+
+  <!-- this entry is built to travel -->
+  <section class="se__share">
+    <p class="u-eyebrow">Share this specimen</p>
+    <ShareCard name={data.name} share_line={data.share_line ?? data.one_line} glyph={data.glyph} />
+  </section>
+</div>
+
+<style>
+  .se { display: flex; flex-direction: column; gap: var(--space-2xl); }
+  .se__links { display: flex; flex-direction: column; gap: var(--space-xl); }
+  .se__connections {
+    display: grid;
+    gap: var(--space-l);
+    border-block-start: var(--border-w) solid var(--color-border);
+    padding-block-start: var(--space-l);
+  }
+  @media (min-width: 40rem) {
+    .se__connections { grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr)); }
+  }
+  .se__chips { list-style: none; margin: var(--space-2xs) 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--space-2xs); }
+  .se__chip {
+    display: inline-block;
+    font-family: var(--font-ui);
+    font-size: var(--step--1);
+    padding: 0.35em 0.8em;
+    border: var(--border-w) solid var(--color-border-strong);
+    border-radius: 999px;
+    color: var(--color-text-muted);
+    text-decoration: none;
+  }
+  .se__chip--link:hover { color: var(--color-text); border-color: var(--color-text); }
+  .se__share { border-block-start: var(--border-w) solid var(--color-border); padding-block-start: var(--space-l); }
+</style>

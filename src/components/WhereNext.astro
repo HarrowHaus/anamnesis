@@ -1,0 +1,75 @@
+---
+// §3.9 + §5.6 — Where-next list. Scored, capped, labeled by relation. Reveals
+// on enter with a gentle stagger (IntersectionObserver, not a pin). Calm, never
+// a graph. Reduced-motion / no-JS → present, no stagger.
+import SpecimenCard from "./SpecimenCard.astro";
+import type { WhereNextItem } from "../lib/relations";
+
+interface Props {
+  items: WhereNextItem[];
+  heading?: string;
+}
+const { items, heading = "Where next" } = Astro.props;
+---
+
+<section class="wn" data-stagger>
+  <h2 class="wn__h u-eyebrow">{heading}</h2>
+  <ul class="wn__list" role="list">
+    {items.map((it, i) => (
+      <li class="wn__item" style={`--i:${i}`}>
+        <SpecimenCard
+          symbol={{
+            name: it.item.name,
+            slug: it.item.slug,
+            one_line: (it.item as any).one_line ?? "",
+            category: it.item.category ?? "",
+            tradition: it.item.tradition,
+            tier: ((it.item as any).tier ?? "B"),
+            glyph: (it.item as any).glyph,
+          }}
+          variant="related"
+          note={it.relation}
+        />
+      </li>
+    ))}
+  </ul>
+</section>
+
+<style>
+  .wn__h { margin-bottom: var(--space-s); }
+  .wn__list {
+    list-style: none;
+    margin: 0; padding: 0;
+    display: grid;
+    gap: var(--space-s);
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 40rem) {
+    .wn__list { grid-template-columns: repeat(2, 1fr); }
+  }
+  .wn__item.is-armed { opacity: 0; transform: translateY(10px); }
+  .wn__item.is-in {
+    opacity: 1; transform: none;
+    transition: opacity var(--dur-reveal) var(--ease-reveal) calc(var(--i) * 70ms),
+      transform var(--dur-reveal) var(--ease-reveal) calc(var(--i) * 70ms);
+  }
+</style>
+
+<script>
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (!reduce && "IntersectionObserver" in window) {
+    document.querySelectorAll<HTMLElement>("[data-stagger]").forEach((sec) => {
+      const items = Array.from(sec.querySelectorAll<HTMLElement>(".wn__item"));
+      items.forEach((el) => el.classList.add("is-armed"));
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            items.forEach((el) => el.classList.add("is-in"));
+            io.disconnect();
+          }
+        });
+      }, { threshold: 0.2 });
+      io.observe(sec);
+    });
+  }
+</script>

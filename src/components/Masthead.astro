@@ -1,0 +1,163 @@
+---
+// §3.1 — Masthead/Nav. Sticky. Dictionary emphasized. Search trigger.
+// Variants: full (desktop inline) + mobile-sheet (hamburger → slide-in sheet).
+interface Props {
+  active?: string; // slug of the active section
+}
+const { active = "" } = Astro.props;
+const items = [
+  { slug: "start", label: "Start Here", href: "/start" },
+  { slug: "dictionary", label: "Dictionary", href: "/dictionary", emphasis: true },
+  { slug: "figures", label: "Figures", href: "/figures" },
+  { slug: "pillars", label: "Pillars", href: "/pillars" },
+  { slug: "casebook", label: "Casebook", href: "/casebook" },
+  { slug: "timeline", label: "Timeline", href: "/timeline" },
+  { slug: "library", label: "Library", href: "/library" },
+];
+---
+
+<header class="mast" data-mast>
+  <div class="mast__bar u-container">
+    <a class="mast__brand" href="/">ANAMNESIS</a>
+
+    <nav class="mast__nav" aria-label="Primary">
+      {items.map((it) => (
+        <a
+          href={it.href}
+          class:list={["mast__link", { "is-emph": it.emphasis, "is-active": it.slug === active }]}
+          aria-current={it.slug === active ? "page" : undefined}
+        >{it.label}</a>
+      ))}
+    </nav>
+
+    <div class="mast__actions">
+      <button class="mast__search" type="button" aria-label="Search">
+        <span aria-hidden="true">⌕</span><span class="mast__search-label">Search</span>
+      </button>
+      <button class="mast__burger" type="button" aria-label="Open menu" aria-expanded="false" data-burger>
+        <span aria-hidden="true">≡</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- mobile-sheet variant -->
+  <div class="mast__sheet" data-sheet hidden>
+    <nav class="mast__sheet-nav" aria-label="Primary (mobile)">
+      {items.map((it) => (
+        <a
+          href={it.href}
+          class:list={["mast__sheet-link", { "is-emph": it.emphasis, "is-active": it.slug === active }]}
+        >{it.label}</a>
+      ))}
+    </nav>
+  </div>
+</header>
+
+<style>
+  .mast {
+    position: sticky;
+    inset-block-start: 0;
+    z-index: var(--z-nav);
+    background: color-mix(in srgb, var(--color-bg) 90%, transparent);
+    backdrop-filter: blur(8px);
+    border-block-end: var(--border-w) solid var(--color-border);
+  }
+  .mast__bar {
+    display: flex;
+    align-items: center;
+    gap: var(--space-m);
+    min-height: 56px;
+  }
+  .mast__brand {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-decoration: none;
+    margin-inline-end: auto;
+  }
+  .mast__nav { display: none; gap: var(--space-s); align-items: center; }
+  .mast__link {
+    font-family: var(--font-ui);
+    font-size: var(--step--1);
+    text-decoration: none;
+    color: var(--color-text-muted);
+    padding-block: 0.25em;
+    border-block-end: 2px solid transparent;
+  }
+  .mast__link:hover { color: var(--color-text); }
+  .mast__link.is-emph { color: var(--color-text); font-weight: 600; }
+  .mast__link.is-active { color: var(--color-text); border-block-end-color: var(--color-accent); }
+
+  .mast__actions { display: flex; align-items: center; gap: var(--space-2xs); }
+  .mast__search {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    background: var(--color-surface);
+    border: var(--border-w) solid var(--color-border);
+    border-radius: var(--radius-m);
+    padding: 0.4em 0.7em;
+    font-family: var(--font-ui);
+    font-size: var(--step--1);
+    color: var(--color-text-muted);
+  }
+  .mast__search-label { display: none; }
+  .mast__burger {
+    background: none;
+    border: var(--border-w) solid var(--color-border);
+    border-radius: var(--radius-m);
+    padding: 0.2em 0.55em;
+    font-size: var(--step-1);
+    line-height: 1;
+  }
+
+  .mast__sheet {
+    border-block-start: var(--border-w) solid var(--color-border);
+    overflow: hidden;
+  }
+  .mast__sheet[hidden] { display: none; }
+  .mast__sheet-nav {
+    display: flex;
+    flex-direction: column;
+    padding: var(--space-2xs) var(--gutter) var(--space-s);
+  }
+  .mast__sheet-link {
+    font-family: var(--font-ui);
+    text-decoration: none;
+    color: var(--color-text);
+    padding: var(--space-2xs) 0;
+    border-block-end: var(--border-w) solid var(--color-border);
+  }
+  .mast__sheet-link.is-emph { font-weight: 600; }
+  .mast__sheet-link.is-active { color: var(--color-accent); }
+
+  @media (min-width: 56rem) {
+    .mast__nav { display: flex; }
+    .mast__burger { display: none; }
+    .mast__search-label { display: inline; }
+  }
+</style>
+
+<script>
+  // Mobile-sheet toggle. Sheet content is in the DOM; we only flip [hidden]
+  // + aria-expanded, so it works with and without reduced motion.
+  document.querySelectorAll("[data-mast]").forEach((mast) => {
+    const burger = mast.querySelector<HTMLButtonElement>("[data-burger]");
+    const sheet = mast.querySelector<HTMLElement>("[data-sheet]");
+    if (!burger || !sheet) return;
+    const setOpen = (open: boolean) => {
+      sheet.hidden = !open;
+      burger.setAttribute("aria-expanded", String(open));
+      burger.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+    };
+    burger.addEventListener("click", () =>
+      setOpen(burger.getAttribute("aria-expanded") !== "true")
+    );
+    sheet.addEventListener("click", (e) => {
+      if ((e.target as HTMLElement).tagName === "A") setOpen(false);
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") setOpen(false);
+    });
+  });
+</script>

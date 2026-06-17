@@ -1,0 +1,60 @@
+---
+// L9 / kit — Footer + sitemap. The safety net for anyone who scrolled to the
+// bottom looking for structure. Sourcing standard stated quietly.
+const sections = [
+  { label: "Start Here", href: "/start" },
+  { label: "Dictionary", href: "/dictionary" },
+  { label: "Lineage", href: "/lineage" },
+  { label: "Pillars", href: "/pillars" },
+  { label: "Casebook", href: "/casebook" },
+  { label: "Timeline", href: "/timeline" },
+  { label: "Library", href: "/library" },
+  { label: "Glossary", href: "/glossary" },
+];
+---
+
+<footer class="ft">
+  <div class="ft__inner u-container">
+    <div class="ft__brandcol">
+      <a class="ft__brand" href="/">ANAMNESIS</a>
+      <p class="ft__tag u-measure">An advocacy compendium for reading the engineered symbols that steer a symbolically-illiterate public — from Plato to the AI age.</p>
+    </div>
+    <nav class="ft__nav" aria-label="Sitemap">
+      <p class="u-eyebrow">The archive</p>
+      <ul>{sections.map((s) => <li><a href={s.href}>{s.label}</a></li>)}</ul>
+    </nav>
+    <div class="ft__method">
+      <p class="u-eyebrow">Method</p>
+      <ul>
+        <li><a href="/about">About &amp; sourcing standard</a></li>
+      </ul>
+      <p class="ft__note">Sources are tiered: <b>A</b> stated as documented history, <b>B</b> always attributed to the proponent who argues it, <b>C</b> used sparingly.</p>
+    </div>
+  </div>
+  <div class="ft__base u-container"><p>ANAMNESIS · working title, name under review</p></div>
+</footer>
+
+<style>
+  .ft {
+    margin-block-start: var(--space-3xl);
+    border-block-start: var(--border-w) solid var(--color-border);
+    background: var(--color-surface);
+  }
+  .ft__inner {
+    display: grid;
+    gap: var(--space-l);
+    padding-block: var(--space-2xl);
+    grid-template-columns: 1fr;
+  }
+  .ft__brand { font-family: var(--font-display); font-weight: 600; letter-spacing: 0.06em; text-decoration: none; font-size: var(--step-1); }
+  .ft__tag { color: var(--color-text-muted); margin-block-start: var(--space-2xs); }
+  .ft__nav ul, .ft__method ul { list-style: none; margin: var(--space-2xs) 0 0; padding: 0; display: grid; gap: var(--space-3xs); }
+  .ft__nav a, .ft__method a { font-family: var(--font-ui); font-size: var(--step--1); text-decoration: none; color: var(--color-text-muted); }
+  .ft__nav a:hover, .ft__method a:hover { color: var(--color-text); }
+  .ft__note { font-family: var(--font-ui); font-size: var(--step--1); color: var(--color-text-muted); margin-block-start: var(--space-s); }
+  .ft__base { padding-block: var(--space-m); border-block-start: var(--border-w) solid var(--color-border); font-family: var(--font-ui); font-size: var(--step--1); color: var(--color-text-muted); }
+
+  @media (min-width: 44rem) {
+    .ft__inner { grid-template-columns: 2fr 1fr 1.4fr; gap: var(--space-2xl); }
+  }
+</style>

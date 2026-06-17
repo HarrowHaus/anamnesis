@@ -1,0 +1,65 @@
+---
+// §3.5 — Figure card (sibling of the specimen card). A lineage figure.
+import { plateUrl } from "../lib/plates";
+
+interface Figure {
+  name: string;
+  slug: string;
+  one_line?: string;
+  tier: "founder" | "ancestor" | "peer" | "backbone";
+  dates?: string;
+  media?: { portrait?: string };
+}
+interface Props {
+  figure: Figure;
+  href?: string;
+}
+const { figure, href } = Astro.props;
+const url = href ?? `/figures/${figure.slug}`;
+const img = plateUrl(figure.media?.portrait);
+const tierLabel = {
+  founder: "Founder",
+  ancestor: "Ancestor",
+  peer: "Living peer",
+  backbone: "Scholarly backbone",
+}[figure.tier];
+---
+
+<article class="fig">
+  <a class="fig__link" href={url}>
+    <div class="fig__portrait">
+      {img
+        ? <img class="u-plate" src={img} alt={`Portrait of ${figure.name}`} loading="lazy" />
+        : <div class="u-plate-fallback" role="presentation"></div>}
+    </div>
+    <div class="fig__body">
+      <p class="u-eyebrow">{tierLabel}{figure.dates ? ` · ${figure.dates}` : ""}</p>
+      <h3 class="fig__name">{figure.name}</h3>
+      {figure.one_line && <p class="fig__line">{figure.one_line}</p>}
+    </div>
+  </a>
+</article>
+
+<style>
+  .fig {
+    background: var(--color-surface);
+    border: var(--border-w) solid var(--color-border);
+    border-radius: var(--radius-l);
+    overflow: hidden;
+    transition: transform var(--dur-fast) var(--ease-reveal),
+      box-shadow var(--dur-fast) var(--ease-reveal);
+  }
+  .fig:hover { transform: translateY(-2px); box-shadow: var(--shadow-card); }
+  .fig__link {
+    display: grid;
+    grid-template-columns: 96px 1fr;
+    gap: var(--space-s);
+    align-items: center;
+    color: inherit;
+    text-decoration: none;
+  }
+  .fig__portrait { aspect-ratio: 1; background: var(--color-surface-sunk); }
+  .fig__body { padding: var(--space-s) var(--space-s) var(--space-s) 0; }
+  .fig__name { font-size: var(--step-1); margin-bottom: var(--space-3xs); }
+  .fig__line { color: var(--color-text-muted); margin: 0; }
+</style>

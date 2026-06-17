@@ -1,0 +1,68 @@
+---
+// Symbol entry — the core product (blueprint §4 "SYMBOL ENTRY"). Full page;
+// the same SymbolEntry body also renders inside the Dictionary's bottom-sheet
+// drawer, so direct navigation and in-grid opening show identical content.
+import { getCollection, render } from "astro:content";
+import SiteLayout from "../../layouts/SiteLayout.astro";
+import EntrySurface from "../../components/EntrySurface.astro";
+import SymbolEntry from "../../components/SymbolEntry.astro";
+import Breadcrumbs from "../../components/Breadcrumbs.astro";
+import PrevNext from "../../components/PrevNext.astro";
+import { buildPool, relatedFor, appearsInFor } from "../../lib/graph";
+import { plateUrl } from "../../lib/plates";
+
+export async function getStaticPaths() {
+  const symbols = await getCollection("symbols");
+  return symbols.map((e) => ({ params: { symbol: e.data.slug } }));
+}
+
+const all = (await getCollection("symbols")).sort((a, b) => a.data.name.localeCompare(b.data.name));
+const casebook = await getCollection("casebook");
+const casebookBySlug = new Map(casebook.map((c) => [c.data.slug, { slug: c.data.slug, title: c.data.title }]));
+
+const slug = Astro.params.symbol;
+const idx = all.findIndex((e) => e.data.slug === slug);
+const entry = all[idx];
+const { Content } = await render(entry);
+
+const pool = buildPool(all.map((e) => e.data));
+const related = relatedFor(entry.data, pool);
+const appearsIn = appearsInFor(entry.data.appears_in, casebookBySlug);
+
+// sequential wrap-around across the (alphabetical) dictionary
+const prev = all[(idx - 1 + all.length) % all.length];
+const next = all[(idx + 1) % all.length];
+---
+
+<SiteLayout
+  title={entry.data.seo_title}
+  description={entry.data.seo_description}
+  image={plateUrl(entry.data.glyph) ?? undefined}
+  active="dictionary"
+>
+  <div class="u-container head">
+    <Breadcrumbs crumbs={[
+      { label: "Home", href: "/" },
+      { label: "Dictionary", href: "/dictionary" },
+      { label: entry.data.name },
+    ]} />
+  </div>
+
+  <EntrySurface variant="full">
+    <SymbolEntry data={entry.data} related={related} appearsIn={appearsIn}>
+      <Content />
+    </SymbolEntry>
+  </EntrySurface>
+
+  <div class="u-container foot">
+    <PrevNext
+      prev={{ label: prev.data.name, href: `/dictionary/${prev.data.slug}` }}
+      next={{ label: next.data.name, href: `/dictionary/${next.data.slug}` }}
+    />
+  </div>
+</SiteLayout>
+
+<style>
+  .head { padding-block: var(--space-l) 0; }
+  .foot { padding-block: 0 var(--space-2xl); }
+</style>

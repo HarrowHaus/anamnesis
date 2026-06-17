@@ -1,0 +1,95 @@
+---
+// §3.12 — Timeline node. date · event · why-it-matters · links. Pinned-scroll
+// aware on the Timeline page; standalone it is a static node that reveals on
+// enter. Reduced-motion / no-JS → present, no motion.
+import { plateUrl } from "../lib/plates";
+
+interface Props {
+  date: string;
+  event: string;
+  why_it_matters: string;
+  era?: "sacred" | "mechanical" | "algorithmic";
+  glyph?: string;
+  links?: { label: string; href: string }[];
+}
+const { date, event, why_it_matters, era, glyph, links = [] } = Astro.props;
+const img = plateUrl(glyph);
+const eraLabel = era ? { sacred: "Sacred image-control", mechanical: "Mechanical reproduction", algorithmic: "Algorithmic / synthetic" }[era] : null;
+---
+
+<article class="node" data-reveal>
+  <div class="node__rail" aria-hidden="true"><span class="node__dot"></span></div>
+  <div class="node__plate">
+    {img
+      ? <img class="u-plate" src={img} alt="" loading="lazy" />
+      : <div class="u-plate-fallback" role="presentation"></div>}
+  </div>
+  <div class="node__body">
+    <p class="u-eyebrow">{date}{eraLabel ? ` · ${eraLabel}` : ""}</p>
+    <h3 class="node__event">{event}</h3>
+    <p class="node__why u-measure">{why_it_matters}</p>
+    {links.length > 0 && (
+      <ul class="node__links" role="list">
+        {links.map((l) => <li><a href={l.href}>{l.label} →</a></li>)}
+      </ul>
+    )}
+  </div>
+</article>
+
+<style>
+  .node {
+    display: grid;
+    grid-template-columns: 1.25rem 1fr;
+    gap: var(--space-s);
+    padding-block: var(--space-m);
+  }
+  .node__rail { display: flex; justify-content: center; }
+  .node__dot {
+    inline-size: 0.85rem; block-size: 0.85rem;
+    border-radius: 50%;
+    background: var(--color-accent);
+    margin-block-start: 0.4rem;
+    box-shadow: 0 0 0 4px var(--color-bg);
+  }
+  .node__plate {
+    grid-column: 2;
+    aspect-ratio: 16 / 9;
+    border-radius: var(--radius-m);
+    overflow: hidden;
+    background: var(--color-surface-sunk);
+    margin-bottom: var(--space-s);
+  }
+  .node__event { font-size: var(--step-2); margin-bottom: var(--space-2xs); }
+  .node__why { color: var(--color-text-muted); }
+  .node__links { display: flex; flex-wrap: wrap; gap: var(--space-s); list-style: none; margin: var(--space-2xs) 0 0; padding: 0; }
+  .node__links a {
+    font-family: var(--font-ui);
+    font-size: var(--step--1);
+    text-decoration: none;
+  }
+  .node__links a:hover { text-decoration: underline; }
+
+  @media (min-width: 48rem) {
+    .node__plate { max-width: 28rem; }
+  }
+
+  [data-reveal].is-armed { opacity: 0; transform: translateY(12px); }
+  [data-reveal].is-in {
+    opacity: 1; transform: none;
+    transition: opacity var(--dur-reveal) var(--ease-reveal),
+      transform var(--dur-reveal) var(--ease-reveal);
+  }
+</style>
+
+<script>
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (!reduce && "IntersectionObserver" in window) {
+    document.querySelectorAll<HTMLElement>(".node[data-reveal]").forEach((el) => {
+      el.classList.add("is-armed");
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("is-in"); io.unobserve(e.target); } });
+      }, { threshold: 0.15 });
+      io.observe(el);
+    });
+  }
+</script>

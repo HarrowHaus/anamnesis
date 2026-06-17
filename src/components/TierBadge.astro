@@ -1,0 +1,48 @@
+---
+// §3.8 — Source/Tier badge. Quiet. A = asserted (hard history); B = attributed
+// ("X argues"); C = used sparingly. Color comes only from neutral tokens.
+interface Props {
+  tier: "A" | "B" | "C";
+  size?: "sm" | "md";
+}
+const { tier, size = "md" } = Astro.props;
+const label = { A: "Asserted", B: "Attributed", C: "Contextual" }[tier];
+const title = {
+  A: "Tier A — hard history, stated as fact",
+  B: "Tier B — a proponent's reading, attributed",
+  C: "Tier C — used sparingly",
+}[tier];
+---
+
+<span class={`badge badge--${tier} badge--${size}`} title={title}>
+  <span class="badge__letter" aria-hidden="true">{tier}</span>
+  <span class="badge__label">{label}</span>
+</span>
+
+<style>
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    font-family: var(--font-ui);
+    font-size: var(--step--1);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    white-space: nowrap;
+  }
+  .badge--sm { font-size: calc(var(--step--1) * 0.9); }
+  .badge__letter {
+    display: inline-grid;
+    place-items: center;
+    inline-size: 1.5em;
+    block-size: 1.5em;
+    border-radius: 50%;
+    border: var(--border-w) solid currentColor;
+    font-weight: 700;
+    letter-spacing: 0;
+  }
+  .badge--A .badge__letter { color: var(--color-tier-a); }
+  .badge--B .badge__letter { color: var(--color-tier-b); }
+  .badge--C .badge__letter { color: var(--color-tier-c); }
+</style>

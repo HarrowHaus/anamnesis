@@ -1,0 +1,42 @@
+---
+// §3.15 — Skeleton (grid loading). Pure CSS shimmer; the shimmer animation is
+// neutralized by the reduced-motion backstop in base.css.
+interface Props { count?: number }
+const { count = 6 } = Astro.props;
+---
+
+<div class="sk" aria-hidden="true">
+  {Array.from({ length: count }).map(() => (
+    <div class="sk__card">
+      <div class="sk__plate sk__sheen"></div>
+      <div class="sk__lines">
+        <div class="sk__line sk__sheen" style="width:40%"></div>
+        <div class="sk__line sk__sheen" style="width:85%"></div>
+        <div class="sk__line sk__sheen" style="width:60%"></div>
+      </div>
+    </div>
+  ))}
+</div>
+
+<style>
+  .sk { display: grid; gap: var(--space-s); grid-template-columns: 1fr; }
+  @media (min-width: 34rem) { .sk { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 52rem) { .sk { grid-template-columns: repeat(3, 1fr); } }
+  .sk__card {
+    border: var(--border-w) solid var(--color-border);
+    border-radius: var(--radius-l);
+    overflow: hidden;
+  }
+  .sk__plate { aspect-ratio: 4 / 3; }
+  .sk__lines { padding: var(--space-s); display: grid; gap: var(--space-2xs); }
+  .sk__line { height: 0.8rem; border-radius: var(--radius-s); }
+  .sk__sheen {
+    background: linear-gradient(100deg,
+      var(--color-surface-sunk) 30%,
+      var(--color-border) 50%,
+      var(--color-surface-sunk) 70%);
+    background-size: 200% 100%;
+    animation: sheen 1.4s linear infinite;
+  }
+  @keyframes sheen { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+</style>

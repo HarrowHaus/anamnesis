@@ -1,0 +1,41 @@
+---
+// Document shell. Imports placeholder tokens + base styles globally.
+// Mobile-first viewport + the SEO/OG metadata each shareable entry needs.
+import "../styles/tokens.css";
+import "../styles/base.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;      // absolute or root-relative share image
+  noindex?: boolean;
+}
+const {
+  title = "ANAMNESIS",
+  description = "Learn to read the engineered symbols that steer a symbolically-illiterate public — from Plato to the AI age.",
+  image,
+  noindex = false,
+} = Astro.props;
+const canonical = Astro.url?.pathname ?? "/";
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    {noindex && <meta name="robots" content="noindex" />}
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    {image && <meta property="og:image" content={image} />}
+    <meta name="twitter:card" content={image ? "summary_large_image" : "summary"} />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

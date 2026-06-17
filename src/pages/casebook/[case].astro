@@ -1,0 +1,149 @@
+---
+// Casebook decode (blueprint §4 "CASEBOOK DECODE", model 4d). The artifact →
+// surface → decode → the symbol-lineage broken into Dictionary symbols, each
+// traced back. The lineage section is the proof-of-system: it shows the
+// Dictionary "working." Highest share priority.
+import { getCollection, render } from "astro:content";
+import SiteLayout from "../../layouts/SiteLayout.astro";
+import Breadcrumbs from "../../components/Breadcrumbs.astro";
+import CasebookAssemble from "../../components/CasebookAssemble.astro";
+import SourceRow from "../../components/SourceRow.astro";
+import WhereNext from "../../components/WhereNext.astro";
+import ShareCard from "../../components/ShareCard.astro";
+import { plateUrl } from "../../lib/plates";
+import { buildPool } from "../../lib/graph";
+import type { WhereNextItem } from "../../lib/relations";
+
+export async function getStaticPaths() {
+  const cases = await getCollection("casebook");
+  return cases.map((e) => ({ params: { case: e.data.slug } }));
+}
+
+const humanize = (s: string) => s.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+
+const entry = (await getCollection("casebook")).find((e) => e.data.slug === Astro.params.case)!;
+const { Content } = await render(entry);
+const data = entry.data;
+
+const symbolEntries = await getCollection("symbols");
+const symbolBySlug = new Map(symbolEntries.map((e) => [e.data.slug, e.data]));
+const pool = buildPool(symbolEntries.map((e) => e.data));
+
+// the symbol-lineage for the "aha assembles" set-piece (§5.4). Use the authored
+// marker positions when present; otherwise auto-distribute across the artifact.
+const markerSrc =
+  data.assemble && data.assemble.length > 0
+    ? data.assemble
+    : (data.symbol_lineage ?? []).map((slug, i, a) => ({
+        slug,
+        x: a.length > 1 ? 20 + (i * 60) / (a.length - 1) : 50,
+        y: 40,
+        blurb: undefined as string | undefined,
+      }));
+const lineage = markerSrc.map((m) => {
+  const symbol = symbolBySlug.get(m.slug);
+  return {
+    slug: m.slug,
+    name: symbol?.name ?? humanize(m.slug),
+    glyph: symbol?.glyph,
+    resolved: !!symbol,
+    x: m.x,
+    y: m.y,
+    blurb: m.blurb,
+  };
+});
+
+// where-next from the decode's related symbols
+const related: WhereNextItem[] = (data.related_symbols ?? [])
+  .map((slug) => pool.find((p) => p.slug === slug))
+  .filter(Boolean)
+  .map((item) => ({ item: item!, relation: "Related symbol", score: 1 }));
+
+const heroImg = plateUrl(data.glyph);
+---
+
+<SiteLayout
+  title={data.seo_title}
+  description={data.seo_description}
+  image={heroImg ?? undefined}
+  active="casebook"
+>
+  <div class="u-container cb-head">
+    <Breadcrumbs crumbs={[
+      { label: "Home", href: "/" },
+      { label: "Casebook" },
+      { label: data.title },
+    ]} />
+  </div>
+
+  <article class="cb u-container">
+    <!-- the artifact, large -->
+    <header class="cb-hero">
+      <figure class="cb-hero__plate">
+        {heroImg
+          ? <img class="u-plate" src={heroImg} alt={`The ${data.artifact}`} />
+          : <div class="u-plate-fallback" role="presentation"></div>}
+      </figure>
+      <p class="u-eyebrow">Casebook decode · {data.artifact}</p>
+      <h1 class="cb-hero__title">{data.title}</h1>
+      <p class="cb-hero__essence u-measure">{data.one_line}</p>
+    </header>
+
+    <!-- surface → decode → lineage prose (RL-0/RL-1) -->
+    <div class="cb-body u-measure">
+      <Content />
+    </div>
+
+    <!-- the magic: the artifact broken into its Dictionary symbols (§5.4) -->
+    <CasebookAssemble artifactGlyph={data.glyph} artifactAlt={`The ${data.artifact}`} items={lineage} />
+
+    <!-- who made the claim + sources (RL-2) -->
+    <section class="cb-apparatus">
+      {data.who_made_this_claim && data.who_made_this_claim.length > 0 && (
+        <div class="cb-claim">
+          <p class="u-eyebrow">Who teaches this decode</p>
+          <ul class="cb-chips" role="list">
+            {data.who_made_this_claim.map((f) => <li class="cb-chip">{humanize(f)}</li>)}
+          </ul>
+        </div>
+      )}
+      <div class="cb-sources">
+        <h2 class="cb-sources__h">Sources</h2>
+        {data.sources.map((s) => <SourceRow source={s} />)}
+      </div>
+    </section>
+
+    {related.length > 0 && <div class="cb-next"><WhereNext items={related} heading="Where next" /></div>}
+
+    <section class="cb-share">
+      <p class="u-eyebrow">Share this decode</p>
+      <ShareCard name={data.title} share_line={data.share_line ?? data.one_line ?? data.title} glyph={data.glyph} />
+    </section>
+  </article>
+</SiteLayout>
+
+<style>
+  .cb-head { padding-block: var(--space-l) 0; }
+  .cb { padding-block: var(--space-l) var(--space-2xl); display: flex; flex-direction: column; gap: var(--space-2xl); }
+  .cb-hero__plate {
+    margin: 0 0 var(--space-m);
+    aspect-ratio: 16 / 10;
+    border-radius: var(--radius-l);
+    overflow: hidden;
+    background: var(--color-surface-sunk);
+  }
+  .cb-hero__title { font-size: var(--step-4); margin-block: var(--space-2xs); }
+  .cb-hero__essence { font-size: var(--step-1); color: var(--color-text-muted); }
+  .cb-body :global(h2) { font-size: var(--step-2); margin-block: var(--space-l) var(--space-2xs); }
+  .cb-body :global(p) { margin-bottom: var(--space-m); }
+
+  .cb-apparatus { border-block-start: var(--border-w) solid var(--color-border); padding-block-start: var(--space-l); display: grid; gap: var(--space-l); }
+  .cb-chips { list-style: none; margin: var(--space-2xs) 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--space-2xs); }
+  .cb-chip {
+    font-family: var(--font-ui); font-size: var(--step--1);
+    padding: 0.35em 0.8em; border: var(--border-w) solid var(--color-border-strong);
+    border-radius: 999px; color: var(--color-text-muted);
+  }
+  .cb-sources__h { font-size: var(--step-1); }
+  .cb-share { border-block-start: var(--border-w) solid var(--color-border); padding-block-start: var(--space-l); }
+</style>

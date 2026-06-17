@@ -1,0 +1,158 @@
+---
+// HOME (blueprint §4 "HOME"). State the thesis, hook the wanderer, open every
+// path without looking like an index. Reads as a magazine front, not a homepage.
+// No facets here — the wanderer is never asked to filter. (The scrollytelling
+// "veil parts" hero is a later phase; this is its clean static form.)
+import { getCollection } from "astro:content";
+import SiteLayout from "../layouts/SiteLayout.astro";
+import FeatureBlock from "../components/FeatureBlock.astro";
+import SpecimenCard from "../components/SpecimenCard.astro";
+import PathwayCard from "../components/PathwayCard.astro";
+import { plateUrl } from "../lib/plates";
+
+const symbols = (await getCollection("symbols")).map((e) => e.data);
+const casebook = (await getCollection("casebook")).map((e) => e.data);
+const featured = casebook[0];
+
+// the dictionary shelf — a small curated set, into the flagship
+const shelf = symbols.slice(0, 3);
+
+// curated routes (the invisible-guidance layer) — working filtered browses,
+// presented as editorial features rather than "beginner mode."
+const routes = [
+  { title: "Follow the Eye", one_line: "The watching eye, from Horus to the dollar.", glyph: "../../assets/plates/kircher.jpg", href: "/dictionary?cat=civic-solar", stops: 3 },
+  { title: "As Above, So Below", one_line: "The Hermetic chain of correspondence, drawn whole.", glyph: "../../assets/plates/fludd.jpg", href: "/dictionary?tradition=Hermetic", stops: 2 },
+  { title: "The Geometry of Limits", one_line: "Saturn, the cube, and the square that confines.", glyph: "../../assets/plates/saturn.jpg", href: "/dictionary?q=saturn", stops: 2 },
+];
+const heroPlate = "/plates/hero.jpg";
+---
+
+<SiteLayout
+  title="ANAMNESIS — learn to read the symbols steering you"
+  description="An advocacy compendium that teaches a symbolically-illiterate public to read the engineered symbols steering them — from Plato to the AI age."
+  active=""
+>
+  <!-- THE HOOK -->
+  <section class="hook">
+    <div class="hook__plate" aria-hidden="true">
+      <img class="u-plate" src={heroPlate} alt="" fetchpriority="high" />
+    </div>
+    <div class="hook__scrim" aria-hidden="true"></div>
+    <div class="hook__inner u-container">
+      <p class="u-eyebrow">An advocacy compendium · Plato → the AI age</p>
+      <h1 class="hook__title">You were taught to look.<br />You were never taught to read.</h1>
+      <p class="hook__sub u-measure">Every glyph on the money, the screen, the storefront is engineered to move you. This is the decoder — the documented history, the reading the tradition gives it, and where each symbol hides today.</p>
+      <div class="hook__cta">
+        <a class="btn btn--primary" href="/dictionary">Enter the Dictionary →</a>
+        <a class="btn btn--ghost" href="/start">Start Here</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- THE FEATURED DECODE — the conversion bait -->
+  {featured && (
+    <section class="home-sec">
+      <div class="u-container"><p class="u-eyebrow">The featured decode</p></div>
+      <div class="u-container">
+        <FeatureBlock
+          eyebrow={`Casebook · ${featured.artifact}`}
+          title={featured.title}
+          deck={featured.one_line}
+          glyph={featured.glyph}
+          href={`/casebook/${featured.slug}`}
+          ctaLabel="Read the decode"
+        />
+      </div>
+    </section>
+  )}
+
+  <!-- CURATED ROUTES -->
+  <section class="home-sec u-container">
+    <header class="home-sec__head">
+      <div>
+        <p class="u-eyebrow">Curated routes</p>
+        <h2 class="home-sec__h">Three ways in</h2>
+      </div>
+    </header>
+    <div class="home-grid home-grid--3">
+      {routes.map((r) => (
+        <PathwayCard pathway={{ title: r.title, slug: "", one_line: r.one_line, glyph: r.glyph, stops: Array(r.stops) }} href={r.href} />
+      ))}
+    </div>
+  </section>
+
+  <!-- FROM THE DICTIONARY -->
+  <section class="home-sec u-container">
+    <header class="home-sec__head">
+      <div>
+        <p class="u-eyebrow">From the Dictionary</p>
+        <h2 class="home-sec__h">Specimens to start with</h2>
+      </div>
+      <a class="home-sec__more" href="/dictionary">All symbols →</a>
+    </header>
+    <div class="home-grid home-grid--3">
+      {shelf.map((s) => <SpecimenCard symbol={s} variant="grid" />)}
+    </div>
+  </section>
+
+  <!-- THE ARGUMENT, BRIEFLY -->
+  <section class="home-arg">
+    <div class="u-container home-arg__inner">
+      <p class="u-eyebrow">The argument, briefly · Pillar P1</p>
+      <h2 class="home-arg__h u-measure">Whoever owns the image owns the interior life of a people.</h2>
+      <p class="home-arg__body u-measure">In the <i>Republic</i>, Plato's ideal state must control which stories and images reach the soul — because rhythm, story, and image sink beneath reason and shape it. The thesis is ancient and the stakes are present: representation is power. See it worked through one artifact you already carry.</p>
+      <a class="btn btn--ghost" href={featured ? `/casebook/${featured.slug}` : "/dictionary"}>See the argument worked through →</a>
+    </div>
+  </section>
+</SiteLayout>
+
+<style>
+  /* the hook */
+  .hook { position: relative; isolation: isolate; min-height: 78vh; display: flex; align-items: center; }
+  .hook__plate { position: absolute; inset: 0; z-index: -2; background: var(--color-bg); }
+  .hook__plate .u-plate { opacity: 0.42; }
+  /* neutral scrim floor so the type stays readable over any plate, no hue */
+  .hook__scrim {
+    position: absolute; inset: 0; z-index: -1;
+    background: linear-gradient(
+      to top,
+      var(--color-bg) 0%,
+      color-mix(in srgb, var(--color-bg) 72%, transparent) 55%,
+      color-mix(in srgb, var(--color-bg) 50%, transparent) 100%
+    );
+  }
+  .hook__inner { padding-block: var(--space-3xl); }
+  .hook__title { font-size: var(--step-5); line-height: var(--leading-tight); margin-block: var(--space-s); }
+  .hook__sub { font-size: var(--step-1); color: var(--color-text); }
+  .hook__cta { display: flex; flex-wrap: wrap; gap: var(--space-s); margin-block-start: var(--space-l); }
+
+  .btn {
+    display: inline-block;
+    font-family: var(--font-ui);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    font-size: var(--step--1);
+    padding: 0.8em 1.4em;
+    border-radius: var(--radius-m);
+    text-decoration: none;
+    border: var(--border-w) solid var(--color-text);
+  }
+  .btn--primary { background: var(--color-accent); color: var(--color-accent-text); border-color: var(--color-accent); }
+  .btn--ghost { background: color-mix(in srgb, var(--color-surface) 70%, transparent); }
+  .btn:hover { transform: translateY(-1px); }
+
+  .home-sec { padding-block: var(--space-2xl); }
+  .home-sec__head { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--space-s); margin-block-end: var(--space-l); }
+  .home-sec__h { font-size: var(--step-2); margin: 0; }
+  .home-sec__more { font-family: var(--font-ui); font-size: var(--step--1); text-decoration: none; white-space: nowrap; }
+  .home-sec__more:hover { text-decoration: underline; }
+
+  .home-grid { display: grid; gap: var(--space-s); grid-template-columns: 1fr; }
+  @media (min-width: 34rem) { .home-grid--3 { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 56rem) { .home-grid--3 { grid-template-columns: repeat(3, 1fr); } }
+
+  .home-arg { background: var(--color-surface); border-block: var(--border-w) solid var(--color-border); }
+  .home-arg__inner { padding-block: var(--space-2xl); }
+  .home-arg__h { font-size: var(--step-3); margin-block: var(--space-2xs) var(--space-s); }
+  .home-arg__body { color: var(--color-text-muted); font-size: var(--step-1); margin-bottom: var(--space-l); }
+</style>

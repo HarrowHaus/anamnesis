@@ -1,0 +1,23 @@
+---
+// The standard page chrome for the public site: masthead + main + footer.
+// Detail/index pages compose their content into the default slot.
+import Base from "./Base.astro";
+import Masthead from "../components/Masthead.astro";
+import Footer from "../components/Footer.astro";
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  active?: string; // active masthead section slug
+}
+const { title, description, image, active = "" } = Astro.props;
+---
+
+<Base title={title} description={description} image={image}>
+  <Masthead active={active} />
+  <main id="main">
+    <slot />
+  </main>
+  <Footer />
+</Base>

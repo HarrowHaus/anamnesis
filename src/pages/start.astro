@@ -1,0 +1,335 @@
+---
+// START HERE — the on-ramp (blueprint §4 "START HERE"; motion §5.2).
+// A single guided descent of five beats. Each beat is a full-bleed plate + one
+// resolving line; a progress tick advances, prev/next + "skip into the archive"
+// stay available. Beat 2 breaks a recognizable artifact into its symbols (a mini
+// version of the Casebook assemble, §5.4).
+//
+// MOTION MODEL (same as §5.4): the CSS default is five readable, stacked
+// full-screen sections — exactly the §5.2 reduced-motion fallback. GSAP only
+// runs when motion is allowed: it overlaps the beats, pins the stage, and
+// scrubs a plate cross-dissolve + line swap between them.
+import { getCollection } from "astro:content";
+import SiteLayout from "../layouts/SiteLayout.astro";
+import { plateUrl } from "../lib/plates";
+
+const humanize = (s: string) => s.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+
+// Beat 2 stays wired to the real Great Seal decode.
+const symbols = new Map((await getCollection("symbols")).map((e) => [e.data.slug, e.data]));
+const seal = (await getCollection("casebook")).find((e) => e.data.slug === "great-seal-pyramid");
+const lineage = (seal?.data.symbol_lineage ?? []).map((slug) => {
+  const sym = symbols.get(slug);
+  return { slug, name: sym?.name ?? humanize(slug), glyph: sym?.glyph, resolved: !!sym };
+});
+
+const beats = [
+  {
+    id: "claim",
+    plate: "/plates/hero.jpg",
+    eyebrow: "The claim",
+    headline: "Representation is power.",
+    body:
+      "Every image you meet was made by someone, to do something to you. The storefront, the screen, the seal on the money — none of it is neutral, and none of it is an accident. Whoever decides which images you see, and which you never do, is shaping the inside of your life. That is the oldest kind of power there is.",
+  },
+  {
+    id: "decode",
+    plate: "/plates/kircher.jpg",
+    eyebrow: "One decode",
+    headline: "You've held this and never read it.",
+    body:
+      "Turn over a dollar. A pyramid left unfinished, a single open eye, a Latin motto announcing a new order of the ages. Manly P. Hall read it plainly as the signature of an initiatic tradition. It isn't decoration — it's a stack of inherited symbols, and once you can name them, the bill never looks the same.",
+    decode: true,
+  },
+  {
+    id: "keystone",
+    plate: "/plates/fludd.jpg",
+    eyebrow: "The keystone",
+    headline: "Plato banned the poets.",
+    body:
+      "Twenty-four centuries ago, in the Republic, Plato argued that the ideal state must control its stories, its music, and its images — because rhythm and image sink beneath reason and shape the soul before thought can object. Book X goes further, and exiles the imitative artists outright. The first political act, he saw, is deciding what may be shown.",
+  },
+  {
+    id: "pattern",
+    plate: "/plates/fluddmind.jpg",
+    eyebrow: "The pattern",
+    headline: "Every power fights over images first.",
+    body:
+      "It is not only Plato. The Second Commandment forbids the graven image. Byzantium tore down its icons; reformers whitewashed their churches; empires raised and toppled statues. Across four thousand years one pattern holds: whoever wants the soul of a people goes to war over its pictures first. Image-control and soul-control are the same campaign.",
+  },
+  {
+    id: "unsee",
+    plate: "/plates/cosmos.jpg",
+    eyebrow: "Now you can't unsee it",
+    headline: "You can't unsee it now.",
+    body:
+      "You've crossed the line that matters: from looking to reading. The images don't change — you do. From here the archive opens. Walk the Dictionary and learn the symbols one by one, or follow a route through the ones hiding closest to home.",
+    cta: true,
+  },
+];
+const total = beats.length;
+---
+
+<SiteLayout
+  title="Start Here — learn to read the symbols | ANAMNESIS"
+  description="A five-step descent from looking to reading: the claim, one decode, Plato's keystone, the four-thousand-year pattern, and the archive that opens after."
+  active="start"
+>
+  <section class="sh" data-sh aria-label="Start Here — a five-step descent">
+    <div class="sh__stage" data-sh-stage>
+      {beats.map((b, i) => (
+        <article class="sh__beat" id={`sh-${b.id}`} data-sh-beat data-index={i}>
+          <div class="sh__plate" aria-hidden="true">
+            <img class="u-plate" src={b.plate} alt="" loading={i === 0 ? "eager" : "lazy"} />
+          </div>
+          <div class="sh__scrim" aria-hidden="true"></div>
+          <div class="sh__inner u-container">
+            <p class="u-eyebrow">Step {i + 1} of {total} · {b.eyebrow}</p>
+            <h2 class="sh__headline">{b.headline}</h2>
+            <p class="sh__body u-measure">{b.body}</p>
+
+            {b.decode && (
+              <div class="sh__decode" data-sh-decode>
+                <p class="sh__decode-label">It breaks into its symbols —</p>
+                <ul class="sh__chips" role="list">
+                  {lineage.map((c) => {
+                    const img = plateUrl(c.glyph);
+                    const inner = (
+                      <>
+                        <span class="sh__chip-plate">
+                          {img
+                            ? <img class="u-plate" src={img} alt="" loading="lazy" />
+                            : <span class="u-plate-fallback" />}
+                        </span>
+                        <span class="sh__chip-name">{c.name}</span>
+                      </>
+                    );
+                    return (
+                      <li class="sh__chip" data-sh-chip>
+                        {c.resolved
+                          ? <a class="sh__chip-link" href={`/dictionary/${c.slug}`}>{inner}</a>
+                          : <span class="sh__chip-link sh__chip-link--static">{inner}</span>}
+                      </li>
+                    );
+                  })}
+                </ul>
+                <a class="sh__decode-more" href="/casebook/great-seal-pyramid">See the full decode →</a>
+              </div>
+            )}
+
+            {b.cta && (
+              <div class="sh__cta">
+                <a class="btn btn--primary" href="/dictionary">Enter the Dictionary →</a>
+                <a class="btn btn--ghost" href="/dictionary?cat=civic-solar">Follow a route</a>
+              </div>
+            )}
+          </div>
+        </article>
+      ))}
+    </div>
+
+    <!-- always-available controls: progress, prev/next, skip -->
+    <div class="sh__nav" data-sh-nav>
+      <a class="sh__arrow" data-dir="-1" href={`#sh-${beats[0].id}`} aria-label="Previous step">↑</a>
+      <div class="sh__ticks" role="status" aria-live="polite">
+        <ol class="sh__dots" aria-hidden="true">
+          {beats.map((b, i) => <li class="sh__dot" data-dot data-index={i}></li>)}
+        </ol>
+        <span class="sh__count" data-sh-count>1 / {total}</span>
+      </div>
+      <a class="sh__arrow" data-dir="1" href={`#sh-${beats[1].id}`} aria-label="Next step">↓</a>
+      <a class="sh__skip" href="/dictionary">Skip into the archive →</a>
+    </div>
+  </section>
+</SiteLayout>
+
+<style>
+  .sh { position: relative; }
+
+  /* ---- default (no-JS / reduced-motion): five readable stacked beats ---- */
+  .sh__beat {
+    position: relative;
+    isolation: isolate;
+    min-height: 100vh;
+    min-height: 100svh;
+    display: flex;
+    align-items: center;
+    scroll-margin-top: 4rem;
+  }
+  .sh__plate { position: absolute; inset: 0; z-index: -2; background: var(--color-plate-bg); }
+  .sh__plate .u-plate { opacity: 0.4; }
+  .sh__scrim {
+    position: absolute; inset: 0; z-index: -1;
+    background: linear-gradient(
+      to top,
+      var(--color-bg) 0%,
+      color-mix(in srgb, var(--color-bg) 74%, transparent) 55%,
+      color-mix(in srgb, var(--color-bg) 52%, transparent) 100%
+    );
+  }
+  .sh__inner { padding-block: var(--space-3xl); width: 100%; }
+  .sh__headline { font-size: var(--step-5); line-height: var(--leading-tight); margin-block: var(--space-2xs) var(--space-m); }
+  .sh__body { font-size: var(--step-1); }
+
+  .sh__decode { margin-block-start: var(--space-l); }
+  .sh__decode-label { font-family: var(--font-ui); font-size: var(--step--1); color: var(--color-text-muted); margin-bottom: var(--space-2xs); }
+  .sh__chips { list-style: none; margin: 0 0 var(--space-s); padding: 0; display: flex; flex-wrap: wrap; gap: var(--space-2xs); }
+  .sh__chip-link {
+    display: inline-flex; align-items: center; gap: var(--space-2xs);
+    padding: 0.35em 0.7em 0.35em 0.35em;
+    border: var(--border-w) solid var(--color-border-strong);
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--color-surface) 75%, transparent);
+    text-decoration: none; color: inherit;
+    font-family: var(--font-ui); font-size: var(--step--1);
+  }
+  a.sh__chip-link:hover { border-color: var(--color-text); }
+  .sh__chip-link--static { border-style: dashed; color: var(--color-text-muted); }
+  .sh__chip-plate { inline-size: 1.7rem; block-size: 1.7rem; border-radius: 50%; overflow: hidden; background: var(--color-surface-sunk); flex: none; }
+  .sh__decode-more { font-family: var(--font-ui); font-size: var(--step--1); }
+
+  .sh__cta { display: flex; flex-wrap: wrap; gap: var(--space-s); margin-block-start: var(--space-l); }
+  .btn {
+    display: inline-block; font-family: var(--font-ui);
+    letter-spacing: var(--tracking-wide); text-transform: uppercase; font-size: var(--step--1);
+    padding: 0.8em 1.4em; border-radius: var(--radius-m); text-decoration: none;
+    border: var(--border-w) solid var(--color-text);
+  }
+  .btn--primary { background: var(--color-accent); color: var(--color-accent-text); border-color: var(--color-accent); }
+  .btn--ghost { background: color-mix(in srgb, var(--color-surface) 70%, transparent); }
+
+  /* ---- controls (fixed; sit below the masthead, clear of it) ---- */
+  .sh__nav {
+    position: fixed;
+    inset-block-end: 0; inset-inline: 0;
+    z-index: 90;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    grid-template-areas: "prev ticks next" "skip skip skip";
+    align-items: center;
+    gap: var(--space-2xs) var(--space-s);
+    padding: var(--space-2xs) var(--gutter);
+    background: color-mix(in srgb, var(--color-bg) 86%, transparent);
+    backdrop-filter: blur(8px);
+    border-block-start: var(--border-w) solid var(--color-border);
+  }
+  .sh__arrow {
+    display: grid; place-items: center;
+    inline-size: 2.4rem; block-size: 2.4rem;
+    border: var(--border-w) solid var(--color-border-strong);
+    border-radius: 50%;
+    text-decoration: none; font-size: var(--step-1);
+  }
+  .sh__arrow[aria-disabled="true"] { opacity: 0.35; pointer-events: none; }
+  .sh__arrow[data-dir="-1"] { grid-area: prev; }
+  .sh__arrow[data-dir="1"] { grid-area: next; }
+  .sh__ticks { grid-area: ticks; display: flex; align-items: center; gap: var(--space-s); justify-content: center; }
+  .sh__dots { list-style: none; display: flex; gap: var(--space-2xs); margin: 0; padding: 0; }
+  .sh__dot { inline-size: 0.5rem; block-size: 0.5rem; border-radius: 50%; background: var(--color-border-strong); transition: background var(--dur-fast), transform var(--dur-fast); }
+  .sh__dot.is-on { background: var(--color-accent); transform: scale(1.4); }
+  .sh__count { font-family: var(--font-ui); font-size: var(--step--1); color: var(--color-text-muted); min-width: 3.2em; text-align: center; }
+  .sh__skip { grid-area: skip; justify-self: center; font-family: var(--font-ui); font-size: var(--step--1); text-decoration: none; color: var(--color-text-muted); }
+  .sh__skip:hover { color: var(--color-text); }
+
+  @media (min-width: 40rem) {
+    .sh__nav { grid-template-columns: auto 1fr auto auto; grid-template-areas: "prev ticks next skip"; }
+  }
+
+  /* ---- motion mode: overlap the beats so the stage can cross-dissolve ---- */
+  .sh__stage.is-animated { position: relative; height: 100vh; height: 100svh; overflow: hidden; }
+  .sh__stage.is-animated .sh__beat { position: absolute; inset: 0; min-height: 0; }
+  .sh__chip[data-sh-chip] { will-change: opacity, transform; }
+</style>
+
+<script>
+  import { gsap } from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const section = document.querySelector<HTMLElement>("[data-sh]");
+  const stage = document.querySelector<HTMLElement>("[data-sh-stage]");
+  if (section && stage) {
+    const beats = gsap.utils.toArray<HTMLElement>("[data-sh-beat]");
+    const dots = Array.from(document.querySelectorAll<HTMLElement>("[data-dot]"));
+    const countEl = document.querySelector<HTMLElement>("[data-sh-count]");
+    const prevBtn = document.querySelector<HTMLAnchorElement>('[data-dir="-1"]');
+    const nextBtn = document.querySelector<HTMLAnchorElement>('[data-dir="1"]');
+    const n = beats.length;
+    let active = -1;
+
+    const setActive = (i: number) => {
+      i = Math.max(0, Math.min(n - 1, i));
+      if (i === active) return;
+      active = i;
+      dots.forEach((d, j) => d.classList.toggle("is-on", j === i));
+      if (countEl) countEl.textContent = `${i + 1} / ${n}`;
+      prevBtn?.setAttribute("aria-disabled", String(i === 0));
+      nextBtn?.setAttribute("aria-disabled", String(i === n - 1));
+    };
+
+    let goTo = (i: number) => beats[Math.max(0, Math.min(n - 1, i))]?.scrollIntoView({ behavior: "smooth" });
+
+    if (!reduce) {
+      // MOTION: overlap, pin, scrub a cross-dissolve between beats.
+      gsap.registerPlugin(ScrollTrigger);
+      stage.classList.add("is-animated");
+      gsap.set(beats.slice(1), { opacity: 0 });
+      const chips = gsap.utils.toArray<HTMLElement>("[data-sh-chip]");
+      gsap.set(chips, { opacity: 0, y: 12 });
+
+      const tl = gsap.timeline({
+        defaults: { ease: "none" },
+        scrollTrigger: {
+          trigger: stage,
+          start: "top top",
+          end: () => "+=" + window.innerHeight * (n - 1),
+          pin: stage,
+          pinSpacing: true,
+          scrub: true,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+          onUpdate: (self) => setActive(Math.round(self.progress * (n - 1))),
+        },
+      });
+
+      for (let i = 1; i < n; i++) {
+        tl.to(beats[i - 1], { opacity: 0, duration: 0.5 });
+        tl.fromTo(beats[i], { opacity: 0 }, { opacity: 1, duration: 0.5 }, "<");
+        tl.fromTo(beats[i].querySelector(".sh__plate"), { scale: 1.08 }, { scale: 1, duration: 0.6 }, "<");
+        if (chips.length && beats[i].hasAttribute("data-sh-beat") && beats[i].querySelector("[data-sh-decode]")) {
+          tl.to(chips, { opacity: 1, y: 0, stagger: 0.12, duration: 0.4 }, "<0.15");
+        }
+      }
+
+      const st = tl.scrollTrigger!;
+      goTo = (i: number) => {
+        i = Math.max(0, Math.min(n - 1, i));
+        const top = st.start + (i / (n - 1)) * (st.end - st.start);
+        window.scrollTo({ top, behavior: "smooth" });
+      };
+      setActive(0);
+    } else {
+      // REDUCED-MOTION: static stack; the beat whose centre is nearest the
+      // viewport centre is "active". Deterministic, no threshold quirks.
+      const onScroll = () => {
+        const mid = window.scrollY + window.innerHeight / 2;
+        let best = 0, bestDist = Infinity;
+        beats.forEach((b, i) => {
+          const top = b.getBoundingClientRect().top + window.scrollY;
+          const dist = Math.abs(top + b.offsetHeight / 2 - mid);
+          if (dist < bestDist) { bestDist = dist; best = i; }
+        });
+        setActive(best);
+      };
+      window.addEventListener("scroll", onScroll, { passive: true });
+      window.addEventListener("resize", onScroll);
+      onScroll();
+    }
+
+    // prev/next drive goTo in both modes; native anchors are the no-JS fallback.
+    // setActive immediately so the tick is authoritative regardless of scroll-
+    // event timing; free-scroll keeps it in sync via the listeners above.
+    prevBtn?.addEventListener("click", (e) => { e.preventDefault(); const t = active - 1; goTo(t); setActive(t); });
+    nextBtn?.addEventListener("click", (e) => { e.preventDefault(); const t = active + 1; goTo(t); setActive(t); });
+  }
+</script>

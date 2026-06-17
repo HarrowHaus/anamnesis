@@ -1,0 +1,74 @@
+---
+// §3.14 — Share-card (OG). glyph + one line + wordmark, at the 1.91:1 OG ratio.
+// On-page this is the visual that the build later rasterizes per shareable
+// entry. Palette-neutral (grayscale plate) so no hue is baked in.
+import { plateUrl } from "../lib/plates";
+
+interface Props {
+  name: string;
+  share_line: string;
+  glyph?: string;
+}
+const { name, share_line, glyph } = Astro.props;
+const img = plateUrl(glyph);
+---
+
+<div class="og" role="img" aria-label={`Share card: ${name} — ${share_line}`}>
+  <div class="og__plate">
+    {img
+      ? <img class="u-plate" src={img} alt="" />
+      : <div class="u-plate-fallback" role="presentation"></div>}
+  </div>
+  <div class="og__scrim"></div>
+  <div class="og__content">
+    <p class="og__brand">ANAMNESIS</p>
+    <p class="og__line">{share_line}</p>
+    <p class="og__name">{name}</p>
+  </div>
+</div>
+
+<style>
+  .og {
+    position: relative;
+    aspect-ratio: 1200 / 630;
+    border-radius: var(--radius-m);
+    overflow: hidden;
+    isolation: isolate;
+    max-width: 40rem;
+  }
+  .og__plate { position: absolute; inset: 0; }
+  .og__plate .u-plate { opacity: 0.6; }
+  .og__scrim {
+    position: absolute; inset: 0;
+    background: linear-gradient(105deg,
+      color-mix(in srgb, var(--color-surface) 92%, transparent) 30%,
+      transparent 85%);
+  }
+  .og__content {
+    position: relative;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: var(--space-2xs);
+    padding: var(--space-l);
+    max-width: 75%;
+  }
+  .og__brand {
+    font-family: var(--font-ui);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    font-size: var(--step--1);
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+  .og__line { font-family: var(--font-display); font-size: var(--step-2); margin: 0; line-height: var(--leading-snug); }
+  .og__name {
+    font-family: var(--font-ui);
+    font-size: var(--step--1);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    margin: var(--space-2xs) 0 0;
+  }
+</style>

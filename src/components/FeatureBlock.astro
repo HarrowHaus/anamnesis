@@ -1,0 +1,69 @@
+---
+// §3.6 — Feature block. The lead story on Home / index tops. Full-bleed plate,
+// eyebrow, large title, deck, CTA. Driven by any entry with a glyph.
+import { plateUrl } from "../lib/plates";
+
+interface Props {
+  eyebrow?: string;
+  title: string;
+  deck?: string;
+  glyph?: string;
+  href?: string;
+  ctaLabel?: string;
+}
+const { eyebrow = "Featured decode", title, deck, glyph, href = "#", ctaLabel = "Read the decode" } = Astro.props;
+const img = plateUrl(glyph);
+---
+
+<section class="feature">
+  <div class="feature__plate">
+    {img
+      ? <img class="u-plate" src={img} alt="" loading="eager" />
+      : <div class="u-plate-fallback" role="presentation"></div>}
+  </div>
+  <div class="feature__inner u-container">
+    <div class="feature__panel">
+      <p class="u-eyebrow">{eyebrow}</p>
+      <h2 class="feature__title">{title}</h2>
+      {deck && <p class="feature__deck u-measure">{deck}</p>}
+      <a class="feature__cta" href={href}>{ctaLabel} →</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .feature {
+    position: relative;
+    isolation: isolate;
+    min-height: 60vh;
+    display: flex;
+    align-items: flex-end;
+    border-radius: var(--radius-l);
+    overflow: hidden;
+  }
+  .feature__plate { position: absolute; inset: 0; z-index: -1; background: var(--color-plate-bg); }
+  .feature__plate .u-plate { opacity: 0.55; }
+  .feature__inner { width: 100%; padding-block: var(--space-2xl); }
+  .feature__panel {
+    max-width: 46rem;
+    padding: var(--space-l);
+    background: color-mix(in srgb, var(--color-surface) 88%, transparent);
+    border-radius: var(--radius-l);
+    backdrop-filter: blur(4px);
+  }
+  .feature__title { font-size: var(--step-4); margin-bottom: var(--space-s); }
+  .feature__deck { font-size: var(--step-1); color: var(--color-text-muted); }
+  .feature__cta {
+    display: inline-block;
+    margin-block-start: var(--space-s);
+    font-family: var(--font-ui);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    font-size: var(--step--1);
+    padding: 0.7em 1.2em;
+    border: var(--border-w) solid var(--color-text);
+    border-radius: var(--radius-m);
+    text-decoration: none;
+  }
+  .feature__cta:hover { background: var(--color-accent); color: var(--color-accent-text); border-color: var(--color-accent); }
+</style>

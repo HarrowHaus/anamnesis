@@ -1,0 +1,130 @@
+---
+// §3.4 — Specimen card ★ (the flagship atom). One symbol, four variants:
+//   grid          — index tile (default)
+//   related       — compact horizontal row (where-next / drawer)
+//   search        — grid tile + a matched-context line
+//   pathway-stop  — grid tile carrying a step ordinal + connective note
+import { plateUrl } from "../lib/plates";
+import TierBadge from "./TierBadge.astro";
+
+interface Symbol {
+  name: string;
+  slug: string;
+  one_line: string;
+  category: string;
+  tradition?: string;
+  tier: "A" | "B" | "C";
+  glyph?: string;
+}
+interface Props {
+  symbol: Symbol;
+  variant?: "grid" | "related" | "search" | "pathway-stop";
+  href?: string;
+  note?: string; // search context / pathway connective copy / relation label
+  step?: number; // pathway-stop ordinal
+  openDrawer?: string; // id of an EntrySurface drawer to open instead of navigating
+}
+const { symbol, variant = "grid", href, note, step, openDrawer } = Astro.props;
+const url = href ?? `/dictionary/${symbol.slug}`;
+const img = plateUrl(symbol.glyph);
+---
+
+<article class={`spec spec--${variant}`} data-cat={symbol.category} data-tradition={symbol.tradition} data-tier={symbol.tier} data-name={symbol.name}>
+  <a class="spec__link" href={url} data-open={openDrawer}>
+    <div class="spec__plate">
+      {img
+        ? <img class="u-plate" src={img} alt={`Plate for ${symbol.name}`} loading="lazy" />
+        : <div class="u-plate-fallback" role="presentation"></div>}
+      {step != null && <span class="spec__step" aria-hidden="true">{step}</span>}
+    </div>
+    <div class="spec__body">
+      <p class="spec__cat u-eyebrow">{symbol.category}</p>
+      <h3 class="spec__name">{symbol.name}</h3>
+      <p class="spec__line">{symbol.one_line}</p>
+      {note && <p class="spec__note">{note}</p>}
+      <div class="spec__foot">
+        <TierBadge tier={symbol.tier} size="sm" />
+        {symbol.tradition && <span class="spec__trad">{symbol.tradition}</span>}
+      </div>
+    </div>
+  </a>
+</article>
+
+<style>
+  .spec {
+    background: var(--color-surface);
+    border: var(--border-w) solid var(--color-border);
+    border-radius: var(--radius-l);
+    overflow: hidden;
+    transition: transform var(--dur-fast) var(--ease-reveal),
+      box-shadow var(--dur-fast) var(--ease-reveal);
+  }
+  .spec:hover { transform: translateY(-2px); box-shadow: var(--shadow-card); }
+
+  .spec__link {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+    height: 100%;
+  }
+  .spec__plate {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    background: var(--color-surface-sunk);
+  }
+  .spec__step {
+    position: absolute;
+    inset-block-start: var(--space-2xs);
+    inset-inline-start: var(--space-2xs);
+    display: grid;
+    place-items: center;
+    inline-size: 2rem;
+    block-size: 2rem;
+    border-radius: 50%;
+    background: var(--color-accent);
+    color: var(--color-accent-text);
+    font-family: var(--font-ui);
+    font-weight: 700;
+  }
+  .spec__body { padding: var(--space-s); }
+  .spec__cat { margin-bottom: var(--space-3xs); }
+  .spec__name { font-size: var(--step-1); margin-bottom: var(--space-3xs); }
+  .spec__line { color: var(--color-text-muted); margin-bottom: var(--space-2xs); }
+  .spec__note {
+    font-family: var(--font-ui);
+    font-size: var(--step--1);
+    color: var(--color-text-muted);
+    border-inline-start: 2px solid var(--color-border-strong);
+    padding-inline-start: var(--space-2xs);
+    margin-bottom: var(--space-2xs);
+  }
+  .spec__foot {
+    display: flex;
+    align-items: center;
+    gap: var(--space-s);
+    flex-wrap: wrap;
+  }
+  .spec__trad {
+    font-family: var(--font-ui);
+    font-size: var(--step--1);
+    color: var(--color-text-muted);
+  }
+
+  /* related — compact horizontal row */
+  .spec--related .spec__link {
+    display: grid;
+    grid-template-columns: 88px 1fr;
+    gap: var(--space-s);
+    align-items: center;
+  }
+  .spec--related .spec__plate { aspect-ratio: 1; border-radius: var(--radius-m); }
+  .spec--related .spec__body { padding: var(--space-2xs) var(--space-s) var(--space-2xs) 0; }
+  .spec--related .spec__line { display: none; }
+
+  @media (min-width: 40rem) {
+    .spec--related .spec__line {
+      display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+  }
+</style>
