@@ -1,0 +1,138 @@
+---
+// The Casebook — index (handoff A2; mirrors dictionary/index.astro). The viral
+// surface: recognizable artifacts, suddenly legible. Design for the screenshot.
+import { getCollection } from "astro:content";
+import SiteLayout from "../../layouts/SiteLayout.astro";
+import FacetBar from "../../components/FacetBar.astro";
+import CasebookCard from "../../components/CasebookCard.astro";
+import EmptyState from "../../components/states/EmptyState.astro";
+
+const humanize = (s: string) => s.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+
+const cases = (await getCollection("casebook")).map((e) => e.data).sort((a, b) => a.title.localeCompare(b.title));
+const figuresBySlug = new Map((await getCollection("figures")).map((f) => [f.data.slug, f.data.name]));
+
+// facet: who teaches the decode (union of who_made_this_claim across entries)
+const decoderSlugs = [...new Set(cases.flatMap((c) => c.who_made_this_claim ?? []))].sort();
+const facetGroups = [
+  {
+    key: "by",
+    label: "Decoded by",
+    options: decoderSlugs.map((s) => ({ value: s, label: figuresBySlug.get(s) ?? humanize(s) })),
+  },
+];
+---
+
+<SiteLayout
+  title="The Casebook | ANAMNESIS"
+  description="Worked decodes of the artifacts you already know — logos, seals, monuments — broken into the symbols that built them, each reading attributed."
+  active="casebook"
+>
+  <header class="cx-head u-container">
+    <p class="u-eyebrow">Decoded in the open</p>
+    <h1 class="cx-title">The Casebook</h1>
+    <p class="cx-lede u-measure">The artifacts you already know — a seal, a logo, a monument — taken apart into the inherited symbols that built them. Every reading attributed; built to be read at a glance.</p>
+
+    <div class="cx-filter">
+      <label class="u-visually-hidden" for="cx-q">Filter decodes</label>
+      <span class="cx-filter__icon" aria-hidden="true">⌕</span>
+      <input id="cx-q" class="cx-filter__input" type="search" placeholder="Filter the casebook…" autocomplete="off" data-filter />
+      <p class="cx-count" data-count aria-live="polite">{cases.length} decode{cases.length === 1 ? "" : "s"}</p>
+    </div>
+  </header>
+
+  {facetGroups[0].options.length > 0 && (
+    <div class="u-container">
+      <FacetBar groups={facetGroups} />
+    </div>
+  )}
+
+  <section class="cx-wall u-container" aria-label="All decodes">
+    <ul class="cx-grid" data-grid role="list">
+      {cases.map((c) => (
+        <li class="cx-cell" data-by={(c.who_made_this_claim ?? []).join(" ")}>
+          <CasebookCard entry={c} />
+        </li>
+      ))}
+    </ul>
+    <div class="cx-empty" data-empty hidden>
+      <EmptyState
+        title="No decodes match that filter"
+        message="Loosen the filter, or start with the Great Seal."
+        suggestions={[{ label: "Clear filter", href: "/casebook" }]}
+      />
+    </div>
+  </section>
+</SiteLayout>
+
+<style>
+  .cx-head { padding-block: var(--space-xl) var(--space-l); }
+  .cx-title { font-size: var(--step-4); margin-block: var(--space-2xs); }
+  .cx-lede { color: var(--color-text-muted); font-size: var(--step-1); }
+
+  .cx-filter { position: relative; display: flex; align-items: center; gap: var(--space-s); margin-block-start: var(--space-l); flex-wrap: wrap; }
+  .cx-filter__icon { position: absolute; inset-inline-start: var(--space-s); color: var(--color-text-muted); pointer-events: none; }
+  .cx-filter__input {
+    flex: 1 1 18rem; font: inherit; font-family: var(--font-ui);
+    padding: 0.7em 0.9em 0.7em 2.4em;
+    background: var(--color-surface);
+    border: var(--border-w) solid var(--color-border-strong);
+    border-radius: var(--radius-m); color: var(--color-text);
+  }
+  .cx-count { font-family: var(--font-ui); font-size: var(--step--1); color: var(--color-text-muted); margin: 0; white-space: nowrap; }
+
+  .cx-wall { padding-block: var(--space-l) var(--space-2xl); }
+  .cx-grid { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-s); grid-template-columns: 1fr; }
+  @media (min-width: 40rem) { .cx-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 60rem) { .cx-grid { grid-template-columns: repeat(3, 1fr); } }
+  .cx-cell.is-hidden { display: none; }
+</style>
+
+<script>
+  const grid = document.querySelector<HTMLElement>("[data-grid]");
+  const input = document.querySelector<HTMLInputElement>("[data-filter]");
+  const countEl = document.querySelector<HTMLElement>("[data-count]");
+  const emptyEl = document.querySelector<HTMLElement>("[data-empty]");
+  if (grid) {
+    const cells = Array.from(grid.querySelectorAll<HTMLElement>(".cx-cell"));
+    let by = "";
+    let q = "";
+
+    const apply = () => {
+      let shown = 0;
+      cells.forEach((cell) => {
+        let ok = !by || (cell.dataset.by ?? "").split(" ").includes(by);
+        if (ok && q) ok = (cell.textContent ?? "").toLowerCase().includes(q);
+        cell.classList.toggle("is-hidden", !ok);
+        if (ok) shown++;
+      });
+      if (countEl) countEl.textContent = `${shown} decode${shown === 1 ? "" : "s"}`;
+      if (emptyEl) emptyEl.hidden = shown !== 0;
+    };
+
+    document.addEventListener("anamnesis:facet", (e) => {
+      by = ((e as CustomEvent).detail ?? {}).by ?? "";
+      apply();
+    });
+
+    input?.addEventListener("input", () => {
+      q = input.value.trim().toLowerCase();
+      const url = new URL(location.href);
+      if (q) url.searchParams.set("q", q); else url.searchParams.delete("q");
+      history.replaceState(null, "", url.toString());
+      apply();
+    });
+
+    const params = new URLSearchParams(location.search);
+    const q0 = params.get("q");
+    if (q0 && input) { input.value = q0; q = q0.toLowerCase(); }
+    const by0 = params.get("by");
+    if (by0) {
+      by = by0;
+      const chip = document.querySelector<HTMLButtonElement>(`[data-facet="by"][data-value="${by0}"]`);
+      chip?.classList.add("is-on");
+      chip?.setAttribute("aria-pressed", "true");
+    }
+    apply();
+  }
+</script>
