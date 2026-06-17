@@ -1,0 +1,177 @@
+---
+// THE TIMELINE — scroll-story (handoff C2; blueprint §4 + motion §5.5). The one
+// page where motion is the content: three acts (sacred → mechanical →
+// algorithmic), nodes ordered by `sort`, with pinned act-transitions and plate
+// parallax. A jump-rail skips the cinematic.
+//
+// MOTION MODEL (same as CasebookAssemble/Start): the CSS default is a clean,
+// readable static vertical list grouped by act — exactly the §5.5
+// reduced-motion fallback. GSAP only runs when motion is allowed: it pins each
+// act intro and parallaxes the node plates.
+import { getCollection } from "astro:content";
+import SiteLayout from "../layouts/SiteLayout.astro";
+import TimelineNode from "../components/TimelineNode.astro";
+
+const nodes = (await getCollection("timeline")).map((e) => e.data).sort((a, b) => a.sort - b.sort);
+const figuresBySlug = new Map((await getCollection("figures")).map((f) => [f.data.slug, f.data.name]));
+const symbolsBySlug = new Map((await getCollection("symbols")).map((s) => [s.data.slug, s.data.name]));
+
+const linksFor = (n: (typeof nodes)[number]) => [
+  ...(n.linked_figures ?? []).filter((s) => figuresBySlug.has(s)).map((s) => ({ label: figuresBySlug.get(s)!, href: `/figures/${s}` })),
+  ...(n.linked_symbols ?? []).filter((s) => symbolsBySlug.has(s)).map((s) => ({ label: symbolsBySlug.get(s)!, href: `/dictionary/${s}` })),
+];
+
+const ACTS = [
+  { era: "sacred", n: "I", title: "Sacred image-control", sub: "From the first painted cave to the manuscript age — when the image belonged to god and king, and to ban it was to govern the soul." },
+  { era: "mechanical", n: "II", title: "Mechanical reproduction & mass persuasion", sub: "The press, the poster, the photograph, the broadcast — the image multiplied past counting, and consent became a thing you could engineer." },
+  { era: "algorithmic", n: "III", title: "Algorithmic & synthetic imagery", sub: "The feed, the deepfake, the generator — the image-machine privatized, and the visual unconscious handed to whoever owns the models." },
+] as const;
+const acts = ACTS.map((a) => ({ ...a, nodes: nodes.filter((n) => n.era === a.era) }));
+---
+
+<SiteLayout
+  title="The Timeline | ANAMNESIS"
+  description="The war over images across 45,000 years — sacred image-control, mechanical reproduction, and the algorithmic age — told as a three-act scroll-story."
+  active="timeline"
+>
+  <header class="tl-head u-container">
+    <p class="u-eyebrow">45,000 years · three acts</p>
+    <h1 class="tl-title">The Timeline</h1>
+    <p class="tl-lede u-measure">Every power that wanted the soul of a people went to war over its images first. Here is that war, in order — from the first painted cave to the privatized image-machine of 2026.</p>
+  </header>
+
+  <!-- jump-rail (always available; skips the cinematic) -->
+  <nav class="tl-rail" aria-label="Jump to act" data-tl-rail>
+    <ol>
+      {acts.map((a) => (
+        <li><a href={`#act-${a.era}`} data-rail-link={a.era}><span class="tl-rail__n">{a.n}</span> {a.title.split(" ")[0]}</a></li>
+      ))}
+    </ol>
+  </nav>
+
+  <div class="tl" data-tl>
+    {acts.map((a) => (
+      <section class="tl-act" id={`act-${a.era}`} data-act={a.era}>
+        <div class="tl-act__intro" data-act-intro>
+          <div class="tl-act__inner">
+            <p class="u-eyebrow">Act {a.n}</p>
+            <h2 class="tl-act__title">{a.title}</h2>
+            <p class="tl-act__sub u-measure">{a.sub}</p>
+          </div>
+        </div>
+        <div class="tl-act__nodes">
+          {a.nodes.map((n) => (
+            <TimelineNode date={n.date} event={n.event} why_it_matters={n.why_it_matters} era={n.era} glyph={n.glyph} links={linksFor(n)} />
+          ))}
+        </div>
+      </section>
+    ))}
+  </div>
+
+  <footer class="tl-end u-container">
+    <p class="u-eyebrow">Where it lands</p>
+    <p class="tl-end__line u-measure">The image-machine is privatized. That is the argument the whole archive is built to make legible — read it through in <a href="/pillars/symbolic-illiteracy-and-the-ai-image-age">Pillar P5</a>.</p>
+  </footer>
+</SiteLayout>
+
+<style>
+  .tl-head { padding-block: var(--space-xl) var(--space-l); }
+  .tl-title { font-size: var(--step-5); margin-block: var(--space-2xs); }
+  .tl-lede { color: var(--color-text-muted); font-size: var(--step-1); }
+
+  /* jump-rail — sticky under the masthead */
+  .tl-rail {
+    position: sticky;
+    inset-block-start: 56px;
+    z-index: 80;
+    background: color-mix(in srgb, var(--color-bg) 90%, transparent);
+    backdrop-filter: blur(8px);
+    border-block: var(--border-w) solid var(--color-border);
+  }
+  .tl-rail ol {
+    display: flex; gap: var(--space-s);
+    list-style: none; margin: 0; padding: var(--space-2xs) var(--gutter);
+    overflow-x: auto;
+  }
+  .tl-rail a {
+    display: inline-flex; align-items: center; gap: 0.4em;
+    font-family: var(--font-ui); font-size: var(--step--1);
+    text-decoration: none; color: var(--color-text-muted);
+    white-space: nowrap; padding-block: 0.2em;
+    border-block-end: 2px solid transparent;
+  }
+  .tl-rail a:hover { color: var(--color-text); }
+  .tl-rail a.is-current { color: var(--color-text); border-block-end-color: var(--color-accent); }
+  .tl-rail__n { font-weight: 700; }
+
+  .tl { }
+  .tl-act { }
+  /* act intro — static header by default; becomes a pinned set-piece in motion */
+  .tl-act__intro { padding-block: var(--space-2xl) var(--space-l); }
+  .tl-act__intro.is-animated {
+    min-height: 100vh; min-height: 100svh;
+    display: flex; align-items: center;
+    padding-block: var(--space-xl);
+  }
+  .tl-act__inner { }
+  .tl-act__title { font-size: var(--step-4); margin-block: var(--space-2xs) var(--space-s); }
+  .tl-act__sub { font-size: var(--step-1); color: var(--color-text-muted); }
+  .tl-act__nodes { display: flex; flex-direction: column; }
+
+  .tl-act, .tl-act__intro, .tl-act__nodes { padding-inline: var(--gutter); max-width: var(--container-max); margin-inline: auto; }
+
+  .tl-end { padding-block: var(--space-2xl) var(--space-3xl); border-block-start: var(--border-w) solid var(--color-border); margin-block-start: var(--space-2xl); }
+  .tl-end__line { font-size: var(--step-1); }
+
+  .tl-act__intro .tl-act__inner { will-change: transform, opacity; }
+</style>
+
+<script>
+  import { gsap } from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // Scrollspy for the jump-rail — runs in BOTH modes (IntersectionObserver,
+  // not motion). Highlights the act currently in view.
+  const railLinks = new Map<string, HTMLElement>();
+  document.querySelectorAll<HTMLElement>("[data-rail-link]").forEach((a) => railLinks.set(a.dataset.railLink!, a));
+  const acts = document.querySelectorAll<HTMLElement>("[data-act]");
+  if (acts.length && "IntersectionObserver" in window) {
+    const spy = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            railLinks.forEach((el, era) => el.classList.toggle("is-current", era === (e.target as HTMLElement).dataset.act));
+          }
+        });
+      },
+      { rootMargin: "-40% 0px -55% 0px" }
+    );
+    acts.forEach((a) => spy.observe(a));
+  }
+
+  // MOTION ONLY: pin each act intro + parallax the node plates (§5.5).
+  if (!reduce) {
+    gsap.registerPlugin(ScrollTrigger);
+
+    document.querySelectorAll<HTMLElement>("[data-act-intro]").forEach((intro) => {
+      intro.classList.add("is-animated");
+      const inner = intro.querySelector<HTMLElement>(".tl-act__inner");
+      gsap.timeline({
+        scrollTrigger: { trigger: intro, start: "top top", end: "+=" + window.innerHeight * 0.8, pin: true, scrub: true, anticipatePin: 1, invalidateOnRefresh: true },
+      })
+        .fromTo(inner, { opacity: 0.35, scale: 0.98 }, { opacity: 1, scale: 1, ease: "none", duration: 0.5 })
+        .to(inner, { opacity: 0.85, ease: "none", duration: 0.5 });
+    });
+
+    // plate parallax — the full-bleed plate drifts behind each node as it passes
+    gsap.utils.toArray<HTMLElement>(".node__plate img").forEach((img) => {
+      gsap.fromTo(
+        img,
+        { yPercent: -8 },
+        { yPercent: 8, ease: "none", scrollTrigger: { trigger: img.closest(".node"), start: "top bottom", end: "bottom top", scrub: true } }
+      );
+    });
+  }
+</script>
