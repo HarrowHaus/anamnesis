@@ -184,6 +184,21 @@ This document collates public information on researchers in the astro-theology /
 - **Influenced by:** the Masonic and Hermetic tradition; Éliphas Lévi | **Influenced:** Jordan Maxwell, William Cooper, Mark Passio, Freeman Fly, David Icke.
 - **Sources:** 1. https://www.bibliotecapleyades.net/sociopolitica/morals_dogma/apike03.htm 2. https://ia801909.us.archive.org/17/items/MoralsAndDogmaAlbertPikeTheCouncil1871/Morals%20and%20Dogma,%20Albert%20Pike,%20The%20Council%20(1871).pdf
 
+### Éliphas Lévi (Alphonse Louis Constant)
+*Added during Phase B graph-integrity pass: cited as a proponent across the Symbol Dictionary (Baphomet, the pentagram, the inverted pentagram, the Blazing Star) but absent from the original roster. Authored from his documented public-domain works.*
+- **Dates & status:** February 8, 1810 – May 31, 1875 (Paris, France). Deceased.
+- **Tier:** Ancestor (originating source of modern ceremonial magic).
+- **One-line:** French occultist who codified 19th-century magical symbolism and drew the Baphomet of Mendes.
+- **Role in lineage:** Founding source of the modern Western magical-symbol vocabulary the later scene inherits (the Sabbatic Goat, the pentagram doctrine).
+- **Core claims:**
+  - Lévi taught that the upright pentagram represents the microcosm — man, and the triumph of spirit over matter — calling it "the Blazing Star," the sign of intellectual omnipotence.
+  - Lévi formulated a doctrine of a universal "astral light," a magical agent linking will, imagination, and the cosmos.
+  - Lévi held that all magic, religion, and symbolism descend from one ancient secret science recoverable through the Qabbalah and the Tarot.
+- **Key works:** *Dogme et Rituel de la Haute Magie* (1854–56; trans. A.E. Waite as *Transcendental Magic*); *Histoire de la Magie* (1860); *La Clef des Grands Mystères* (1861).
+- **Signature examples:** the "Baphomet of Mendes" / Sabbatic Goat drawing (1856) as the equilibrium of opposites (*solve et coagula*); the upright vs. inverted pentagram doctrine; the Tarot read as a Qabbalistic key.
+- **Influenced by:** Qabbalah, Hermeticism, Martinism, Catholic mysticism | **Influenced:** Albert Pike, Helena Blavatsky, the Hermetic Order of the Golden Dawn, Manly P. Hall, and the modern symbol-decoding tradition (Maxwell, Passio).
+- **Sources:** 1. https://en.wikipedia.org/wiki/%C3%89liphas_L%C3%A9vi 2. https://www.britannica.com/topic/Baphomet
+
 ---
 
 ## LIVING PEERS / SCENE

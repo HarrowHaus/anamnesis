@@ -1,15 +1,17 @@
 ---
 // L9 / kit — Footer + sitemap. The safety net for anyone who scrolled to the
 // bottom looking for structure. Sourcing standard stated quietly.
+// `built: false` items stay listed but render disabled (no clickable link to a
+// route with no page) until they ship in Phase C/D.
 const sections = [
-  { label: "Start Here", href: "/start" },
-  { label: "Dictionary", href: "/dictionary" },
-  { label: "Lineage", href: "/figures" },
-  { label: "Pillars", href: "/pillars" },
-  { label: "Casebook", href: "/casebook" },
-  { label: "Timeline", href: "/timeline" },
-  { label: "Library", href: "/library" },
-  { label: "Glossary", href: "/glossary" },
+  { label: "Start Here", href: "/start", built: true },
+  { label: "Dictionary", href: "/dictionary", built: true },
+  { label: "Lineage", href: "/figures", built: true },
+  { label: "Pillars", href: "/pillars", built: true },
+  { label: "Casebook", href: "/casebook", built: true },
+  { label: "Timeline", href: "/timeline", built: false },
+  { label: "Library", href: "/library", built: false },
+  { label: "Glossary", href: "/glossary", built: false },
 ];
 ---
 
@@ -21,7 +23,11 @@ const sections = [
     </div>
     <nav class="ft__nav" aria-label="Sitemap">
       <p class="u-eyebrow">The archive</p>
-      <ul>{sections.map((s) => <li><a href={s.href}>{s.label}</a></li>)}</ul>
+      <ul>{sections.map((s) => (
+        <li>{s.built
+          ? <a href={s.href}>{s.label}</a>
+          : <span class="ft__soon" aria-disabled="true">{s.label} <small>soon</small></span>}</li>
+      ))}</ul>
     </nav>
     <div class="ft__method">
       <p class="u-eyebrow">Method</p>
@@ -51,6 +57,8 @@ const sections = [
   .ft__nav ul, .ft__method ul { list-style: none; margin: var(--space-2xs) 0 0; padding: 0; display: grid; gap: var(--space-3xs); }
   .ft__nav a, .ft__method a { font-family: var(--font-ui); font-size: var(--step--1); text-decoration: none; color: var(--color-text-muted); }
   .ft__nav a:hover, .ft__method a:hover { color: var(--color-text); }
+  .ft__soon { font-family: var(--font-ui); font-size: var(--step--1); color: var(--color-border-strong); }
+  .ft__soon small { opacity: 0.8; }
   .ft__note { font-family: var(--font-ui); font-size: var(--step--1); color: var(--color-text-muted); margin-block-start: var(--space-s); }
   .ft__base { padding-block: var(--space-m); border-block-start: var(--border-w) solid var(--color-border); font-family: var(--font-ui); font-size: var(--step--1); color: var(--color-text-muted); }
 

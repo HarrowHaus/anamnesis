@@ -5,14 +5,16 @@ interface Props {
   active?: string; // slug of the active section
 }
 const { active = "" } = Astro.props;
+// `built: false` items stay in the IA but render disabled (no clickable link to
+// a route with no page) until their section ships in Phase C/D.
 const items = [
-  { slug: "start", label: "Start Here", href: "/start" },
-  { slug: "dictionary", label: "Dictionary", href: "/dictionary", emphasis: true },
-  { slug: "figures", label: "Figures", href: "/figures" },
-  { slug: "pillars", label: "Pillars", href: "/pillars" },
-  { slug: "casebook", label: "Casebook", href: "/casebook" },
-  { slug: "timeline", label: "Timeline", href: "/timeline" },
-  { slug: "library", label: "Library", href: "/library" },
+  { slug: "start", label: "Start Here", href: "/start", built: true },
+  { slug: "dictionary", label: "Dictionary", href: "/dictionary", emphasis: true, built: true },
+  { slug: "figures", label: "Figures", href: "/figures", built: true },
+  { slug: "pillars", label: "Pillars", href: "/pillars", built: true },
+  { slug: "casebook", label: "Casebook", href: "/casebook", built: true },
+  { slug: "timeline", label: "Timeline", href: "/timeline", built: false },
+  { slug: "library", label: "Library", href: "/library", built: false },
 ];
 ---
 
@@ -22,11 +24,13 @@ const items = [
 
     <nav class="mast__nav" aria-label="Primary">
       {items.map((it) => (
-        <a
-          href={it.href}
-          class:list={["mast__link", { "is-emph": it.emphasis, "is-active": it.slug === active }]}
-          aria-current={it.slug === active ? "page" : undefined}
-        >{it.label}</a>
+        it.built
+          ? <a
+              href={it.href}
+              class:list={["mast__link", { "is-emph": it.emphasis, "is-active": it.slug === active }]}
+              aria-current={it.slug === active ? "page" : undefined}
+            >{it.label}</a>
+          : <span class="mast__link is-soon" aria-disabled="true" title="Coming soon">{it.label}</span>
       ))}
     </nav>
 
@@ -44,10 +48,12 @@ const items = [
   <div class="mast__sheet" data-sheet hidden>
     <nav class="mast__sheet-nav" aria-label="Primary (mobile)">
       {items.map((it) => (
-        <a
-          href={it.href}
-          class:list={["mast__sheet-link", { "is-emph": it.emphasis, "is-active": it.slug === active }]}
-        >{it.label}</a>
+        it.built
+          ? <a
+              href={it.href}
+              class:list={["mast__sheet-link", { "is-emph": it.emphasis, "is-active": it.slug === active }]}
+            >{it.label}</a>
+          : <span class="mast__sheet-link is-soon" aria-disabled="true">{it.label} <small>soon</small></span>
       ))}
     </nav>
   </div>
@@ -87,6 +93,9 @@ const items = [
   .mast__link:hover { color: var(--color-text); }
   .mast__link.is-emph { color: var(--color-text); font-weight: 600; }
   .mast__link.is-active { color: var(--color-text); border-block-end-color: var(--color-accent); }
+  .mast__link.is-soon { color: var(--color-border-strong); cursor: default; }
+  .mast__sheet-link.is-soon { color: var(--color-text-muted); pointer-events: none; }
+  .mast__sheet-link.is-soon small { font-family: var(--font-ui); font-size: var(--step--1); opacity: 0.7; }
 
   .mast__actions { display: flex; align-items: center; gap: var(--space-2xs); }
   .mast__search {
