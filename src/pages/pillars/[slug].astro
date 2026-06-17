@@ -1,0 +1,139 @@
+---
+// Pillar essay — detail page (handoff B3; blueprint §4 "PILLAR ESSAY"). A
+// designed long-read: essay body + apparatus (key claims, anchors, linked
+// proponents/examples/symbols, sources) + prev/next across the five.
+import { getCollection, render } from "astro:content";
+import SiteLayout from "../../layouts/SiteLayout.astro";
+import Breadcrumbs from "../../components/Breadcrumbs.astro";
+import PrevNext from "../../components/PrevNext.astro";
+import SourceRow from "../../components/SourceRow.astro";
+import WhereNext from "../../components/WhereNext.astro";
+import { buildPool } from "../../lib/graph";
+import type { WhereNextItem } from "../../lib/relations";
+
+export async function getStaticPaths() {
+  const pillars = await getCollection("pillars");
+  return pillars.map((e) => ({ params: { slug: e.data.slug } }));
+}
+
+const humanize = (s: string) => s.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+
+const pillars = (await getCollection("pillars")).sort((a, b) => (a.data.order ?? 0) - (b.data.order ?? 0));
+const idx = pillars.findIndex((e) => e.data.slug === Astro.params.slug);
+const entry = pillars[idx];
+const { Content } = await render(entry);
+const d = entry.data;
+
+const figuresBySlug = new Map((await getCollection("figures")).map((f) => [f.data.slug, f.data.name]));
+const casebookBySlug = new Map((await getCollection("casebook")).map((c) => [c.data.slug, c.data.title]));
+const symbols = (await getCollection("symbols")).map((e) => e.data);
+const pool = buildPool(symbols);
+
+const proponents = (d.proponents ?? []).map((s) => ({ slug: s, name: figuresBySlug.get(s) ?? humanize(s), exists: figuresBySlug.has(s) }));
+const examples = (d.example_slots ?? []).map((s) => ({ slug: s, title: casebookBySlug.get(s) ?? humanize(s), exists: casebookBySlug.has(s) }));
+const relatedSymbols: WhereNextItem[] = (d.related_symbols ?? [])
+  .map((s) => pool.find((p) => p.slug === s))
+  .filter(Boolean)
+  .map((item) => ({ item: item!, relation: "In the dictionary", score: 1 }))
+  .slice(0, 6);
+
+const prev = pillars[(idx - 1 + pillars.length) % pillars.length];
+const next = pillars[(idx + 1) % pillars.length];
+---
+
+<SiteLayout title={d.seo_title} description={d.seo_description} active="pillars">
+  <div class="u-container head">
+    <Breadcrumbs crumbs={[{ label: "Home", href: "/" }, { label: "Pillars", href: "/pillars" }, { label: d.title }]} />
+  </div>
+
+  <article class="pl u-container">
+    <header class="pl__head">
+      <p class="u-eyebrow">Pillar {d.order} of {pillars.length}</p>
+      <h1 class="pl__title">{d.title}</h1>
+      {d.thesis && <p class="pl__thesis u-measure">{d.thesis}</p>}
+    </header>
+
+    <div class="pl__body u-measure"><Content /></div>
+
+    <section class="pl__apparatus">
+      {d.key_claims && d.key_claims.length > 0 && (
+        <div class="pl__block">
+          <h2 class="u-eyebrow">The claims</h2>
+          <ul class="pl__list">{d.key_claims.map((c) => <li>{c}</li>)}</ul>
+        </div>
+      )}
+      {d.historical_anchors && d.historical_anchors.length > 0 && (
+        <div class="pl__block">
+          <h2 class="u-eyebrow">The citable spine</h2>
+          <ul class="pl__list">{d.historical_anchors.map((a) => <li>{a}</li>)}</ul>
+        </div>
+      )}
+
+      {(proponents.length > 0 || examples.length > 0) && (
+        <div class="pl__connections">
+          {proponents.length > 0 && (
+            <div class="pl__conn">
+              <p class="u-eyebrow">Proponents</p>
+              <ul class="pl__chips" role="list">
+                {proponents.map((p) => (
+                  <li>{p.exists
+                    ? <a class="pl__chip pl__chip--link" href={`/figures/${p.slug}`}>{p.name}</a>
+                    : <span class="pl__chip">{p.name}</span>}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+          {examples.length > 0 && (
+            <div class="pl__conn">
+              <p class="u-eyebrow">Worked examples</p>
+              <ul class="pl__chips" role="list">
+                {examples.map((e) => (
+                  <li>{e.exists
+                    ? <a class="pl__chip pl__chip--link" href={`/casebook/${e.slug}`}>{e.title}</a>
+                    : <span class="pl__chip">{e.title}</span>}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+      )}
+
+      {relatedSymbols.length > 0 && <WhereNext items={relatedSymbols} heading="Symbols in this argument" />}
+
+      {d.sources && d.sources.length > 0 && (
+        <div class="pl__sources">
+          <h2 class="pl__sources-h">Sources</h2>
+          {d.sources.map((s) => <SourceRow source={s} />)}
+        </div>
+      )}
+    </section>
+  </article>
+
+  <div class="u-container foot">
+    <PrevNext
+      prev={{ label: prev.data.title, href: `/pillars/${prev.data.slug}` }}
+      next={{ label: next.data.title, href: `/pillars/${next.data.slug}` }}
+    />
+  </div>
+</SiteLayout>
+
+<style>
+  .head { padding-block: var(--space-l) 0; }
+  .pl { padding-block: var(--space-l) var(--space-xl); display: flex; flex-direction: column; gap: var(--space-2xl); }
+  .pl__title { font-size: var(--step-4); margin-block: var(--space-2xs); }
+  .pl__thesis { font-size: var(--step-1); color: var(--color-text-muted); }
+  .pl__body :global(h2) { font-size: var(--step-2); margin-block: var(--space-xl) var(--space-2xs); }
+  .pl__body :global(h3) { font-size: var(--step-1); margin-block: var(--space-l) var(--space-2xs); }
+  .pl__body :global(p) { margin-bottom: var(--space-m); }
+
+  .pl__apparatus { display: flex; flex-direction: column; gap: var(--space-xl); border-block-start: var(--border-w) solid var(--color-border); padding-block-start: var(--space-l); }
+  .pl__block h2 { margin-bottom: var(--space-2xs); }
+  .pl__list { margin: 0; padding-inline-start: 1.1em; display: flex; flex-direction: column; gap: var(--space-2xs); max-width: var(--measure); }
+  .pl__connections { display: grid; gap: var(--space-l); }
+  @media (min-width: 40rem) { .pl__connections { grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); } }
+  .pl__chips { list-style: none; margin: var(--space-2xs) 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--space-2xs); }
+  .pl__chip { display: inline-block; font-family: var(--font-ui); font-size: var(--step--1); padding: 0.35em 0.8em; border: var(--border-w) solid var(--color-border-strong); border-radius: 999px; color: var(--color-text-muted); text-decoration: none; }
+  .pl__chip--link:hover { color: var(--color-text); border-color: var(--color-text); }
+  .pl__sources-h { font-size: var(--step-1); }
+  .foot { padding-block: 0 var(--space-2xl); }
+</style>

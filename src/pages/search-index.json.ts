@@ -2,8 +2,8 @@
 // /search fetches + filters it client-side. One flat record per entry.
 //
 // Only the populated collections are queried (Astro warns on empty ones).
-// TODO: extend as collections fill — pillars (B3), timeline (C), library +
-// glossary (D1/D2). Add the collection's block below when it has entries.
+// TODO: extend as collections fill — timeline (C), library + glossary (D1/D2).
+// Add the collection's block below when it has entries.
 import type { APIRoute } from "astro";
 import { getCollection } from "astro:content";
 
@@ -42,6 +42,14 @@ export const GET: APIRoute = async () => {
       collection: "casebook", kind: "Decode", slug: e.data.slug, title: e.data.title,
       one_line: e.data.one_line ?? "", category: e.data.artifact, tier: "",
       url: `/casebook/${e.data.slug}`,
+    });
+  }
+
+  for (const e of await getCollection("pillars")) {
+    records.push({
+      collection: "pillars", kind: "Pillar", slug: e.data.slug, title: e.data.title,
+      one_line: e.data.thesis ?? "", category: "", tier: "",
+      url: `/pillars/${e.data.slug}`,
     });
   }
 

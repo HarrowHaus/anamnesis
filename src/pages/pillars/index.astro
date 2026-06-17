@@ -1,0 +1,62 @@
+---
+// The Pillars — index (handoff B3). The five spine essays, ordered, as an
+// editorial list. The keystone (P1) leads.
+import { getCollection } from "astro:content";
+import SiteLayout from "../../layouts/SiteLayout.astro";
+
+const pillars = (await getCollection("pillars")).map((e) => e.data).sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+---
+
+<SiteLayout
+  title="The Pillars | ANAMNESIS"
+  description="The argument in five essays: who controls the image, the war on images, astrotheology and the sky-code, the engineering of consent, and the AI image age."
+  active="pillars"
+>
+  <header class="px-head u-container">
+    <p class="u-eyebrow">The argument, in five</p>
+    <h1 class="px-title">The Pillars</h1>
+    <p class="px-lede u-measure">One thesis, carried across four thousand years: whoever controls the image controls the interior of a people. Five essays trace it from Plato to the AI age — start with the keystone.</p>
+  </header>
+
+  <ol class="px-list u-container" role="list">
+    {pillars.map((p) => (
+      <li class="px-item">
+        <a class="px-link" href={`/pillars/${p.slug}`}>
+          <span class="px-num" aria-hidden="true">P{p.order}</span>
+          <span class="px-text">
+            <span class="px-name">{p.title.replace(/^P\d+\s*[—-]\s*/, "")}</span>
+            {p.thesis && <span class="px-thesis">{p.thesis}</span>}
+            <span class="px-cta">Read the pillar →</span>
+          </span>
+        </a>
+      </li>
+    ))}
+  </ol>
+</SiteLayout>
+
+<style>
+  .px-head { padding-block: var(--space-xl) var(--space-l); }
+  .px-title { font-size: var(--step-4); margin-block: var(--space-2xs); }
+  .px-lede { color: var(--color-text-muted); font-size: var(--step-1); }
+
+  .px-list { list-style: none; margin: 0; padding-block: var(--space-l) var(--space-3xl); display: flex; flex-direction: column; gap: var(--space-s); }
+  .px-item { }
+  .px-link {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--space-m);
+    align-items: start;
+    padding: var(--space-l);
+    border: var(--border-w) solid var(--color-border);
+    border-radius: var(--radius-l);
+    background: var(--color-surface);
+    text-decoration: none; color: inherit;
+    transition: transform var(--dur-fast) var(--ease-reveal), box-shadow var(--dur-fast) var(--ease-reveal);
+  }
+  .px-link:hover { transform: translateY(-2px); box-shadow: var(--shadow-card); }
+  .px-num { font-family: var(--font-display); font-size: var(--step-3); line-height: 1; color: var(--color-text-muted); }
+  .px-text { display: flex; flex-direction: column; gap: var(--space-2xs); }
+  .px-name { font-family: var(--font-display); font-size: var(--step-2); }
+  .px-thesis { color: var(--color-text-muted); max-width: var(--measure); }
+  .px-cta { font-family: var(--font-ui); font-size: var(--step--1); letter-spacing: var(--tracking-wide); text-transform: uppercase; margin-block-start: var(--space-2xs); }
+</style>
