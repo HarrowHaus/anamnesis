@@ -1,0 +1,132 @@
+---
+// Global search (handoff A4 + §0.6). Search-as-browse across every collection.
+// Renders the SearchBar field + a results grid that filters the static
+// /search-index.json client-side on ?q — mirroring the dictionary filter.
+import SiteLayout from "../layouts/SiteLayout.astro";
+import SearchBar from "../components/SearchBar.astro";
+---
+
+<SiteLayout
+  title="Search | ANAMNESIS"
+  description="Search the archive — symbols, figures, and decodes — by name, essence, or category."
+>
+  <section class="sr u-container">
+    <header class="sr__head">
+      <p class="u-eyebrow">Search the archive</p>
+      <h1 class="sr__title">Search</h1>
+      <div class="sr__field"><SearchBar placeholder="Search symbols, figures, decodes…" /></div>
+      <p class="sr__count" data-count aria-live="polite"></p>
+    </header>
+
+    <ul class="sr__grid" data-results role="list"></ul>
+
+    <div class="sr__state" data-prompt>
+      <p class="sr__state-msg u-measure">Type to search across the dictionary, the lineage, and the casebook.</p>
+    </div>
+    <div class="sr__state" data-empty hidden>
+      <p class="sr__mark" aria-hidden="true">⌕</p>
+      <p class="sr__state-msg u-measure">No entries match <b data-empty-q></b>. Try a broader term, or browse a section.</p>
+      <p class="sr__suggest">
+        <a href="/dictionary">The Dictionary</a> · <a href="/figures">The Lineage</a> · <a href="/casebook">The Casebook</a>
+      </p>
+    </div>
+  </section>
+</SiteLayout>
+
+<style>
+  .sr { padding-block: var(--space-xl) var(--space-3xl); }
+  .sr__head { display: flex; flex-direction: column; gap: var(--space-s); margin-bottom: var(--space-xl); }
+  .sr__title { font-size: var(--step-4); margin: 0; }
+  .sr__field { max-width: 34rem; }
+  .sr__count { font-family: var(--font-ui); font-size: var(--step--1); color: var(--color-text-muted); margin: 0; min-height: 1.2em; }
+
+  .sr__grid { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-s); grid-template-columns: 1fr; }
+  @media (min-width: 40rem) { .sr__grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 60rem) { .sr__grid { grid-template-columns: repeat(3, 1fr); } }
+
+  .sr__card {
+    display: block; height: 100%;
+    padding: var(--space-m);
+    border: var(--border-w) solid var(--color-border);
+    border-radius: var(--radius-l);
+    background: var(--color-surface);
+    text-decoration: none; color: inherit;
+    transition: transform var(--dur-fast) var(--ease-reveal), box-shadow var(--dur-fast) var(--ease-reveal);
+  }
+  .sr__card:hover { transform: translateY(-2px); box-shadow: var(--shadow-card); }
+  .sr__kind { font-family: var(--font-ui); font-size: var(--step--1); letter-spacing: var(--tracking-wide); text-transform: uppercase; color: var(--color-text-muted); margin: 0 0 var(--space-3xs); }
+  .sr__name { font-family: var(--font-display); font-size: var(--step-1); margin: 0 0 var(--space-3xs); }
+  .sr__line { color: var(--color-text-muted); margin: 0; }
+
+  .sr__state { padding-block: var(--space-2xl); text-align: center; color: var(--color-text-muted); }
+  .sr__state[hidden] { display: none; }
+  .sr__mark { font-size: var(--step-4); color: var(--color-border-strong); margin: 0 0 var(--space-2xs); }
+  .sr__state-msg { margin: 0 auto; }
+  .sr__suggest { font-family: var(--font-ui); font-size: var(--step--1); margin-block-start: var(--space-s); }
+</style>
+
+<script>
+  type Rec = { kind: string; title: string; one_line: string; category: string; url: string };
+
+  const input = document.querySelector<HTMLInputElement>("#q");
+  const form = input?.closest("form");
+  const grid = document.querySelector<HTMLElement>("[data-results]");
+  const countEl = document.querySelector<HTMLElement>("[data-count]");
+  const promptEl = document.querySelector<HTMLElement>("[data-prompt]");
+  const emptyEl = document.querySelector<HTMLElement>("[data-empty]");
+  const emptyQ = document.querySelector<HTMLElement>("[data-empty-q]");
+
+  // don't let the SearchBar's form navigate; we filter in place
+  form?.addEventListener("submit", (e) => e.preventDefault());
+
+  let records: Rec[] = [];
+  const esc = (s: string) => s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]!));
+
+  const render = (q: string) => {
+    const query = q.trim().toLowerCase();
+    if (!grid) return;
+    if (!query) {
+      grid.innerHTML = "";
+      if (countEl) countEl.textContent = "";
+      promptEl?.removeAttribute("hidden");
+      emptyEl?.setAttribute("hidden", "");
+      return;
+    }
+    promptEl?.setAttribute("hidden", "");
+    const hits = records.filter((r) =>
+      `${r.title} ${r.one_line} ${r.category} ${r.kind}`.toLowerCase().includes(query)
+    );
+    if (countEl) countEl.textContent = `${hits.length} result${hits.length === 1 ? "" : "s"} for “${q.trim()}”`;
+    grid.innerHTML = hits
+      .map((r) => `<li><a class="sr__card" href="${r.url}">
+        <p class="sr__kind">${esc(r.kind)}</p>
+        <p class="sr__name">${esc(r.title)}</p>
+        ${r.one_line ? `<p class="sr__line">${esc(r.one_line)}</p>` : ""}
+      </a></li>`)
+      .join("");
+    if (emptyEl && emptyQ) {
+      emptyQ.textContent = `“${q.trim()}”`;
+      emptyEl.hidden = hits.length !== 0;
+    }
+  };
+
+  const syncUrl = (q: string) => {
+    const url = new URL(location.href);
+    if (q.trim()) url.searchParams.set("q", q.trim()); else url.searchParams.delete("q");
+    history.replaceState(null, "", url.toString());
+  };
+
+  fetch("/search-index.json")
+    .then((r) => r.json())
+    .then((data: Rec[]) => {
+      records = data;
+      const q0 = new URLSearchParams(location.search).get("q") ?? "";
+      if (q0 && input) input.value = q0;
+      render(q0);
+    });
+
+  input?.addEventListener("input", () => {
+    render(input.value);
+    syncUrl(input.value);
+  });
+</script>
