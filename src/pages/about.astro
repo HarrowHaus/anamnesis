@@ -1,0 +1,75 @@
+---
+// About / Method (handoff A3; dossier §1, §11, §12, §15). Static editorial page.
+// The credibility contract — it earns the right to make the rest of the claims.
+// Also fixes the footer's previously-broken /about link.
+import SiteLayout from "../layouts/SiteLayout.astro";
+import TierBadge from "../components/TierBadge.astro";
+---
+
+<SiteLayout
+  title="About & Method | ANAMNESIS"
+  description="What ANAMNESIS is and is not: the mission, the editorial method, the three-tier sourcing standard, and the posture — advocacy, institutions not ethnicity, living people attributed."
+>
+  <article class="ab u-container">
+    <header class="ab__head">
+      <p class="u-eyebrow">About &amp; Method</p>
+      <h1 class="ab__title">The waking is remembering.</h1>
+      <p class="ab__lede u-measure">ANAMNESIS teaches a symbol-saturated public to read the engineered images that move it — from Plato to the AI age. This page is the contract: what we are, how the archive is built, and how every claim is sourced.</p>
+    </header>
+
+    <section class="ab__sec u-measure">
+      <h2 class="ab__h">The mission</h2>
+      <p>Whoever controls representation — image, symbol, story, sound — shapes the population's interior, because symbols move us <i>beneath</i> reason. This is not new: Plato legislated it, every empire fought over it, and modern power has industrialized it. Most people today are saturated with engineered symbols yet cannot read a single one. To wake up is to become literate again — to look at the seal, the logo, the monument, and finally <i>see</i> it.</p>
+    </section>
+
+    <section class="ab__sec u-measure">
+      <h2 class="ab__h">The method</h2>
+      <p>This is a designed editorial publication, not a wiki and not a graph explorer. Behind every page is a relational web — a symbol links to the figures who decode it, the casebook entries it appears in, the symbols it travels with, its sources — but that web stays underneath. On the surface you get calm, curated lists: <em>where next</em>, <em>decoded by</em>, <em>appears in</em>. Each entry opens with a one-line hook anyone can read and descends into the documented history, the attributed reading, and the apparatus. The curious newcomer stops where they like; the researcher keeps going. Both leave with the same feeling: <i>I was being moved by something I couldn't see, and now I can.</i></p>
+    </section>
+
+    <section class="ab__sec u-measure">
+      <h2 class="ab__h">The sourcing standard</h2>
+      <p>A believer's archive is only powerful if it is credible. So every claim carries a source, tagged by tier — and the body keeps documented fact and attributed reading structurally distinct.</p>
+      <dl class="ab__tiers">
+        <div class="ab__tier"><dt><TierBadge tier="A" /></dt><dd><b>Hard history and scholarship.</b> Plato, art history, Bernays, Jung, Barthes, Yates. <span class="ab__muted">Stated as fact.</span></dd></div>
+        <div class="ab__tier"><dt><TierBadge tier="B" /></dt><dd><b>The figures' own works.</b> The books and lectures of the tradition's researchers. <span class="ab__muted">Always attributed — "Maxwell argues…", never asserted as settled.</span></dd></div>
+        <div class="ab__tier"><dt><TierBadge tier="C" /></dt><dd><b>Secondary and community sources.</b> <span class="ab__muted">Used sparingly, only to point back to Tier A or B.</span></dd></div>
+      </dl>
+    </section>
+
+    <section class="ab__sec u-measure">
+      <h2 class="ab__h">The posture</h2>
+      <p>ANAMNESIS is <b>advocacy</b>: we present the tradition's case at full strength and take its claims seriously, because the strongest version of this case is the well-documented one. We are <b>not a debunk site</b>.</p>
+      <p>The antagonist here is never an ethnic group. It is <b>power structures</b> — state, church, advertising, media, and the platforms that now own the image-machines. The frame stays on institutions and methods. Any "secret cabal of a people" framing is forbidden; it is false, and it would be the one thing that makes a credibility-built archive worthless.</p>
+      <p>For <b>living people</b>, we describe their stated claims and published work, attribute everything, and assert no defamatory facts about them as individuals. The site is framed for research and education. The voice is fascination, not fear: we let the evidence detonate; we don't shout.</p>
+    </section>
+
+    <nav class="ab__next">
+      <a class="ab__cta" href="/start">Start Here →</a>
+      <a class="ab__cta ab__cta--ghost" href="/dictionary">Enter the Dictionary</a>
+    </nav>
+  </article>
+</SiteLayout>
+
+<style>
+  .ab { padding-block: var(--space-xl) var(--space-3xl); display: flex; flex-direction: column; gap: var(--space-2xl); }
+  .ab__head { display: flex; flex-direction: column; gap: var(--space-xs); }
+  .ab__title { font-size: var(--step-4); margin: 0; }
+  .ab__lede { font-size: var(--step-1); color: var(--color-text-muted); }
+  .ab__sec { display: flex; flex-direction: column; gap: var(--space-s); }
+  .ab__h { font-size: var(--step-2); margin: 0; }
+  .ab__sec p { margin: 0; }
+  .ab__tiers { display: flex; flex-direction: column; gap: var(--space-m); margin: var(--space-s) 0 0; }
+  .ab__tier { display: grid; grid-template-columns: auto 1fr; gap: var(--space-s); align-items: start; }
+  .ab__tier dd { margin: 0; }
+  .ab__muted { color: var(--color-text-muted); }
+  .ab__next { display: flex; flex-wrap: wrap; gap: var(--space-s); border-block-start: var(--border-w) solid var(--color-border); padding-block-start: var(--space-l); }
+  .ab__cta {
+    display: inline-block; font-family: var(--font-ui);
+    letter-spacing: var(--tracking-wide); text-transform: uppercase; font-size: var(--step--1);
+    padding: 0.8em 1.4em; border-radius: var(--radius-m); text-decoration: none;
+    border: var(--border-w) solid var(--color-text);
+    background: var(--color-accent); color: var(--color-accent-text);
+  }
+  .ab__cta--ghost { background: none; color: var(--color-text); }
+</style>
