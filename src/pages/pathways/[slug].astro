@@ -1,0 +1,131 @@
+---
+// Pathway / Collection — a guided themed journey (handoff D3; blueprint §4 + L3).
+// Ordered stops across the taxonomy, each a card under PathwayStop's connective
+// copy. Stops resolve to whichever collection they name.
+import { getCollection } from "astro:content";
+import SiteLayout from "../../layouts/SiteLayout.astro";
+import Breadcrumbs from "../../components/Breadcrumbs.astro";
+import PrevNext from "../../components/PrevNext.astro";
+import PathwayStop from "../../components/PathwayStop.astro";
+import SpecimenCard from "../../components/SpecimenCard.astro";
+import FigureCard from "../../components/FigureCard.astro";
+import CasebookCard from "../../components/CasebookCard.astro";
+import { plateUrl } from "../../lib/plates";
+
+export async function getStaticPaths() {
+  const pathways = await getCollection("pathways");
+  return pathways.map((e) => ({ params: { slug: e.data.slug } }));
+}
+
+const stripPn = (t: string) => t.replace(/^P\d+\s*[—-]\s*/, "");
+
+const pathways = (await getCollection("pathways")).sort((a, b) => a.data.title.localeCompare(b.data.title));
+const entry = pathways.find((e) => e.data.slug === Astro.params.slug)!;
+const idx = pathways.findIndex((e) => e.data.slug === Astro.params.slug);
+const d = entry.data;
+
+// slug → data maps for every collection a stop can name
+const symbols = new Map((await getCollection("symbols")).map((e) => [e.data.slug, e.data]));
+const figures = new Map((await getCollection("figures")).map((e) => [e.data.slug, e.data]));
+const casebook = new Map((await getCollection("casebook")).map((e) => [e.data.slug, e.data]));
+const pillars = new Map((await getCollection("pillars")).map((e) => [e.data.slug, e.data]));
+const library = new Map((await getCollection("library")).map((e) => [e.data.slug, e.data]));
+const timeline = new Map((await getCollection("timeline")).map((e) => [e.data.slug, e.data]));
+
+const hero = plateUrl(d.glyph);
+const total = d.stops.length;
+const prev = pathways[(idx - 1 + pathways.length) % pathways.length];
+const next = pathways[(idx + 1) % pathways.length];
+---
+
+<SiteLayout title={d.seo_title} description={d.seo_description} image={hero ?? undefined}>
+  <div class="u-container head">
+    <Breadcrumbs crumbs={[{ label: "Home", href: "/" }, { label: "Pathways" }, { label: d.title }]} />
+  </div>
+
+  <article class="pw u-container">
+    <header class="pw__head">
+      <p class="u-eyebrow">A pathway · {total} stops</p>
+      <h1 class="pw__title">{d.title}</h1>
+      {d.one_line && <p class="pw__line u-measure">{d.one_line}</p>}
+      <div class="pw__intro u-measure"><slot /></div>
+    </header>
+
+    <div class="pw__stops">
+      {d.stops.map((stop, i) => {
+        const sym = stop.collection === "symbols" ? symbols.get(stop.slug) : undefined;
+        const fig = stop.collection === "figures" ? figures.get(stop.slug) : undefined;
+        const cas = stop.collection === "casebook" ? casebook.get(stop.slug) : undefined;
+        const pil = stop.collection === "pillars" ? pillars.get(stop.slug) : undefined;
+        const lib = stop.collection === "library" ? library.get(stop.slug) : undefined;
+        const tl = stop.collection === "timeline" ? timeline.get(stop.slug) : undefined;
+        return (
+          <PathwayStop step={i + 1} total={total} connective={stop.note} last={i === total - 1}>
+            {sym && <SpecimenCard symbol={sym} variant="related" />}
+            {fig && <FigureCard figure={fig} />}
+            {cas && <CasebookCard entry={cas} />}
+            {pil && (
+              <a class="ps-card" href={`/pillars/${pil.slug}`}>
+                <p class="u-eyebrow">Pillar P{pil.order}</p>
+                <p class="ps-card__title">{stripPn(pil.title)}</p>
+                {pil.thesis && <p class="ps-card__line">{pil.thesis}</p>}
+                <span class="ps-card__cta">Read the pillar →</span>
+              </a>
+            )}
+            {lib && (
+              <a class="ps-card" href={`/library/${lib.slug}`}>
+                <p class="u-eyebrow">{lib.type.charAt(0).toUpperCase() + lib.type.slice(1)}{lib.year ? ` · ${lib.year}` : ""}</p>
+                <p class="ps-card__title">{lib.title}</p>
+                {lib.author && <p class="ps-card__line">by {lib.author}</p>}
+                <span class="ps-card__cta">In the Library →</span>
+              </a>
+            )}
+            {tl && (
+              <a class="ps-card" href="/timeline">
+                <p class="u-eyebrow">Timeline · {tl.date}</p>
+                <p class="ps-card__title">{tl.event}</p>
+                <span class="ps-card__cta">On the timeline →</span>
+              </a>
+            )}
+          </PathwayStop>
+        );
+      })}
+    </div>
+
+    <p class="pw__end u-measure">That's the route. Wander on into the <a href="/dictionary">Dictionary</a>, or follow another path below.</p>
+  </article>
+
+  <div class="u-container foot">
+    <PrevNext
+      prev={{ label: prev.data.title, href: `/pathways/${prev.data.slug}` }}
+      next={{ label: next.data.title, href: `/pathways/${next.data.slug}` }}
+    />
+  </div>
+</SiteLayout>
+
+<style>
+  .head { padding-block: var(--space-l) 0; }
+  .pw { padding-block: var(--space-l) var(--space-xl); }
+  .pw__head { margin-bottom: var(--space-xl); }
+  .pw__title { font-size: var(--step-4); margin-block: var(--space-2xs); }
+  .pw__line { font-size: var(--step-1); color: var(--color-text-muted); }
+  .pw__intro { margin-block-start: var(--space-s); }
+  .pw__intro :global(p) { margin: 0; }
+  .pw__stops { display: flex; flex-direction: column; }
+  .pw__end { margin-block-start: var(--space-l); color: var(--color-text-muted); }
+
+  .ps-card {
+    display: block;
+    padding: var(--space-m);
+    border: var(--border-w) solid var(--color-border);
+    border-radius: var(--radius-l);
+    background: var(--color-surface);
+    text-decoration: none; color: inherit;
+    transition: transform var(--dur-fast) var(--ease-reveal), box-shadow var(--dur-fast) var(--ease-reveal);
+  }
+  .ps-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-card); }
+  .ps-card__title { font-family: var(--font-display); font-size: var(--step-1); margin: var(--space-3xs) 0; }
+  .ps-card__line { color: var(--color-text-muted); margin: 0 0 var(--space-2xs); }
+  .ps-card__cta { font-family: var(--font-ui); font-size: var(--step--1); letter-spacing: var(--tracking-wide); text-transform: uppercase; }
+  .foot { padding-block: 0 var(--space-2xl); }
+</style>

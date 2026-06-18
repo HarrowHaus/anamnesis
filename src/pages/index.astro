@@ -17,13 +17,9 @@ const featured = casebook[0];
 // the dictionary shelf — a small curated set, into the flagship
 const shelf = symbols.slice(0, 3);
 
-// curated routes (the invisible-guidance layer) — working filtered browses,
-// presented as editorial features rather than "beginner mode."
-const routes = [
-  { title: "Follow the Eye", one_line: "The watching eye, from Horus to the dollar.", glyph: "../../assets/plates/kircher.jpg", href: "/dictionary?cat=civic-solar", stops: 3 },
-  { title: "As Above, So Below", one_line: "The Hermetic chain of correspondence, drawn whole.", glyph: "../../assets/plates/fludd.jpg", href: "/dictionary?tradition=Hermetic", stops: 2 },
-  { title: "The Geometry of Limits", one_line: "Saturn, the cube, and the square that confines.", glyph: "../../assets/plates/saturn.jpg", href: "/dictionary?q=saturn", stops: 2 },
-];
+// curated routes (the invisible-guidance layer, blueprint L3) — the authored
+// Pathways: guided themed walks across the taxonomy.
+const pathways = (await getCollection("pathways")).map((e) => e.data).sort((a, b) => a.title.localeCompare(b.title));
 const heroPlate = "/plates/hero.jpg";
 ---
 
@@ -66,20 +62,20 @@ const heroPlate = "/plates/hero.jpg";
     </section>
   )}
 
-  <!-- CURATED ROUTES -->
-  <section class="home-sec u-container">
-    <header class="home-sec__head">
-      <div>
-        <p class="u-eyebrow">Curated routes</p>
-        <h2 class="home-sec__h">Three ways in</h2>
+  <!-- CURATED ROUTES (Pathways, blueprint L3) -->
+  {pathways.length > 0 && (
+    <section class="home-sec u-container">
+      <header class="home-sec__head">
+        <div>
+          <p class="u-eyebrow">Curated routes</p>
+          <h2 class="home-sec__h">Pathways through the archive</h2>
+        </div>
+      </header>
+      <div class="home-grid home-grid--3">
+        {pathways.map((p) => <PathwayCard pathway={p} />)}
       </div>
-    </header>
-    <div class="home-grid home-grid--3">
-      {routes.map((r) => (
-        <PathwayCard pathway={{ title: r.title, slug: "", one_line: r.one_line, glyph: r.glyph, stops: Array(r.stops) }} href={r.href} />
-      ))}
-    </div>
-  </section>
+    </section>
+  )}
 
   <!-- FROM THE DICTIONARY -->
   <section class="home-sec u-container">
