@@ -1,0 +1,117 @@
+---
+// Library source — detail page (handoff D1). The work + summary + where it's
+// used across the archive. `used_by` backlinks are resolved AT BUILD by
+// matching this work's title against every entry's inline sources[].
+import { getCollection } from "astro:content";
+import SiteLayout from "../../layouts/SiteLayout.astro";
+import Breadcrumbs from "../../components/Breadcrumbs.astro";
+import PrevNext from "../../components/PrevNext.astro";
+import TierBadge from "../../components/TierBadge.astro";
+
+export async function getStaticPaths() {
+  const lib = await getCollection("library");
+  return lib.map((e) => ({ params: { source: e.data.slug } }));
+}
+
+// normalize a title for fuzzy matching (drop leading article, subtitle, punctuation)
+const norm = (s: string) =>
+  s.toLowerCase().replace(/^(the|a|an)\s+/, "").split(/[:(]/)[0].replace(/[^a-z0-9]+/g, " ").trim();
+const titleMatch = (a: string, b: string) => {
+  const x = norm(a), y = norm(b);
+  return x.length >= 5 && y.length >= 5 && (x === y || x.includes(y) || y.includes(x));
+};
+
+const lib = (await getCollection("library")).sort((a, b) => (a.data.author ?? a.data.title).localeCompare(b.data.author ?? b.data.title));
+const idx = lib.findIndex((e) => e.data.slug === Astro.params.source);
+const entry = lib[idx];
+const d = entry.data;
+
+// author → figure link (when the author has a figure profile)
+const figureSlugByName = new Map((await getCollection("figures")).map((f) => [f.data.name, f.data.slug]));
+const authorFigure = d.author ? figureSlugByName.get(d.author) : undefined;
+
+// used_by — every entry whose inline sources cite this work (resolved at build)
+const citers: { collection: string; slug: string; title: string; url: string; sources?: { title: string }[] }[] = [
+  ...(await getCollection("symbols")).map((e) => ({ collection: "Symbol", slug: e.data.slug, title: e.data.name, url: `/dictionary/${e.data.slug}`, sources: e.data.sources })),
+  ...(await getCollection("figures")).map((e) => ({ collection: "Figure", slug: e.data.slug, title: e.data.name, url: `/figures/${e.data.slug}`, sources: e.data.sources })),
+  ...(await getCollection("casebook")).map((e) => ({ collection: "Decode", slug: e.data.slug, title: e.data.title, url: `/casebook/${e.data.slug}`, sources: e.data.sources })),
+  ...(await getCollection("pillars")).map((e) => ({ collection: "Pillar", slug: e.data.slug, title: e.data.title, url: `/pillars/${e.data.slug}`, sources: e.data.sources })),
+];
+const usedBy = citers.filter((c) => (c.sources ?? []).some((s) => titleMatch(s.title, d.title)));
+
+const typeLabel = d.type.charAt(0).toUpperCase() + d.type.slice(1);
+const prev = lib[(idx - 1 + lib.length) % lib.length];
+const next = lib[(idx + 1) % lib.length];
+---
+
+<SiteLayout title={d.seo_title} description={d.seo_description} active="library">
+  <div class="u-container head">
+    <Breadcrumbs crumbs={[{ label: "Home", href: "/" }, { label: "Library", href: "/library" }, { label: d.title }]} />
+  </div>
+
+  <article class="ls u-container">
+    <header class="ls__head">
+      <p class="u-eyebrow">{typeLabel}{d.year ? ` · ${d.year}` : ""}</p>
+      <h1 class="ls__title">{d.title}</h1>
+      <p class="ls__author">
+        {d.author && (authorFigure
+          ? <>by <a href={`/figures/${authorFigure}`}>{d.author}</a></>
+          : <>by {d.author}</>)}
+      </p>
+      <div class="ls__tier"><TierBadge tier={d.tier} /></div>
+    </header>
+
+    {d.summary && <p class="ls__summary u-measure">{d.summary}</p>}
+    <div class="ls__body u-measure"><slot /></div>
+
+    {d.link && (
+      <p class="ls__link"><a class="ls__cta" href={d.link} rel="noopener">Read / find it →</a></p>
+    )}
+
+    <section class="ls__usedby">
+      <h2 class="u-eyebrow">Used across the archive</h2>
+      {usedBy.length > 0
+        ? <ul class="ls__refs" role="list">
+            {usedBy.map((c) => (
+              <li><a class="ls__ref" href={c.url}><span class="ls__ref-kind">{c.collection}</span> {c.title}</a></li>
+            ))}
+          </ul>
+        : <p class="ls__none">Cited in the apparatus; not yet wired to a specific entry.</p>}
+    </section>
+  </article>
+
+  <div class="u-container foot">
+    <PrevNext
+      prev={{ label: prev.data.title, href: `/library/${prev.data.slug}` }}
+      next={{ label: next.data.title, href: `/library/${next.data.slug}` }}
+    />
+  </div>
+</SiteLayout>
+
+<style>
+  .head { padding-block: var(--space-l) 0; }
+  .ls { padding-block: var(--space-l) var(--space-xl); display: flex; flex-direction: column; gap: var(--space-l); }
+  .ls__title { font-size: var(--step-3); margin-block: var(--space-2xs); }
+  .ls__author { color: var(--color-text-muted); margin: 0; }
+  .ls__author a { text-decoration-color: var(--color-border-strong); }
+  .ls__tier { margin-block-start: var(--space-2xs); }
+  .ls__summary { font-size: var(--step-1); }
+  .ls__body :global(p) { margin-bottom: var(--space-m); color: var(--color-text-muted); }
+  .ls__cta {
+    display: inline-block; font-family: var(--font-ui);
+    letter-spacing: var(--tracking-wide); text-transform: uppercase; font-size: var(--step--1);
+    padding: 0.7em 1.2em; border: var(--border-w) solid var(--color-text); border-radius: var(--radius-m); text-decoration: none;
+  }
+  .ls__cta:hover { background: var(--color-accent); color: var(--color-accent-text); border-color: var(--color-accent); }
+  .ls__usedby { border-block-start: var(--border-w) solid var(--color-border); padding-block-start: var(--space-l); }
+  .ls__refs { list-style: none; margin: var(--space-s) 0 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-2xs); }
+  .ls__ref { text-decoration: none; color: inherit; }
+  .ls__ref:hover { text-decoration: underline; }
+  .ls__ref-kind {
+    font-family: var(--font-ui); font-size: var(--step--1);
+    letter-spacing: var(--tracking-wide); text-transform: uppercase; color: var(--color-text-muted);
+    margin-inline-end: var(--space-2xs);
+  }
+  .ls__none { color: var(--color-text-muted); font-family: var(--font-ui); font-size: var(--step--1); }
+  .foot { padding-block: 0 var(--space-2xl); }
+</style>

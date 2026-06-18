@@ -1,0 +1,129 @@
+---
+// The Library — index (handoff D1). The bibliography, browsable: credibility
+// made legible. A list of SourceRow, faceted by type + tier, with a text filter.
+import { getCollection } from "astro:content";
+import SiteLayout from "../../layouts/SiteLayout.astro";
+import FacetBar from "../../components/FacetBar.astro";
+import SourceRow from "../../components/SourceRow.astro";
+import EmptyState from "../../components/states/EmptyState.astro";
+
+const humanize = (s: string) => s.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+
+const sources = (await getCollection("library")).map((e) => e.data).sort((a, b) =>
+  (a.author ?? a.title).localeCompare(b.author ?? b.title)
+);
+
+const typeOrder = ["book", "lecture", "film", "article", "engraving", "artifact", "other"];
+const typesPresent = [...new Set(sources.map((s) => s.type))].sort((a, b) => typeOrder.indexOf(a) - typeOrder.indexOf(b));
+const tiersPresent = [...new Set(sources.map((s) => s.tier))].sort();
+const tierWord = { A: "asserted", B: "attributed", C: "contextual" } as const;
+const facetGroups = [
+  { key: "type", label: "Type", options: typesPresent.map((t) => ({ value: t, label: humanize(t) })) },
+  { key: "tier", label: "Tier", options: tiersPresent.map((t) => ({ value: t, label: `${t} · ${tierWord[t]}` })) },
+];
+---
+
+<SiteLayout
+  title="The Library | ANAMNESIS"
+  description="The bibliography behind the archive — the primary texts, lectures, and films the readings are sourced to, tiered and browsable."
+  active="library"
+>
+  <header class="lx-head u-container">
+    <p class="u-eyebrow">Credibility, made browsable</p>
+    <h1 class="lx-title">The Library</h1>
+    <p class="lx-lede u-measure">Every reading on this site is sourced. Here are the works it draws on — the public-domain headwaters and the tradition's own books and lectures — one defining text per author. Filter by type or by sourcing tier.</p>
+
+    <div class="lx-filter">
+      <label class="u-visually-hidden" for="lx-q">Filter the library</label>
+      <span class="lx-filter__icon" aria-hidden="true">⌕</span>
+      <input id="lx-q" class="lx-filter__input" type="search" placeholder="Filter by title or author…" autocomplete="off" data-filter />
+      <p class="lx-count" data-count aria-live="polite">{sources.length} works</p>
+    </div>
+  </header>
+
+  <div class="u-container">
+    <FacetBar groups={facetGroups} />
+  </div>
+
+  <section class="lx-wall u-container" aria-label="All sources">
+    <ul class="lx-list" data-grid role="list">
+      {sources.map((s) => (
+        <li class="lx-cell" data-type={s.type} data-tier={s.tier}>
+          <SourceRow source={{ title: s.title, author: s.author, year: s.year, type: s.type, tier: s.tier }} href={`/library/${s.slug}`} />
+        </li>
+      ))}
+    </ul>
+    <div class="lx-empty" data-empty hidden>
+      <EmptyState
+        title="No works match those filters"
+        message="Loosen a filter, or browse the full bibliography."
+        suggestions={[{ label: "Clear filters", href: "/library" }]}
+      />
+    </div>
+  </section>
+</SiteLayout>
+
+<style>
+  .lx-head { padding-block: var(--space-xl) var(--space-l); }
+  .lx-title { font-size: var(--step-4); margin-block: var(--space-2xs); }
+  .lx-lede { color: var(--color-text-muted); font-size: var(--step-1); }
+  .lx-filter { position: relative; display: flex; align-items: center; gap: var(--space-s); margin-block-start: var(--space-l); flex-wrap: wrap; }
+  .lx-filter__icon { position: absolute; inset-inline-start: var(--space-s); color: var(--color-text-muted); pointer-events: none; }
+  .lx-filter__input {
+    flex: 1 1 18rem; font: inherit; font-family: var(--font-ui);
+    padding: 0.7em 0.9em 0.7em 2.4em;
+    background: var(--color-surface);
+    border: var(--border-w) solid var(--color-border-strong);
+    border-radius: var(--radius-m); color: var(--color-text);
+  }
+  .lx-count { font-family: var(--font-ui); font-size: var(--step--1); color: var(--color-text-muted); margin: 0; white-space: nowrap; }
+  .lx-wall { padding-block: var(--space-l) var(--space-2xl); }
+  .lx-list { list-style: none; margin: 0; padding: 0; }
+  .lx-cell.is-hidden { display: none; }
+</style>
+
+<script>
+  const grid = document.querySelector<HTMLElement>("[data-grid]");
+  const input = document.querySelector<HTMLInputElement>("[data-filter]");
+  const countEl = document.querySelector<HTMLElement>("[data-count]");
+  const emptyEl = document.querySelector<HTMLElement>("[data-empty]");
+  if (grid) {
+    const cells = Array.from(grid.querySelectorAll<HTMLElement>(".lx-cell"));
+    let facets: Record<string, string> = {};
+    let q = "";
+    const apply = () => {
+      let shown = 0;
+      cells.forEach((cell) => {
+        let ok = true;
+        for (const [k, v] of Object.entries(facets)) {
+          if ((cell.dataset as Record<string, string>)[k] !== v) { ok = false; break; }
+        }
+        if (ok && q) ok = (cell.textContent ?? "").toLowerCase().includes(q);
+        cell.classList.toggle("is-hidden", !ok);
+        if (ok) shown++;
+      });
+      if (countEl) countEl.textContent = `${shown} work${shown === 1 ? "" : "s"}`;
+      if (emptyEl) emptyEl.hidden = shown !== 0;
+    };
+    document.addEventListener("anamnesis:facet", (e) => { facets = (e as CustomEvent).detail ?? {}; apply(); });
+    input?.addEventListener("input", () => {
+      q = input.value.trim().toLowerCase();
+      const url = new URL(location.href);
+      if (q) url.searchParams.set("q", q); else url.searchParams.delete("q");
+      history.replaceState(null, "", url.toString());
+      apply();
+    });
+    const params = new URLSearchParams(location.search);
+    const q0 = params.get("q");
+    if (q0 && input) { input.value = q0; q = q0.toLowerCase(); }
+    ["type", "tier"].forEach((k) => {
+      const v = params.get(k);
+      if (!v) return;
+      facets[k] = v;
+      const chip = document.querySelector<HTMLButtonElement>(`[data-facet="${k}"][data-value="${v}"]`);
+      chip?.classList.add("is-on");
+      chip?.setAttribute("aria-pressed", "true");
+    });
+    apply();
+  }
+</script>
