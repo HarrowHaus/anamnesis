@@ -61,7 +61,12 @@ function classifyLicence(shortName, machine) {
 async function api(params) {
   const u = new URL(API);
   Object.entries({ format: "json", origin: "*", ...params }).forEach(([k, v]) => u.searchParams.set(k, v));
-  const r = await fetch(u, { headers: { "User-Agent": "ANAMNESIS/plate-sourcing (editorial; contact via repo)" } });
+  let r;
+  for (let attempt = 0; attempt < 4; attempt++) {
+    r = await fetch(u, { headers: { "User-Agent": "ANAMNESIS/plate-sourcing (editorial; contact via repo)" } });
+    if (r.status !== 429) break;
+    await new Promise((res) => setTimeout(res, 4000 * (attempt + 1)));
+  }
   if (!r.ok) throw new Error(`API ${r.status}`);
   return r.json();
 }

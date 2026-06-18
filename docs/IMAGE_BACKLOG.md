@@ -22,3 +22,5 @@ an unverified licence** (E2/E3 legal gate).
 | symbols | tria-prima | NOFREE | No clean PD plate of the three-principles glyph; only book-scan PDFs. Lead: extract the sulphur/mercury/salt triad from a PD alchemical symbol table (e.g. Basil Valentine / Rosicrucian plates). |
 | symbols | sun-cross | NOFREE | Clean ancient sun-cross/solar-wheel image not found; bitmap results drift into Nazi/völkisch material to avoid. Lead: a CC0 Bronze Age sun disc (Trundholm) or rock-carving from a museum API. |
 | symbols | zodiac-wheel | NOFREE | Full-text search only returns book PDFs; no clean zodiac-wheel bitmap surfaced. Lead: a PD zodiac volvelle (Apian, Astronomicum Caesareum) or a Commons Category:Zodiac engraving. |
+| symbols | hexagram | NOFREE | Only book-scan PDFs returned; no clean hexagram/Seal-of-Solomon raster. Lead: extract from a PD grimoire plate (Agrippa, Key of Solomon) or accept a CC0 geometric raster. |
+| symbols | vesica-piscis | UNCLEAR | Only a PD SVG (File:Vesica Piscis.svg) found; held back to keep the raster→webp pipeline clean. Lead: rasterize the SVG, or a PD Gothic-architecture mandorla/ichthys photo. |
