@@ -34,10 +34,25 @@ export function relatedFor(current: Symbolish, pool: Relatable[], cap = 4): Wher
   );
 }
 
-/** Resolve a symbol's `appears_in` slugs to casebook titles (built entries only). */
+/**
+ * Resolve which casebook decodes a symbol appears in, both ways:
+ *  - explicit `appears_in` slugs on the symbol, plus
+ *  - any casebook whose `symbol_lineage` lists this symbol (reverse index, at build).
+ * Deduped, so a decode declared on both sides shows once. This keeps the
+ * symbol↔casebook graph bidirectional without per-symbol frontmatter upkeep.
+ */
 export function appearsInFor(
+  symbolSlug: string,
   appears_in: string[] | undefined,
-  casebookBySlug: Map<string, { slug: string; title: string }>
+  casebook: { slug: string; title: string; symbol_lineage?: string[] }[]
 ): { slug: string; title: string }[] {
-  return (appears_in ?? []).map((s) => casebookBySlug.get(s)).filter(Boolean) as { slug: string; title: string }[];
+  const out = new Map<string, { slug: string; title: string }>();
+  for (const s of appears_in ?? []) {
+    const c = casebook.find((e) => e.slug === s);
+    if (c) out.set(c.slug, { slug: c.slug, title: c.title });
+  }
+  for (const c of casebook) {
+    if ((c.symbol_lineage ?? []).includes(symbolSlug)) out.set(c.slug, { slug: c.slug, title: c.title });
+  }
+  return [...out.values()];
 }

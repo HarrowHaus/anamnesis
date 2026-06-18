@@ -17,7 +17,7 @@ const humanize = (s: string) => s.replace(/-/g, " ").replace(/\b\w/g, (c) => c.t
 const symbolEntries = (await getCollection("symbols")).sort((a, b) => a.data.name.localeCompare(b.data.name));
 const symbols = symbolEntries.map((e) => e.data);
 const casebook = await getCollection("casebook");
-const casebookBySlug = new Map(casebook.map((c) => [c.data.slug, { slug: c.data.slug, title: c.data.title }]));
+const casebookLite = casebook.map((c) => ({ slug: c.data.slug, title: c.data.title, symbol_lineage: c.data.symbol_lineage }));
 const pool = buildPool(symbols);
 
 // pre-render each entry's body so the drawers carry identical, fully-styled content
@@ -26,7 +26,7 @@ const rendered = await Promise.all(
     data: e.data,
     Content: (await render(e)).Content,
     related: relatedFor(e.data, pool),
-    appearsIn: appearsInFor(e.data.appears_in, casebookBySlug),
+    appearsIn: appearsInFor(e.data.slug, e.data.appears_in, casebookLite),
   }))
 );
 

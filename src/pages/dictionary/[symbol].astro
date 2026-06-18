@@ -18,7 +18,7 @@ export async function getStaticPaths() {
 
 const all = (await getCollection("symbols")).sort((a, b) => a.data.name.localeCompare(b.data.name));
 const casebook = await getCollection("casebook");
-const casebookBySlug = new Map(casebook.map((c) => [c.data.slug, { slug: c.data.slug, title: c.data.title }]));
+const casebookLite = casebook.map((c) => ({ slug: c.data.slug, title: c.data.title, symbol_lineage: c.data.symbol_lineage }));
 
 const slug = Astro.params.symbol;
 const idx = all.findIndex((e) => e.data.slug === slug);
@@ -27,7 +27,7 @@ const { Content } = await render(entry);
 
 const pool = buildPool(all.map((e) => e.data));
 const related = relatedFor(entry.data, pool);
-const appearsIn = appearsInFor(entry.data.appears_in, casebookBySlug);
+const appearsIn = appearsInFor(entry.data.slug, entry.data.appears_in, casebookLite);
 
 // sequential wrap-around across the (alphabetical) dictionary
 const prev = all[(idx - 1 + all.length) % all.length];
