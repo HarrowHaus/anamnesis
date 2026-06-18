@@ -32,3 +32,10 @@ an unverified licence** (E2/E3 legal gate).
 | symbols | checkerboard-floor | NOFREE | Masonic mosaic-pavement images are trapped in book PDFs/DJVU. Lead: a CC0/CC-BY lodge-floor photo, or extract from Jeremy Cross's True Masonic Chart. |
 | symbols | blazing-star | NOFREE | Only masonic book PDFs (Jeremy Cross monitor). Lead: crop the blazing star from a PD tracing-board plate. |
 | symbols | letter-g | NOFREE | Only masonic book PDFs. Lead: a PD square-compass-and-G emblem engraving, or extract from a tracing board. |
+| symbols | apple-logo | TM | Active trademark — do not reproduce. Lead: a PD image of the *antecedent* (the fruit-of-knowledge / Eden apple from a PD engraving), shown as the root, not the logo. |
+| symbols | cbs-eye | TM | Active trademark — do not reproduce. Lead: a PD Pennsylvania-Dutch hex sign or Eye of Providence antecedent. |
+| symbols | columbia-pictures | TM | Active trademark — do not reproduce. Lead: a PD "Columbia"/Libertas torch-bearer personification (the real statue-of-liberty plate already covers the root). |
+| symbols | nbc-peacock | TM | Active trademark — do not reproduce. Lead: a PD peacock "many-eyed" plate (Argus/Juno's peacock) as the antecedent. |
+| symbols | shell-logo | TM | Active trademark — do not reproduce. Lead: a PD pilgrim's scallop (Coquille St-Jacques) engraving as the antecedent. |
+| symbols | starbucks-siren | TM | Active trademark — do not reproduce. Lead: a PD medieval twin-tailed siren/Melusine woodcut as the antecedent. |
+| symbols | time-warner-eye | TM | Active trademark — do not reproduce. Lead: a PD Eye of Providence antecedent (the real all-seeing-eye plate covers the root). |
