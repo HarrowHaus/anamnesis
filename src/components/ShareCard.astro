@@ -2,21 +2,24 @@
 // §3.14 — Share-card (OG). glyph + one line + wordmark, at the 1.91:1 OG ratio.
 // On-page this is the visual that the build later rasterizes per shareable
 // entry. Palette-neutral (grayscale plate) so no hue is baked in.
-import { plateUrl } from "../lib/plates";
+import type { ImageMetadata } from "astro";
+import { plateUrl, isSeedPlate } from "../lib/plates";
 
 interface Props {
   name: string;
   share_line: string;
+  plate?: ImageMetadata;
   glyph?: string;
 }
-const { name, share_line, glyph } = Astro.props;
-const img = plateUrl(glyph);
+const { name, share_line, plate, glyph } = Astro.props;
+const img = plateUrl(plate, glyph);
+const seed = isSeedPlate(plate);
 ---
 
 <div class="og" role="img" aria-label={`Share card: ${name} — ${share_line}`}>
   <div class="og__plate">
     {img
-      ? <img class="u-plate" src={img} alt="" />
+      ? <img class="u-plate" src={img} data-plate={seed ? "seed" : "real"} alt="" />
       : <div class="u-plate-fallback" role="presentation"></div>}
   </div>
   <div class="og__scrim"></div>

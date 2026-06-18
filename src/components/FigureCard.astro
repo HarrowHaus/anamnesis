@@ -1,6 +1,7 @@
 ---
 // §3.5 — Figure card (sibling of the specimen card). A lineage figure.
-import { plateUrl } from "../lib/plates";
+import type { ImageMetadata } from "astro";
+import { plateUrl, isSeedPlate } from "../lib/plates";
 
 interface Figure {
   name: string;
@@ -8,6 +9,7 @@ interface Figure {
   one_line?: string;
   tier: "founder" | "ancestor" | "peer" | "backbone";
   dates?: string;
+  plate?: ImageMetadata;
   media?: { portrait?: string };
 }
 interface Props {
@@ -16,7 +18,8 @@ interface Props {
 }
 const { figure, href } = Astro.props;
 const url = href ?? `/figures/${figure.slug}`;
-const img = plateUrl(figure.media?.portrait);
+const img = plateUrl(figure.plate, figure.media?.portrait);
+const seed = isSeedPlate(figure.plate);
 const tierLabel = {
   founder: "Founder",
   ancestor: "Ancestor",
@@ -29,7 +32,7 @@ const tierLabel = {
   <a class="fig__link" href={url}>
     <div class="fig__portrait">
       {img
-        ? <img class="u-plate" src={img} alt={`Portrait of ${figure.name}`} loading="lazy" />
+        ? <img class="u-plate" src={img} data-plate={seed ? "seed" : "real"} alt={`Portrait of ${figure.name}`} loading="lazy" />
         : <div class="u-plate-fallback" role="presentation"></div>}
     </div>
     <div class="fig__body">

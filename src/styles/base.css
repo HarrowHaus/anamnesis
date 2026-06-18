@@ -85,7 +85,12 @@ button {
 }
 
 /* Plate imagery: palette-neutral until the duotone phase. Grayscale keeps
-   every plate looking intentional without committing to a hue. */
+   every plate looking intentional without committing to a hue.
+   Phase E: each <img class="u-plate"> carries data-plate="real|seed".
+     · real — a sourced per-entry asset (astro:assets), the finished plate.
+     · seed — a transitional shared placeholder; grayscale is its visible
+       "provisional" signal (reads as placeholder, not finished art). The
+       Phase-F duotone keys off the category; E5 retires every seed. */
 .u-plate {
   filter: grayscale(1) contrast(1.02);
   object-fit: cover;

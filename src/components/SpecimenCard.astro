@@ -4,7 +4,8 @@
 //   related       — compact horizontal row (where-next / drawer)
 //   search        — grid tile + a matched-context line
 //   pathway-stop  — grid tile carrying a step ordinal + connective note
-import { plateUrl } from "../lib/plates";
+import type { ImageMetadata } from "astro";
+import { plateUrl, isSeedPlate } from "../lib/plates";
 import TierBadge from "./TierBadge.astro";
 
 interface Symbol {
@@ -14,6 +15,7 @@ interface Symbol {
   category: string;
   tradition?: string;
   tier: "A" | "B" | "C";
+  plate?: ImageMetadata;
   glyph?: string;
 }
 interface Props {
@@ -26,14 +28,15 @@ interface Props {
 }
 const { symbol, variant = "grid", href, note, step, openDrawer } = Astro.props;
 const url = href ?? `/dictionary/${symbol.slug}`;
-const img = plateUrl(symbol.glyph);
+const img = plateUrl(symbol.plate, symbol.glyph);
+const seed = isSeedPlate(symbol.plate);
 ---
 
 <article class={`spec spec--${variant}`} data-cat={symbol.category} data-tradition={symbol.tradition} data-tier={symbol.tier} data-name={symbol.name}>
   <a class="spec__link" href={url} data-open={openDrawer}>
     <div class="spec__plate">
       {img
-        ? <img class="u-plate" src={img} alt={`Plate for ${symbol.name}`} loading="lazy" />
+        ? <img class="u-plate" src={img} data-plate={seed ? "seed" : "real"} alt={`Plate for ${symbol.name}`} loading="lazy" />
         : <div class="u-plate-fallback" role="presentation"></div>}
       {step != null && <span class="spec__step" aria-hidden="true">{step}</span>}
     </div>

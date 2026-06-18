@@ -2,18 +2,21 @@
 // §3.12 — Timeline node. date · event · why-it-matters · links. Pinned-scroll
 // aware on the Timeline page; standalone it is a static node that reveals on
 // enter. Reduced-motion / no-JS → present, no motion.
-import { plateUrl } from "../lib/plates";
+import type { ImageMetadata } from "astro";
+import { plateUrl, isSeedPlate } from "../lib/plates";
 
 interface Props {
   date: string;
   event: string;
   why_it_matters: string;
   era?: "sacred" | "mechanical" | "algorithmic";
+  plate?: ImageMetadata;
   glyph?: string;
   links?: { label: string; href: string }[];
 }
-const { date, event, why_it_matters, era, glyph, links = [] } = Astro.props;
-const img = plateUrl(glyph);
+const { date, event, why_it_matters, era, plate, glyph, links = [] } = Astro.props;
+const img = plateUrl(plate, glyph);
+const seed = isSeedPlate(plate);
 const eraLabel = era ? { sacred: "Sacred image-control", mechanical: "Mechanical reproduction", algorithmic: "Algorithmic / synthetic" }[era] : null;
 ---
 
@@ -21,7 +24,7 @@ const eraLabel = era ? { sacred: "Sacred image-control", mechanical: "Mechanical
   <div class="node__rail" aria-hidden="true"><span class="node__dot"></span></div>
   <div class="node__plate">
     {img
-      ? <img class="u-plate" src={img} alt="" loading="lazy" />
+      ? <img class="u-plate" src={img} data-plate={seed ? "seed" : "real"} alt="" loading="lazy" />
       : <div class="u-plate-fallback" role="presentation"></div>}
   </div>
   <div class="node__body">

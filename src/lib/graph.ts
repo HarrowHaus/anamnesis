@@ -2,6 +2,7 @@
  * Build the relation payloads the entry pages + drawers need, from the loaded
  * collections. Keeps the symbol↔casebook graph resolution in one place.
  */
+import type { ImageMetadata } from "astro";
 import { whereNext, type Relatable, type WhereNextItem } from "./relations";
 
 export interface Symbolish {
@@ -11,6 +12,7 @@ export interface Symbolish {
   tradition?: string;
   era?: string;
   tier: "A" | "B" | "C";
+  plate?: ImageMetadata;
   glyph?: string;
   one_line: string;
   decoded_by?: string[];
@@ -22,7 +24,7 @@ export function buildPool(symbols: Symbolish[]): Relatable[] {
     slug: s.slug, name: s.name, category: s.category, tradition: s.tradition,
     decoded_by: s.decoded_by,
     // passthrough for the card the WhereNext list renders
-    one_line: s.one_line, tier: s.tier, glyph: s.glyph,
+    one_line: s.one_line, tier: s.tier, plate: s.plate, glyph: s.glyph,
   })) as Relatable[];
 }
 

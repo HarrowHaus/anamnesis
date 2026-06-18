@@ -8,11 +8,13 @@
 // reader gets a clean static annotated diagram + lineage list (the §5.4
 // fallback) for free. GSAP only runs when motion is allowed: it hides the
 // pieces, pins the stage, and scrubs them back in linearly with scroll.
-import { plateUrl } from "../lib/plates";
+import type { ImageMetadata } from "astro";
+import { plateUrl, isSeedPlate } from "../lib/plates";
 
 interface Item {
   slug: string;
   name: string;
+  plate?: ImageMetadata;
   glyph?: string;
   resolved: boolean;
   x: number;
@@ -20,12 +22,14 @@ interface Item {
   blurb?: string;
 }
 interface Props {
+  artifactPlate?: ImageMetadata;
   artifactGlyph?: string;
   artifactAlt?: string;
   items: Item[];
 }
-const { artifactGlyph, artifactAlt = "The artifact", items } = Astro.props;
-const artImg = plateUrl(artifactGlyph);
+const { artifactPlate, artifactGlyph, artifactAlt = "The artifact", items } = Astro.props;
+const artImg = plateUrl(artifactPlate, artifactGlyph);
+const artSeed = isSeedPlate(artifactPlate);
 ---
 
 <section class="asm" data-asm aria-label="The decode, assembled">
@@ -39,7 +43,7 @@ const artImg = plateUrl(artifactGlyph);
     <div class="asm__grid">
       <figure class="asm__artifact">
         {artImg
-          ? <img class="u-plate" src={artImg} alt={artifactAlt} />
+          ? <img class="u-plate" src={artImg} data-plate={artSeed ? "seed" : "real"} alt={artifactAlt} />
           : <div class="u-plate-fallback" role="presentation"></div>}
         {items.map((it, i) => (
           <span
@@ -53,12 +57,13 @@ const artImg = plateUrl(artifactGlyph);
 
       <ol class="asm__cards" data-asm-cards>
         {items.map((it, i) => {
-          const img = plateUrl(it.glyph);
+          const img = plateUrl(it.plate, it.glyph);
+          const itSeed = isSeedPlate(it.plate);
           const inner = (
             <>
               <span class="asm__card-plate">
                 {img
-                  ? <img class="u-plate" src={img} alt="" loading="lazy" />
+                  ? <img class="u-plate" src={img} data-plate={itSeed ? "seed" : "real"} alt="" loading="lazy" />
                   : <div class="u-plate-fallback" role="presentation"></div>}
               </span>
               <span class="asm__card-text">

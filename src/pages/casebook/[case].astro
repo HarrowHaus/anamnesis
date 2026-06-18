@@ -45,6 +45,7 @@ const lineage = markerSrc.map((m) => {
   return {
     slug: m.slug,
     name: symbol?.name ?? humanize(m.slug),
+    plate: symbol?.plate,
     glyph: symbol?.glyph,
     resolved: !!symbol,
     x: m.x,
@@ -59,7 +60,7 @@ const related: WhereNextItem[] = (data.related_symbols ?? [])
   .filter(Boolean)
   .map((item) => ({ item: item!, relation: "Related symbol", score: 1 }));
 
-const heroImg = plateUrl(data.glyph);
+const heroImg = plateUrl(data.plate, data.glyph);
 ---
 
 <SiteLayout
@@ -95,7 +96,7 @@ const heroImg = plateUrl(data.glyph);
     </div>
 
     <!-- the magic: the artifact broken into its Dictionary symbols (§5.4) -->
-    <CasebookAssemble artifactGlyph={data.glyph} artifactAlt={`The ${data.artifact}`} items={lineage} />
+    <CasebookAssemble artifactPlate={data.plate} artifactGlyph={data.glyph} artifactAlt={`The ${data.artifact}`} items={lineage} />
 
     <!-- who made the claim + sources (RL-2) -->
     <section class="cb-apparatus">
@@ -117,7 +118,7 @@ const heroImg = plateUrl(data.glyph);
 
     <section class="cb-share">
       <p class="u-eyebrow">Share this decode</p>
-      <ShareCard name={data.title} share_line={data.share_line ?? data.one_line ?? data.title} glyph={data.glyph} />
+      <ShareCard name={data.title} share_line={data.share_line ?? data.one_line ?? data.title} plate={data.plate} glyph={data.glyph} />
     </section>
   </article>
 </SiteLayout>

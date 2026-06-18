@@ -3,6 +3,7 @@
 // so it renders identically as a full page and inside a bottom-sheet drawer.
 // The MDX body (## Documented origin / ## The reading / ## Where it hides today)
 // is forwarded through the default slot into ReadingBody's RL-1 region.
+import type { ImageMetadata } from "astro";
 import ReadingBody from "./ReadingBody.astro";
 import WhereNext from "./WhereNext.astro";
 import ShareCard from "./ShareCard.astro";
@@ -16,6 +17,7 @@ interface SymbolData {
   tradition?: string;
   era?: string;
   tier: "A" | "B" | "C";
+  plate?: ImageMetadata;
   glyph?: string;
   aka?: string[];
   decoded_by?: string[];
@@ -41,6 +43,7 @@ const humanize = (s: string) => s.replace(/-/g, " ").replace(/\b\w/g, (c) => c.t
     tradition={data.tradition}
     era={data.era}
     category={data.category}
+    plate={data.plate}
     glyph={data.glyph}
     decoded_by={data.decoded_by}
     sources={data.sources}
@@ -87,7 +90,7 @@ const humanize = (s: string) => s.replace(/-/g, " ").replace(/\b\w/g, (c) => c.t
   <!-- this entry is built to travel -->
   <section class="se__share">
     <p class="u-eyebrow">Share this specimen</p>
-    <ShareCard name={data.name} share_line={data.share_line ?? data.one_line} glyph={data.glyph} />
+    <ShareCard name={data.name} share_line={data.share_line ?? data.one_line} plate={data.plate} glyph={data.glyph} />
   </section>
 </div>
 

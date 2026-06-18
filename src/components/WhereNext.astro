@@ -25,6 +25,7 @@ const { items, heading = "Where next" } = Astro.props;
             category: it.item.category ?? "",
             tradition: it.item.tradition,
             tier: ((it.item as any).tier ?? "B"),
+            plate: (it.item as any).plate,
             glyph: (it.item as any).glyph,
           }}
           variant="related"

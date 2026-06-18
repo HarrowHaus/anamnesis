@@ -11,7 +11,7 @@
 // scrubs a plate cross-dissolve + line swap between them.
 import { getCollection } from "astro:content";
 import SiteLayout from "../layouts/SiteLayout.astro";
-import { plateUrl } from "../lib/plates";
+import { plateUrl, isSeedPlate } from "../lib/plates";
 
 const humanize = (s: string) => s.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
 
@@ -20,7 +20,7 @@ const symbols = new Map((await getCollection("symbols")).map((e) => [e.data.slug
 const seal = (await getCollection("casebook")).find((e) => e.data.slug === "great-seal-pyramid");
 const lineage = (seal?.data.symbol_lineage ?? []).map((slug) => {
   const sym = symbols.get(slug);
-  return { slug, name: sym?.name ?? humanize(slug), glyph: sym?.glyph, resolved: !!sym };
+  return { slug, name: sym?.name ?? humanize(slug), plate: sym?.plate, glyph: sym?.glyph, resolved: !!sym };
 });
 
 const beats = [
@@ -93,12 +93,13 @@ const total = beats.length;
                 <p class="sh__decode-label">It breaks into its symbols —</p>
                 <ul class="sh__chips" role="list">
                   {lineage.map((c) => {
-                    const img = plateUrl(c.glyph);
+                    const img = plateUrl(c.plate, c.glyph);
+                    const cseed = isSeedPlate(c.plate);
                     const inner = (
                       <>
                         <span class="sh__chip-plate">
                           {img
-                            ? <img class="u-plate" src={img} alt="" loading="lazy" />
+                            ? <img class="u-plate" src={img} data-plate={cseed ? "seed" : "real"} alt="" loading="lazy" />
                             : <span class="u-plate-fallback" />}
                         </span>
                         <span class="sh__chip-name">{c.name}</span>

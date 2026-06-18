@@ -1,12 +1,14 @@
 ---
 // §3.5 — Casebook card (sibling). A worked decode of an artifact.
-import { plateUrl } from "../lib/plates";
+import type { ImageMetadata } from "astro";
+import { plateUrl, isSeedPlate } from "../lib/plates";
 
 interface CaseEntry {
   title: string;
   slug: string;
   artifact: string;
   one_line?: string;
+  plate?: ImageMetadata;
   glyph?: string;
   symbol_lineage?: string[];
 }
@@ -16,7 +18,8 @@ interface Props {
 }
 const { entry, href } = Astro.props;
 const url = href ?? `/casebook/${entry.slug}`;
-const img = plateUrl(entry.glyph);
+const img = plateUrl(entry.plate, entry.glyph);
+const seed = isSeedPlate(entry.plate);
 const count = entry.symbol_lineage?.length ?? 0;
 ---
 
@@ -24,7 +27,7 @@ const count = entry.symbol_lineage?.length ?? 0;
   <a class="case__link" href={url}>
     <div class="case__plate">
       {img
-        ? <img class="u-plate" src={img} alt={`The ${entry.artifact}`} loading="lazy" />
+        ? <img class="u-plate" src={img} data-plate={seed ? "seed" : "real"} alt={`The ${entry.artifact}`} loading="lazy" />
         : <div class="u-plate-fallback" role="presentation"></div>}
       <span class="case__tag">Decode</span>
     </div>

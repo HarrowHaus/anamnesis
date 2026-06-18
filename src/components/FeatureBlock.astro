@@ -1,24 +1,27 @@
 ---
 // §3.6 — Feature block. The lead story on Home / index tops. Full-bleed plate,
 // eyebrow, large title, deck, CTA. Driven by any entry with a glyph.
-import { plateUrl } from "../lib/plates";
+import type { ImageMetadata } from "astro";
+import { plateUrl, isSeedPlate } from "../lib/plates";
 
 interface Props {
   eyebrow?: string;
   title: string;
   deck?: string;
+  plate?: ImageMetadata;
   glyph?: string;
   href?: string;
   ctaLabel?: string;
 }
-const { eyebrow = "Featured decode", title, deck, glyph, href = "#", ctaLabel = "Read the decode" } = Astro.props;
-const img = plateUrl(glyph);
+const { eyebrow = "Featured decode", title, deck, plate, glyph, href = "#", ctaLabel = "Read the decode" } = Astro.props;
+const img = plateUrl(plate, glyph);
+const seed = isSeedPlate(plate);
 ---
 
 <section class="feature">
   <div class="feature__plate">
     {img
-      ? <img class="u-plate" src={img} alt="" loading="eager" />
+      ? <img class="u-plate" src={img} data-plate={seed ? "seed" : "real"} alt="" loading="eager" />
       : <div class="u-plate-fallback" role="presentation"></div>}
   </div>
   <div class="feature__inner u-container">

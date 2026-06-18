@@ -37,7 +37,7 @@ const next = all[(idx + 1) % all.length];
 <SiteLayout
   title={entry.data.seo_title}
   description={entry.data.seo_description}
-  image={plateUrl(entry.data.glyph) ?? undefined}
+  image={plateUrl(entry.data.plate, entry.data.glyph) ?? undefined}
   active="dictionary"
 >
   <div class="u-container head">

@@ -6,9 +6,10 @@
 //   RL-2  the apparatus (cross-refs + sources) — the expert's layer
 // RL-2 gently rises into view on scroll; with reduced motion / no JS it is just
 // present. Nothing is hidden from assistive tech or from a static reader.
+import type { ImageMetadata } from "astro";
 import TierBadge from "./TierBadge.astro";
 import SourceRow from "./SourceRow.astro";
-import { plateUrl } from "../lib/plates";
+import { plateUrl, isSeedPlate } from "../lib/plates";
 
 interface Source { title: string; author?: string; year?: number; tier: "A" | "B" | "C"; type?: string; url?: string }
 interface Props {
@@ -19,16 +20,18 @@ interface Props {
   tradition?: string;
   era?: string;
   category?: string;
+  plate?: ImageMetadata;
   glyph?: string;        // when set, RL-0 shows the large specimen plate
   decoded_by?: string[];
   sources?: Source[];
   showLevels?: boolean;  // RL-0/1/2 eyebrow labels (gallery only; off on real pages)
 }
 const {
-  name, one_line, tier, aka = [], tradition, era, category, glyph,
+  name, one_line, tier, aka = [], tradition, era, category, plate, glyph,
   decoded_by = [], sources = [], showLevels = false,
 } = Astro.props;
-const heroImg = plateUrl(glyph);
+const heroImg = plateUrl(plate, glyph);
+const heroSeed = isSeedPlate(plate);
 const facts = [
   tradition && { k: "Tradition", v: tradition },
   era && { k: "Era", v: era },
@@ -42,7 +45,7 @@ const facts = [
     {showLevels && <p class="u-eyebrow">RL-0 · the lead</p>}
     {heroImg && (
       <figure class="rb__hero">
-        <img class="u-plate" src={heroImg} alt={`Plate for ${name}`} />
+        <img class="u-plate" src={heroImg} data-plate={heroSeed ? "seed" : "real"} alt={`Plate for ${name}`} />
       </figure>
     )}
     {category && <p class="rb__cat u-eyebrow">{category}</p>}

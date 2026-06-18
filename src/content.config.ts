@@ -55,14 +55,17 @@ const symbolCategory = z.string();
 
 const symbols = defineCollection({
   loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/symbols" }),
-  schema: z.object({
+  schema: ({ image }) => z.object({
     name: z.string(),
     aka: z.array(z.string()).default([]),
     slug: z.string(),
     category: symbolCategory,
     tradition: z.string().optional(),
     era: z.string().optional(),
-    glyph: z.string().optional(), // path to the plate; becomes image()/duotone later
+    // Real per-entry plate (astro:assets, Phase E). Sourced one-per-entry in E2;
+    // when unset, the UI falls back to the transitional seed glyph below.
+    plate: image().optional(),
+    glyph: z.string().optional(), // transitional seed plate (grayscale; retired in E5)
     one_line: z.string(),
     tier: sourceTier, // dominant sourcing tier of the reading (A asserted / B attributed)
     // Graph edges (slug references; resolved bidirectionally at build):
@@ -82,12 +85,13 @@ const symbols = defineCollection({
 
 const figures = defineCollection({
   loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/figures" }),
-  schema: z.object({
+  schema: ({ image }) => z.object({
     name: z.string(),
     aka: z.array(z.string()).default([]),
     slug: z.string(),
     dates: z.string().optional(),       // "1940–2022" / "b. ~1959"
     tier: z.enum(["founder", "ancestor", "peer", "backbone"]),
+    plate: image().optional(),          // real portrait plate (E2); seed = media.portrait
     one_line: z.string().optional(),
     role_in_lineage: z.string().optional(), // transmitter? source? scholar?
     core_claims: z.array(z.string()).default([]),
@@ -112,10 +116,12 @@ const figures = defineCollection({
 
 const pillars = defineCollection({
   loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/pillars" }),
-  schema: z.object({
+  schema: ({ image }) => z.object({
     title: z.string(),
     slug: z.string(),
     order: z.number().optional(),        // P1…P5 spine order
+    plate: image().optional(),           // real plate (E2)
+    glyph: z.string().optional(),        // transitional seed plate (retired in E5)
     thesis: z.string(),                  // one paragraph
     key_claims: z.array(z.string()).default([]),
     historical_anchors: z.array(z.string()).default([]), // the citable spine
@@ -133,13 +139,14 @@ const pillars = defineCollection({
 
 const casebook = defineCollection({
   loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/casebook" }),
-  schema: z.object({
+  schema: ({ image }) => z.object({
     title: z.string(),
     slug: z.string(),
     artifact: z.string(),     // the logo / building / ad / ritual
     surface: z.string().optional(),   // what the public sees
     one_line: z.string().optional(),
-    glyph: z.string().optional(),     // image of the artifact
+    plate: image().optional(),        // real artifact plate (E2)
+    glyph: z.string().optional(),     // transitional seed plate (retired in E5)
     // the_decode lives in the MDX body (attributed reading)
     symbol_lineage: z.array(z.string()).default([]), // → symbols, in assemble order (§5.4)
     // Optional marker positions for the "aha assembles" set-piece (docs/02 §5.4):
@@ -170,7 +177,7 @@ const casebook = defineCollection({
 
 const timeline = defineCollection({
   loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/timeline" }),
-  schema: z.object({
+  schema: ({ image }) => z.object({
     slug: z.string(),
     date: z.string(),          // "~375 BCE" / "726–843" / "2022"
     sort: z.number(),          // numeric key for ordering the scroll-story (§5.5)
@@ -179,7 +186,8 @@ const timeline = defineCollection({
     why_it_matters: z.string(), // the image-control angle
     linked_figures: z.array(z.string()).default([]), // → figures
     linked_symbols: z.array(z.string()).default([]), // → symbols
-    glyph: z.string().optional(),
+    plate: image().optional(),  // real plate (E2)
+    glyph: z.string().optional(), // transitional seed plate (retired in E5)
     sources: z.array(source).default([]),
     ...seo,
   }),

@@ -8,7 +8,6 @@ import SiteLayout from "../layouts/SiteLayout.astro";
 import FeatureBlock from "../components/FeatureBlock.astro";
 import SpecimenCard from "../components/SpecimenCard.astro";
 import PathwayCard from "../components/PathwayCard.astro";
-import { plateUrl } from "../lib/plates";
 
 const symbols = (await getCollection("symbols")).map((e) => e.data);
 const casebook = (await getCollection("casebook")).map((e) => e.data);
@@ -54,6 +53,7 @@ const heroPlate = "/plates/hero.jpg";
           eyebrow={`Casebook · ${featured.artifact}`}
           title={featured.title}
           deck={featured.one_line}
+          plate={featured.plate}
           glyph={featured.glyph}
           href={`/casebook/${featured.slug}`}
           ctaLabel="Read the decode"
