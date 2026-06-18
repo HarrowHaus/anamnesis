@@ -1,0 +1,169 @@
+---
+// The Glossary — index (handoff D2). Every term, defined; an A–Z utility.
+// Alphabetical definition list + live text filter + first-letter jump-rail.
+// Each term cross-links its related symbols / figures and see-also terms.
+import { getCollection } from "astro:content";
+import SiteLayout from "../layouts/SiteLayout.astro";
+
+const sortKey = (s: string) => s.toLowerCase().replace(/^[\"'“”]+/, "").replace(/^(the|a|an)\s+/, "").trim();
+const groupLetter = (s: string) => (sortKey(s)[0] ?? "#").toUpperCase();
+
+const terms = (await getCollection("glossary")).map((e) => e.data).sort((a, b) => sortKey(a.term).localeCompare(sortKey(b.term)));
+
+// label maps for cross-links
+const symbolName = new Map((await getCollection("symbols")).map((s) => [s.data.slug, s.data.name]));
+const figureName = new Map((await getCollection("figures")).map((f) => [f.data.slug, f.data.name]));
+const glossaryTerm = new Map(terms.map((t) => [t.slug, t.term]));
+
+const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+const lettersPresent = new Set(terms.map((t) => groupLetter(t.term)));
+const groups = ALPHABET.filter((l) => lettersPresent.has(l)).map((l) => ({
+  letter: l,
+  terms: terms.filter((t) => groupLetter(t.term) === l),
+}));
+---
+
+<SiteLayout
+  title="The Glossary | ANAMNESIS"
+  description="Every term in the archive, defined in plain language — from alchemy to the zodiac — cross-linked to the symbols and figures that use it."
+>
+  <header class="gl-head u-container">
+    <p class="u-eyebrow">Every term, defined</p>
+    <h1 class="gl-title">The Glossary</h1>
+    <p class="gl-lede u-measure">The working vocabulary of the archive, in plain language. Filter by word, jump by letter, and follow any term to the symbols and figures that put it to work.</p>
+
+    <div class="gl-filter">
+      <label class="u-visually-hidden" for="gl-q">Filter the glossary</label>
+      <span class="gl-filter__icon" aria-hidden="true">⌕</span>
+      <input id="gl-q" class="gl-filter__input" type="search" placeholder="Filter terms…" autocomplete="off" data-filter />
+      <p class="gl-count" data-count aria-live="polite">{terms.length} terms</p>
+    </div>
+  </header>
+
+  <nav class="gl-rail" aria-label="Jump to letter" data-rail>
+    {ALPHABET.map((l) =>
+      lettersPresent.has(l)
+        ? <a href={`#letter-${l}`} data-rail-letter={l}>{l}</a>
+        : <span class="is-empty" aria-hidden="true">{l}</span>
+    )}
+  </nav>
+
+  <div class="gl-body u-container" data-glossary>
+    {groups.map((g) => (
+      <section class="gl-group" data-letter={g.letter}>
+        <h2 class="gl-letter" id={`letter-${g.letter}`}>{g.letter}</h2>
+        <dl class="gl-list">
+          {g.terms.map((t) => (
+            <div class="gl-term" id={t.slug} data-text={`${t.term} ${(t.aka ?? []).join(" ")} ${t.definition}`.toLowerCase()}>
+              <dt class="gl-term__name">
+                {t.term}
+                {t.aka && t.aka.length > 0 && <span class="gl-term__aka"> · {t.aka.join(" · ")}</span>}
+              </dt>
+              <dd class="gl-term__def">
+                <p class="gl-def">{t.definition}</p>
+                <p class="gl-xref">
+                  {t.related_symbols && t.related_symbols.filter((s) => symbolName.has(s)).length > 0 && (
+                    <span class="gl-xref__grp"><span class="gl-xref__lbl">In the dictionary:</span> {t.related_symbols.filter((s) => symbolName.has(s)).map((s, i) => (<>{i > 0 ? ", " : ""}<a href={`/dictionary/${s}`}>{symbolName.get(s)}</a></>))}</span>
+                  )}
+                  {t.related_figures && t.related_figures.filter((f) => figureName.has(f)).length > 0 && (
+                    <span class="gl-xref__grp"><span class="gl-xref__lbl">Figures:</span> {t.related_figures.filter((f) => figureName.has(f)).map((f, i) => (<>{i > 0 ? ", " : ""}<a href={`/figures/${f}`}>{figureName.get(f)}</a></>))}</span>
+                  )}
+                  {t.see_also && t.see_also.filter((s) => glossaryTerm.has(s)).length > 0 && (
+                    <span class="gl-xref__grp"><span class="gl-xref__lbl">See also:</span> {t.see_also.filter((s) => glossaryTerm.has(s)).map((s, i) => (<>{i > 0 ? ", " : ""}<a href={`#${s}`}>{glossaryTerm.get(s)}</a></>))}</span>
+                  )}
+                </p>
+              </dd>
+            </div>
+          ))}
+        </dl>
+      </section>
+    ))}
+    <div class="gl-empty" data-empty hidden><p class="u-measure">No terms match that filter.</p></div>
+  </div>
+</SiteLayout>
+
+<style>
+  .gl-head { padding-block: var(--space-xl) var(--space-l); }
+  .gl-title { font-size: var(--step-4); margin-block: var(--space-2xs); }
+  .gl-lede { color: var(--color-text-muted); font-size: var(--step-1); }
+  .gl-filter { position: relative; display: flex; align-items: center; gap: var(--space-s); margin-block-start: var(--space-l); flex-wrap: wrap; }
+  .gl-filter__icon { position: absolute; inset-inline-start: var(--space-s); color: var(--color-text-muted); pointer-events: none; }
+  .gl-filter__input {
+    flex: 1 1 18rem; font: inherit; font-family: var(--font-ui);
+    padding: 0.7em 0.9em 0.7em 2.4em;
+    background: var(--color-surface); border: var(--border-w) solid var(--color-border-strong);
+    border-radius: var(--radius-m); color: var(--color-text);
+  }
+  .gl-count { font-family: var(--font-ui); font-size: var(--step--1); color: var(--color-text-muted); margin: 0; white-space: nowrap; }
+
+  .gl-rail {
+    position: sticky; inset-block-start: 56px; z-index: 80;
+    display: flex; flex-wrap: wrap; gap: 0.15em;
+    padding: var(--space-2xs) var(--gutter);
+    background: color-mix(in srgb, var(--color-bg) 90%, transparent);
+    backdrop-filter: blur(8px);
+    border-block: var(--border-w) solid var(--color-border);
+    font-family: var(--font-ui); font-size: var(--step--1);
+  }
+  .gl-rail a, .gl-rail span { display: inline-grid; place-items: center; inline-size: 1.5em; block-size: 1.5em; text-decoration: none; border-radius: var(--radius-s); }
+  .gl-rail a { color: var(--color-text); }
+  .gl-rail a:hover { background: var(--color-surface-sunk); }
+  .gl-rail .is-empty, .gl-rail a.is-off { color: var(--color-border-strong); pointer-events: none; }
+
+  .gl-body { padding-block: var(--space-l) var(--space-2xl); }
+  .gl-group { padding-block-start: var(--space-l); }
+  .gl-group.is-hidden { display: none; }
+  .gl-letter { font-size: var(--step-3); color: var(--color-text-muted); border-block-end: var(--border-w) solid var(--color-border); padding-block-end: var(--space-2xs); scroll-margin-top: 110px; }
+  .gl-list { margin: 0; }
+  .gl-term { padding-block: var(--space-m); border-block-end: var(--border-w) solid var(--color-border); scroll-margin-top: 110px; }
+  .gl-term.is-hidden { display: none; }
+  .gl-term__name { font-family: var(--font-display); font-size: var(--step-1); }
+  .gl-term__aka { font-family: var(--font-ui); font-size: var(--step--1); color: var(--color-text-muted); }
+  .gl-term__def { margin: var(--space-2xs) 0 0; }
+  .gl-def { margin: 0; }
+  .gl-xref { margin: var(--space-2xs) 0 0; display: flex; flex-wrap: wrap; gap: var(--space-s); font-family: var(--font-ui); font-size: var(--step--1); }
+  .gl-xref__lbl { color: var(--color-text-muted); letter-spacing: var(--tracking-wide); text-transform: uppercase; margin-inline-end: 0.3em; }
+  .gl-empty { padding-block: var(--space-2xl); color: var(--color-text-muted); }
+</style>
+
+<script>
+  const root = document.querySelector<HTMLElement>("[data-glossary]");
+  const input = document.querySelector<HTMLInputElement>("[data-filter]");
+  const countEl = document.querySelector<HTMLElement>("[data-count]");
+  const emptyEl = document.querySelector<HTMLElement>("[data-empty]");
+  const railLinks = new Map<string, HTMLElement>();
+  document.querySelectorAll<HTMLElement>("[data-rail-letter]").forEach((a) => railLinks.set(a.dataset.railLetter!, a));
+
+  if (root) {
+    const groups = Array.from(root.querySelectorAll<HTMLElement>(".gl-group"));
+    const terms = Array.from(root.querySelectorAll<HTMLElement>(".gl-term"));
+
+    const apply = (q: string) => {
+      const query = q.trim().toLowerCase();
+      let shown = 0;
+      terms.forEach((t) => {
+        const hit = !query || (t.dataset.text ?? "").includes(query);
+        t.classList.toggle("is-hidden", !hit);
+        if (hit) shown++;
+      });
+      groups.forEach((g) => {
+        const anyVisible = g.querySelectorAll(".gl-term:not(.is-hidden)").length > 0;
+        g.classList.toggle("is-hidden", !anyVisible);
+        const link = railLinks.get(g.dataset.letter!);
+        link?.classList.toggle("is-off", !anyVisible);
+      });
+      if (countEl) countEl.textContent = `${shown} term${shown === 1 ? "" : "s"}`;
+      if (emptyEl) emptyEl.hidden = shown !== 0;
+    };
+
+    input?.addEventListener("input", () => {
+      apply(input.value);
+      const url = new URL(location.href);
+      if (input.value.trim()) url.searchParams.set("q", input.value.trim()); else url.searchParams.delete("q");
+      history.replaceState(null, "", url.toString());
+    });
+
+    const q0 = new URLSearchParams(location.search).get("q");
+    if (q0 && input) { input.value = q0; apply(q0); }
+  }
+</script>
