@@ -12,7 +12,7 @@ Starting point (audited from the real build): the Astro scaffold, the full 15-co
 2. **Use the agent pack already in `.claude/`:** the `orchestrator` plans each phase and delegates; `content-generator` writes entries; `compliance-reviewer` checks stance/sourcing; `committer` commits + pushes. The `gen-symbols` command + the PostToolUse validator hook run automatically.
 3. **Checkpoint = all of:** `npm run build` passes (it runs `astro check && astro build`); `npm run validate:content` is green; reduced-motion verified on any new motion; the page renders mobile-first. Only then does `committer` commit.
 4. **Commit per phase-step** with the message given in that step. Never force-push; never commit secrets.
-5. **The skin is Phase F (locked, below) — not out of scope.** Until that phase, tokens stay the neutral grayscale placeholder and plates stay `grayscale(1)`; the build is verified structurally first, then Phase F drops the real skin in through the token seams in one pass. Ship (Phase G) runs last so Lighthouse/contrast are checked on the real palette.
+5. **Images, skin, and motion are sequenced deliberately — Phase E (images) → F (design/duotone) → G (motion) → H (ship).** Real per-entry plates land in **E** *before* the duotone or any scrollytelling, because both are tuned to the actual images; building them on placeholders forces per-photo rework. Until E, plates stay the neutral grayscale placeholder; until F, tokens stay neutral. Motion (G) runs after the skin so every set-piece is choreographed once, on the final plates. Ship (H) runs last so Lighthouse/contrast are checked on the real palette.
 
 ---
 
@@ -172,25 +172,35 @@ After any batch: `compliance-reviewer` reviews stance/attribution; fix; then `co
 
 ---
 
-## PHASE E — Motion completeness + polish *(docs §5)*
+## PHASE E — Image pipeline *(source, wire & replace every plate — MUST run before Design and Motion)*
 
-**E1 — Home hero §5.1 "veil parts".** Upgrade `src/pages/index.astro` from static feature block to the set-piece (GSAP), reduced-motion → static. Keep the home composition: Masthead · Start-Here affordance · the hero · Feature block · Pathways strip (from D3) · Footer.
-**E2 — Symbol entry §5.3 "develops".** Add the one glyph-resolve moment on `/dictionary/[symbol]` arrival (IntersectionObserver/GSAP), reduced-motion safe.
-**E3 — Reduced-motion audit.** Verify every set-piece (Start, Casebook, Timeline, Home, Symbol) degrades to clean static. Commit `feat(motion): home hero + entry resolve; reduced-motion audited`.
+**Why here:** the duotone skin (F) and every motion set-piece (G) are tuned to specific plates — aspect ratio, focal point, tonal range, the Casebook "assemble" x/y coordinates. Built on placeholders, they get reworked once per photo forever. Real images land first, once. (This phase was missing from earlier drafts; it is the prerequisite for F and G.)
+
+**E1 — Asset architecture (locked).** Migrate off the shared-placeholder system to **Astro assets**. Each entry's plate is a real file at `src/assets/plates/<collection>/<slug>.{webp,jpg}`, referenced through the content schema via Astro `image()` (the schema's `glyph` string was the placeholder seam for exactly this). **First read the current `src/content.config.ts`, `src/lib/plates.ts`, and `src/styles/base.css`** to confirm present wiring before changing anything — do not assume the state from this doc. Update the schema + `plates.ts`; retire the placeholder mapping.
+
+**E2 — Source one image per entry** (symbols, figures, casebook, pillars, timeline nodes) from `docs/05_IMAGE_SOURCES.md`: Wellcome Collection, Wikimedia Commons, Internet Archive, and the open-access museum APIs (Met, Cleveland, AIC, Smithsonian, Getty, Europeana). Choose the actual engraving/plate/portrait the entry discusses where one exists. **Verify each image is genuinely public-domain / CC0** — if license is unclear, skip it and list the entry for follow-up; never ship an unverified image.
+
+**E3 — License + credit capture (locked).** Add a `plate_credit` object (source, creator, license, URL) to each collection schema if absent; populate it per entry; surface a small credit line on detail pages. No plate ships without its license recorded — this is a legal gate, not a nicety.
+
+**E4 — Processing.** Normalize each plate to the aspect ratio its components expect (confirm from the components: specimen ~1:1, entry plate ~4:5, hero full-bleed, timeline node ratio). Emit optimized WebP via `astro:assets`; keep a **grayscale-neutral master** so the Phase-F duotone applies cleanly over it. Watch file sizes for the Lighthouse gate.
+
+**E5 — Wire + replace.** Point every entry at its real plate; remove all placeholder repeats; write descriptive **alt text** per image from the entry. Any entry still without a sourced image falls back to a single, clearly-neutral placeholder (never a misleading repeat, never a broken `<img>`) and is added to a `docs/IMAGE_BACKLOG.md` list.
+
+**E6 — Verify + commit.** `npm run build` clean; no shared placeholder remains except the explicit fallback; `npm run validate:content` green; credits present. Commit `feat(images): real per-entry plates via astro:assets + license capture; retire placeholders`.
 
 ---
 
-## PHASE F — Design / Duotone skin *(locked — replaces the grayscale placeholder in one pass)*
+## PHASE F — Design / Duotone skin *(locked — skins the real plates from Phase E)*
 
-**Source of truth:** `mockup_E_atlas_actualized.html` (Bug's approved direction). The skin is applied through the seams the build already exposes — `src/styles/tokens.css` (the `--color-*`, `--font-*`, and the eight `--way-*` slots), `src/styles/base.css` (the plate filter), and `src/lib/plates.ts` — so this is a **re-skin via tokens, not a rebuild**. Because every component reads from these tokens, any value below stays tunable later by editing one file; "locked" means the system and the default values are decided, not that hues are frozen forever.
+**Source of truth:** `mockup_E_atlas_actualized.html` (Bug's approved direction). Applied through the seams the build exposes — `src/styles/tokens.css` (`--color-*`, `--font-*`, the eight `--way-*` slots), `src/styles/base.css` (the plate filter), `src/lib/plates.ts` — a **re-skin via tokens, not a rebuild**. Every value below stays tunable later by editing one file; "locked" means the system + defaults are decided, not frozen forever.
 
-**Governing principle (locked):** *less gaudy, less safe.* One constrained, high-minded editorial palette derived from mockup_E — restraint over rainbow. The category duotones are **low-chroma, ink-weighted** (a refined tinted near-monochrome), never poppy; one bold motion (datamosh) carries the edge.
+**Governing principle (locked):** *less gaudy, less safe.* One constrained, high-minded editorial palette derived from mockup_E — restraint over rainbow. Category duotones are **low-chroma, ink-weighted** (a refined tinted near-monochrome), never poppy; one bold motion (datamosh) carries the edge.
 
-**F1 — Type.** Set `--font-display: Archivo` (700/900), `--font-body: Spectral`, `--font-ui: "Space Mono"` in `tokens.css`; add the font `<link>` (Google Fonts or @fontsource) in `Base.astro`. Keep the existing fluid scale/spacing tokens.
+**F1 — Type.** Set `--font-display: Archivo` (700/900), `--font-body: Spectral`, `--font-ui: "Space Mono"` in `tokens.css`; add the font `<link>` in `Base.astro`. Keep the existing fluid scale/spacing tokens.
 
-**F2 — Base palette + neo-brutalist tokens.** In `tokens.css` set: `--color-bg` vellum `#F1E9D6`, `--color-surface` `#FAF3E2`, `--color-text` oak-gall ink `#1A1612`, `--color-text-muted` `#6B655A`, `--color-border` ink, and the border/shadow tokens to the mockup language — `--border-w: 2.5px` solid ink, hard offset shadow `5px 5px 0` (no blur), zero radius on structural elements. Do **not** invent values outside mockup_E's register.
+**F2 — Base palette + neo-brutalist tokens.** In `tokens.css`: `--color-bg` vellum `#F1E9D6`, `--color-surface` `#FAF3E2`, `--color-text` oak-gall ink `#1A1612`, `--color-text-muted` `#6B655A`, `--color-border` ink; border/shadow tokens to the mockup language — `--border-w: 2.5px` solid ink, hard offset shadow `5px 5px 0` (no blur), zero radius on structural elements. Invent no values outside mockup_E's register.
 
-**F3 — The duotone IS the category facet (locked).** Plates stop being `grayscale(1)` and become a **two-tone duotone tinted by the entry's category** — so color and facet are one language (per §0.2's eight categories). Implement at the single seam: in `base.css` swap the plate `filter` for a per-category duotone (SVG `feComponentTransfer` color-transfer, or pre-baked variants) selected from the `--way-*` token on the entry's category; wire `plates.ts` to emit the category data-attribute the filter keys off. Assign the eight `--way-*` tokens, all kept **low-saturation** (refined from mockup_E's cobalt/coral/gold/lilac so a category's grid reads as one tasteful tone):
+**F3 — The duotone IS the category facet (locked).** The real Phase-E plates render as a **two-tone duotone tinted by the entry's category** — color and facet, one language (§0.2's eight categories). Implement at the single seam: in `base.css` swap the plate `filter` for a per-category duotone (SVG `feComponentTransfer`, or pre-baked variants) selected from the `--way-*` token on the entry's category; `plates.ts` emits the category data-attribute the filter keys off. Assign the eight `--way-*` tokens, all **low-saturation** (refined from mockup_E's cobalt/coral/gold/lilac so a category's grid reads as one tasteful tone):
 - `--way-solar` (solar-astro) → gold `#C8922E`
 - `--way-civic` (civic-national) → cobalt `#3450C4`
 - `--way-corp` (corporate) → coral-red `#D8452E`
@@ -199,27 +209,38 @@ After any batch: `compliance-reviewer` reviews stance/attribution; fix; then `co
 - `--way-masonic` (fraternal-masonic) → ink-teal `#2F6E6A`
 - `--way-alchem` (alchemical) → verdigris `#3C7A55`
 - `--way-occult` (occult) → oxblood `#8E3B52`
-Map these onto the existing `--way-dictionary/figures/…` slots by section as needed. The shadow pole of every duotone is `--color-text` (ink) and the highlight pole is vellum, so the whole site reads as one constrained object. Tune chroma down (not up) if any grid feels loud — the bar is "high-minded magazine," not "data-viz."
+Shadow pole = `--color-text` (ink), highlight pole = vellum, so the whole site reads as one constrained object. Tune chroma **down** (not up) if any grid feels loud — the bar is "high-minded magazine," not "data-viz."
 
-**F4 — Chrome + wayfinding.** Facet chips, active states, the category eyebrow/label, and the per-section "you are here" signature use the same `--way-*` color (slightly brighter is allowed in chrome for legibility). This is the L8 wayfinding the blueprint deferred to "the palette phase" — now delivered.
+**F4 — Chrome + wayfinding.** Facet chips, active states, the category eyebrow/label, the per-section "you are here" use the same `--way-*` color (slightly brighter allowed in chrome for legibility). The L8 wayfinding the blueprint deferred — now delivered.
 
-**F5 — Datamosh hero (the one bold motion).** Rebuild the home hero (with E1) so the lead engraving channel-splits / slips on load — the engineered image caught being engineered. GSAP, runs once, **freezes to a clean static plate under `prefers-reduced-motion`**. Sparing; it's the only place datamosh appears.
+**F5 — Datamosh hero (the one bold motion).** Treat the **real hero plate from Phase E** so it channel-splits / slips on load — the engineered image caught being engineered. GSAP, runs once, **freezes to a clean static plate under `prefers-reduced-motion`**. The only place datamosh appears.
 
-**F6 — Acceptance.** Side-by-side against `mockup_E`; every plate duotoned by category; the eight categories visually distinguishable but unified; AA contrast on text + chrome over vellum (re-run after this phase, not before); reduced-motion freezes the mosh; `npm run build` clean. Commit `feat(design): apply brutalist-grimoire skin + category duotone (from mockup_E)`.
+**F6 — Acceptance.** Side-by-side against `mockup_E`; every plate duotoned by category; eight categories distinguishable but unified; AA contrast on text + chrome over vellum; reduced-motion freezes the mosh; `npm run build` clean. Commit `feat(design): apply brutalist-grimoire skin + category duotone (from mockup_E)`.
+
+---
+
+## PHASE G — Motion *(choreographed once, on the real skinned plates)*
+
+**E and F first, deliberately:** the set-pieces are tuned to the final images so this work happens once, not per-photo.
+
+**G1 — Re-tune the already-built set-pieces to the real plates.** Now that real images exist, verify and adjust against them: the Casebook "aha assembles" x/y component-symbol coordinates (§5.4), the Timeline pins + plate parallax (§5.5), and the Start descent (§5.2). This is the rework you were right to defer — done once, here.
+
+**G2 — Build the remaining set-pieces.** Home hero §5.1 "veil parts" motion composition (the datamosh treatment itself is built in F5); the Symbol entry §5.3 "develops" glyph-resolve on arrival. Keep the home composition: Masthead · Start-Here affordance · hero · Feature block · Pathways strip (D3) · Footer.
+
+**G3 — Reduced-motion audit + commit.** Verify every set-piece (Home, Start, Symbol, Casebook, Timeline) degrades to a clean static layout under `prefers-reduced-motion`. Commit `feat(motion): all set-pieces tuned to real plates; home + entry resolve; reduced-motion audited`.
 
 ---
 
-## PHASE G — Ship
+## PHASE H — Ship
 
-**G1 — SEO/feeds:** implement §0.7 (OG tags in `Base.astro`, `@astrojs/sitemap`, `@astrojs/rss` for casebook + pillars). Verify each detail page emits its share-card line.
-**G2 — A11y + performance:** keyboard nav, focus states, alt text on plates, color-contrast **on the real Phase-F palette**, Lighthouse ≥ 90 mobile on home + dictionary + a symbol + a casebook.
-**G3 — Deploy:** build, deploy (Cloudflare Pages), smoke-test the spine + one entry of every type. Commit `chore(release): ship v1`.
-
----
+**H1 — SEO/feeds:** implement §0.7 (OG tags in `Base.astro`, `@astrojs/sitemap`, `@astrojs/rss` for casebook + pillars). Verify each detail page emits its share-card line (and its plate credit).
+**H2 — A11y + performance:** keyboard nav, focus states, alt text on every plate, color-contrast on the real Phase-F palette, Lighthouse ≥ 90 mobile on home + dictionary + a symbol + a casebook.
+**H3 — Deploy:** build, deploy (Cloudflare Pages), smoke-test the spine + one entry of every type. Commit `chore(release): ship v1`.
 
 ## DEFINITION OF DONE (the whole project)
 - Every route in §0.1 exists and renders mobile-first; masthead + footer link only to live pages.
 - Every research roster fully generated: ~50+ symbols, ~33 figures, ~17+ casebook decodes, 5 pillars, ~27 timeline nodes, ~24 library sources, ~62 glossary terms, 4 pathways — all stance/sourcing compliant (validator + compliance-reviewer green).
+- Every entry has a real, license-cleared, optimized plate (no shared placeholders); credits recorded and surfaced; alt text on each; remaining gaps tracked in `docs/IMAGE_BACKLOG.md`.
 - The relational graph resolves both directions on every entry (where-next, decoded-by, appears-in, influenced-by/→, used-by, on-the-timeline).
 - All five motion set-pieces live (Home, Start, Symbol, Casebook, Timeline), each with a reduced-motion fallback.
 - Search works across all collections; SEO/OG/sitemap/RSS in place; Lighthouse ≥ 90 mobile.
