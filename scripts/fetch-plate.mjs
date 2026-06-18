@@ -52,7 +52,7 @@ async function wireFrontmatter(collection, slug, rel, credit) {
 // Licences we will ship (PD/CC0 preferred; CC-BY(-SA) accepted WITH credit).
 function classifyLicence(shortName, machine) {
   const s = `${shortName ?? ""} ${machine ?? ""}`.toLowerCase();
-  if (/public domain|pd-|cc-pd|cc0|cc 0/.test(s)) return { ok: true, kind: "PD/CC0" };
+  if (/public domain|pd-|pdm|cc-pd|cc0|cc 0/.test(s)) return { ok: true, kind: "PD/CC0" };
   if (/cc[ -]by[ -]sa/.test(s)) return { ok: true, kind: "CC-BY-SA" };
   if (/cc[ -]by/.test(s)) return { ok: true, kind: "CC-BY" };
   return { ok: false, kind: shortName || machine || "unknown" };
