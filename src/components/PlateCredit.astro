@@ -1,0 +1,44 @@
+---
+// §E3 — Plate credit line. The legal gate, surfaced. Renders only when an entry
+// carries a real plate's `plate_credit` (seed plates show nothing). Small,
+// quiet, links to the source item and the licence deed.
+interface Credit {
+  source: string;
+  creator?: string;
+  license: string;
+  license_url?: string;
+  source_url: string;
+}
+interface Props {
+  credit?: Credit;
+  align?: "start" | "end";
+}
+const { credit, align = "start" } = Astro.props;
+---
+{credit && (
+  <p class={`plate-credit plate-credit--${align}`}>
+    {credit.creator && <span>{credit.creator} · </span>}
+    <a href={credit.source_url} target="_blank" rel="noopener noreferrer">{credit.source}</a>
+    {" · "}
+    {credit.license_url
+      ? <a href={credit.license_url} target="_blank" rel="noopener noreferrer">{credit.license}</a>
+      : <span>{credit.license}</span>}
+  </p>
+)}
+
+<style>
+  .plate-credit {
+    font-family: var(--font-ui);
+    font-size: var(--step--1);
+    line-height: var(--leading-snug);
+    color: var(--color-text-muted);
+    letter-spacing: var(--tracking-wide);
+    margin: var(--space-3xs) 0 0;
+  }
+  .plate-credit--end { text-align: end; }
+  .plate-credit a {
+    color: inherit;
+    text-decoration-color: var(--color-border-strong);
+  }
+  .plate-credit a:hover { text-decoration-color: currentColor; }
+</style>

@@ -10,7 +10,8 @@ import CasebookAssemble from "../../components/CasebookAssemble.astro";
 import SourceRow from "../../components/SourceRow.astro";
 import WhereNext from "../../components/WhereNext.astro";
 import ShareCard from "../../components/ShareCard.astro";
-import { plateUrl } from "../../lib/plates";
+import PlateCredit from "../../components/PlateCredit.astro";
+import { plateUrl, isSeedPlate } from "../../lib/plates";
 import { buildPool } from "../../lib/graph";
 import type { WhereNextItem } from "../../lib/relations";
 
@@ -82,8 +83,9 @@ const heroImg = plateUrl(data.plate, data.glyph);
     <header class="cb-hero">
       <figure class="cb-hero__plate">
         {heroImg
-          ? <img class="u-plate" src={heroImg} alt={`The ${data.artifact}`} />
+          ? <img class="u-plate" src={heroImg} data-plate={isSeedPlate(data.plate) ? "seed" : "real"} alt={`The ${data.artifact}`} />
           : <div class="u-plate-fallback" role="presentation"></div>}
+        {!isSeedPlate(data.plate) && data.plate_credit && <figcaption><PlateCredit credit={data.plate_credit} /></figcaption>}
       </figure>
       <p class="u-eyebrow">Casebook decode · {data.artifact}</p>
       <h1 class="cb-hero__title">{data.title}</h1>

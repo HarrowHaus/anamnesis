@@ -18,6 +18,7 @@ interface SymbolData {
   era?: string;
   tier: "A" | "B" | "C";
   plate?: ImageMetadata;
+  plate_credit?: { source: string; creator?: string; license: string; license_url?: string; source_url: string };
   glyph?: string;
   aka?: string[];
   decoded_by?: string[];
@@ -44,6 +45,7 @@ const humanize = (s: string) => s.replace(/-/g, " ").replace(/\b\w/g, (c) => c.t
     era={data.era}
     category={data.category}
     plate={data.plate}
+    plateCredit={data.plate_credit}
     glyph={data.glyph}
     decoded_by={data.decoded_by}
     sources={data.sources}

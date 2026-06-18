@@ -35,6 +35,19 @@ const source = z.object({
   url: z.string().url().optional(),
 });
 
+// Plate credit (Phase E3 — the legal gate). No real plate ships without its
+// license recorded. `source` = the holding institution / platform; `creator` =
+// artist/author when known (PD works are often anonymous); `license` = the
+// human label (e.g. "Public Domain", "CC0", "CC BY 4.0"); `source_url` = the
+// item/file page the plate was taken from; `license_url` = the licence deed.
+const plateCredit = z.object({
+  source: z.string(),
+  creator: z.string().optional(),
+  license: z.string(),
+  license_url: z.string().url().optional(),
+  source_url: z.string().url(),
+});
+
 // SEO + social fields shared by every shareable entry.
 const seo = {
   seo_title: z.string(),
@@ -65,6 +78,7 @@ const symbols = defineCollection({
     // Real per-entry plate (astro:assets, Phase E). Sourced one-per-entry in E2;
     // when unset, the UI falls back to the transitional seed glyph below.
     plate: image().optional(),
+    plate_credit: plateCredit.optional(), // E3 legal gate; required alongside a real plate
     glyph: z.string().optional(), // transitional seed plate (grayscale; retired in E5)
     one_line: z.string(),
     tier: sourceTier, // dominant sourcing tier of the reading (A asserted / B attributed)
@@ -92,6 +106,7 @@ const figures = defineCollection({
     dates: z.string().optional(),       // "1940–2022" / "b. ~1959"
     tier: z.enum(["founder", "ancestor", "peer", "backbone"]),
     plate: image().optional(),          // real portrait plate (E2); seed = media.portrait
+    plate_credit: plateCredit.optional(), // E3 legal gate
     one_line: z.string().optional(),
     role_in_lineage: z.string().optional(), // transmitter? source? scholar?
     core_claims: z.array(z.string()).default([]),
@@ -121,6 +136,7 @@ const pillars = defineCollection({
     slug: z.string(),
     order: z.number().optional(),        // P1…P5 spine order
     plate: image().optional(),           // real plate (E2)
+    plate_credit: plateCredit.optional(), // E3 legal gate
     glyph: z.string().optional(),        // transitional seed plate (retired in E5)
     thesis: z.string(),                  // one paragraph
     key_claims: z.array(z.string()).default([]),
@@ -146,6 +162,7 @@ const casebook = defineCollection({
     surface: z.string().optional(),   // what the public sees
     one_line: z.string().optional(),
     plate: image().optional(),        // real artifact plate (E2)
+    plate_credit: plateCredit.optional(), // E3 legal gate
     glyph: z.string().optional(),     // transitional seed plate (retired in E5)
     // the_decode lives in the MDX body (attributed reading)
     symbol_lineage: z.array(z.string()).default([]), // → symbols, in assemble order (§5.4)
@@ -187,6 +204,7 @@ const timeline = defineCollection({
     linked_figures: z.array(z.string()).default([]), // → figures
     linked_symbols: z.array(z.string()).default([]), // → symbols
     plate: image().optional(),  // real plate (E2)
+    plate_credit: plateCredit.optional(), // E3 legal gate
     glyph: z.string().optional(), // transitional seed plate (retired in E5)
     sources: z.array(source).default([]),
     ...seo,
