@@ -9,11 +9,45 @@
 // src/assets/plates/<collection>/<slug>.<ext>, and prints the exact frontmatter
 // (`plate:` + `plate_credit:`) to paste. Anything else prints SKIP — never
 // downloaded. No plate ships without a recorded, verified licence.
-import { writeFile, mkdir } from "node:fs/promises";
+import { writeFile, mkdir, readFile } from "node:fs/promises";
 import { dirname } from "node:path";
 
 const API = "https://commons.wikimedia.org/w/api.php";
 const stripHtml = (s) => (s ?? "").replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();
+
+// Commons Artist/credit fields are noisy: doubled words ("UnknownUnknown"),
+// "AnonymousUnknown author", trailing authority ids. Normalise to a clean
+// creator, or "" (anonymous → omit the field).
+function cleanCreator(raw) {
+  let s = stripHtml(raw);
+  s = s.replace(/\b(\w[\w'.-]*)\1\b/g, "$1");                 // UnknownUnknown → Unknown
+  s = s.replace(/Unknown author/gi, "").replace(/\s+/g, " ").trim();
+  s = s.replace(/\.?\s*[nq]\s?\d{6,}.*$/i, "").trim();         // strip VIAF/authority tails
+  if (/^(unknown|anonymous|anonyme|no machine-readable author)/i.test(s) || s.length < 2) return "";
+  return s.slice(0, 160);
+}
+
+// Patch an entry's MDX frontmatter: insert plate + plate_credit after the
+// `glyph:` line (or after `slug:` if none). Idempotent: skips if plate exists.
+async function wireFrontmatter(collection, slug, rel, credit) {
+  const path = `src/content/${collection}/${slug}.mdx`;
+  let text;
+  try { text = await readFile(path, "utf8"); }
+  catch { console.log(`  (no MDX at ${path} — frontmatter not wired)`); return; }
+  if (/^plate:\s/m.test(text)) { console.log(`  (plate already set in ${path} — skipped)`); return; }
+  const lines = text.split("\n");
+  let at = lines.findIndex((l) => /^glyph:/.test(l));
+  if (at < 0) at = lines.findIndex((l) => /^slug:/.test(l));
+  if (at < 0) { console.log(`  (no glyph/slug anchor in ${path} — not wired)`); return; }
+  const yaml = [`plate: ${rel}`, `plate_credit:`, `  source: ${JSON.stringify(credit.source)}`];
+  if (credit.creator) yaml.push(`  creator: ${JSON.stringify(credit.creator)}`);
+  yaml.push(`  license: ${JSON.stringify(credit.license)}`);
+  if (credit.license_url) yaml.push(`  license_url: ${JSON.stringify(credit.license_url)}`);
+  yaml.push(`  source_url: ${JSON.stringify(credit.source_url)}`);
+  lines.splice(at + 1, 0, ...yaml);
+  await writeFile(path, lines.join("\n"));
+  console.log(`  wired → ${path}`);
+}
 
 // Licences we will ship (PD/CC0 preferred; CC-BY(-SA) accepted WITH credit).
 function classifyLicence(shortName, machine) {
@@ -45,7 +79,7 @@ async function search(term, n) {
   }
 }
 
-async function fetchOne(collection, slug, fileTitle, width) {
+async function fetchOne(collection, slug, fileTitle, width, write) {
   const title = fileTitle.startsWith("File:") ? fileTitle : `File:${fileTitle}`;
   const j = await api({ action: "query", titles: title, prop: "imageinfo",
     iiprop: "extmetadata|url|size|mime", iiurlwidth: String(width) });
@@ -54,9 +88,12 @@ async function fetchOne(collection, slug, fileTitle, width) {
   const ii = page.imageinfo?.[0]; const m = ii?.extmetadata ?? {};
   const shortName = stripHtml(m.LicenseShortName?.value);
   const lic = classifyLicence(shortName, m.License?.value);
-  const creator = stripHtml(m.Artist?.value);
+  const creator = cleanCreator(m.Artist?.value);
   const sourceUrl = ii.descriptionurl || `https://commons.wikimedia.org/?curid=${page.pageid}`;
   const licenseUrl = m.LicenseUrl?.value;
+  // Wellcome files are CC-BY and the attribution names Wellcome Collection.
+  const isWellcome = /wellcome/i.test(`${title} ${stripHtml(m.Credit?.value)} ${stripHtml(m.Attribution?.value)}`);
+  const sourceLabel = isWellcome ? "Wellcome Collection (via Wikimedia Commons)" : "Wikimedia Commons";
 
   if (!lic.ok) {
     console.log(`SKIP — licence not shippable: "${shortName || lic.kind}"  (${title})`);
@@ -81,27 +118,33 @@ async function fetchOne(collection, slug, fileTitle, width) {
 
   const licenseLabel = lic.kind === "PD/CC0"
     ? (/cc0/i.test(shortName) ? "CC0" : "Public Domain")
-    : shortName || lic.kind;
+    : (shortName || lic.kind).replace(/^CC /, "CC ");
   const rel = `../../assets/plates/${collection}/${slug}.${ext}`;
-  console.log(`\nOK [${lic.kind}] → ${out}  (${(buf.length / 1024).toFixed(0)} KB, ${ii.thumbwidth || ii.width}px)`);
-  console.log(`\n--- paste into src/content/${collection}/${slug}.mdx frontmatter ---`);
-  console.log(`plate: ${rel}`);
-  console.log(`plate_credit:`);
-  console.log(`  source: "Wikimedia Commons"`);
-  if (creator) console.log(`  creator: ${JSON.stringify(creator.slice(0, 160))}`);
-  console.log(`  license: ${JSON.stringify(licenseLabel)}`);
-  if (licenseUrl) console.log(`  license_url: "${licenseUrl}"`);
-  console.log(`  source_url: "${sourceUrl}"`);
-  console.log(`-------------------------------------------------------------`);
+  const credit = { source: sourceLabel, creator: creator || undefined, license: licenseLabel,
+    license_url: licenseUrl || undefined, source_url: sourceUrl };
+  console.log(`\nOK [${lic.kind}] → ${out}  (${(buf.length / 1024).toFixed(0)} KB, ${ii.thumbwidth || ii.width}px)  creator: ${creator || "—"}`);
+  if (write) {
+    await wireFrontmatter(collection, slug, rel, credit);
+  } else {
+    console.log(`plate: ${rel}`);
+    console.log(`plate_credit:\n  source: ${JSON.stringify(credit.source)}`);
+    if (credit.creator) console.log(`  creator: ${JSON.stringify(credit.creator)}`);
+    console.log(`  license: ${JSON.stringify(credit.license)}`);
+    if (credit.license_url) console.log(`  license_url: ${JSON.stringify(credit.license_url)}`);
+    console.log(`  source_url: ${JSON.stringify(credit.source_url)}`);
+  }
 }
 
 const args = process.argv.slice(2);
-const width = Number((args.find((a) => a.startsWith("--width="))?.split("=")[1]) || 1600);
+const flags = args.filter((a) => a.startsWith("--"));
+const pos = args.filter((a) => !a.startsWith("--"));
+const width = Number((flags.find((a) => a.startsWith("--width="))?.split("=")[1]) || 1600);
+const write = flags.includes("--write");
 if (args[0] === "--search") {
-  const n = Number((args.find((a) => a.startsWith("--n="))?.split("=")[1]) || 6);
-  await search(args[1], n);
-} else if (args.length >= 3) {
-  await fetchOne(args[0], args[1], args.slice(2).filter((a) => !a.startsWith("--")).join(" "), width);
+  const n = Number((flags.find((a) => a.startsWith("--n="))?.split("=")[1]) || 6);
+  await search(pos[0], n);
+} else if (pos.length >= 3) {
+  await fetchOne(pos[0], pos[1], pos.slice(2).join(" "), width, write);
 } else {
-  console.log('Usage: node scripts/fetch-plate.mjs <collection> <slug> "File:Name.jpg" | --search "term"');
+  console.log('Usage: node scripts/fetch-plate.mjs <collection> <slug> "File:Name.jpg" [--write] | --search "term"');
 }
