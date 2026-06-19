@@ -3,8 +3,11 @@
 // SymbolEntry's structure: a hero, the RL-1 body via slot, then the linkage foot
 // (claims, works, decodes, influence, sources). The graph resolves both ways —
 // the symbols/decodes that name this figure are surfaced here (§0.9).
+import type { ImageMetadata } from "astro";
 import WhereNext from "./WhereNext.astro";
 import SourceRow from "./SourceRow.astro";
+import PlateCredit from "./PlateCredit.astro";
+import { plateUrl, isSeedPlate } from "../lib/plates";
 import type { WhereNextItem } from "../lib/relations";
 
 interface FigureData {
@@ -18,6 +21,9 @@ interface FigureData {
   core_claims?: string[];
   signature_examples?: string[];
   status_note?: string;
+  plate?: ImageMetadata;
+  plate_credit?: { source: string; creator?: string; license: string; license_url?: string; source_url?: string };
+  media?: { portrait?: string };
   sources?: { title: string; author?: string; year?: number; tier: "A" | "B" | "C"; type?: string; url?: string }[];
 }
 interface Link { slug: string; name: string; exists: boolean }
@@ -33,6 +39,8 @@ interface Props {
 const { data, keyWorks = [], decodedSymbols = [], workedDecodes = [], influencedBy = [], influenced = [] } = Astro.props;
 const tierLabel = { founder: "Founder", ancestor: "Ancestor", peer: "Living peer", backbone: "Scholarly backbone" }[data.tier];
 const meta = [tierLabel, data.dates].filter(Boolean).join(" · ");
+const portraitImg = plateUrl(data.plate, data.media?.portrait);
+const portraitSeed = isSeedPlate(data.plate);
 const linkChip = (l: Link) =>
   l.exists
     ? `<a class="fp__chip fp__chip--link" href="/figures/${l.slug}">${l.name}</a>`
@@ -41,6 +49,12 @@ const linkChip = (l: Link) =>
 
 <div class="fp">
   <header class="fp__hero">
+    {portraitImg && !portraitSeed && (
+      <figure class="fp__portrait">
+        <img class="u-plate" src={portraitImg} data-plate="real" alt={`Portrait of ${data.name}`} />
+        {data.plate_credit && <figcaption><PlateCredit credit={data.plate_credit} /></figcaption>}
+      </figure>
+    )}
     <p class="u-eyebrow">{meta}</p>
     <h1 class="fp__name">{data.name}</h1>
     {data.aka && data.aka.length > 0 && <p class="fp__aka">{data.aka.join(" · ")}</p>}
@@ -126,6 +140,16 @@ const linkChip = (l: Link) =>
 
 <style>
   .fp { display: flex; flex-direction: column; gap: var(--space-2xl); }
+  .fp__portrait {
+    margin: 0 0 var(--space-m);
+    inline-size: min(280px, 60%);
+    border: var(--border-w) solid var(--color-border);
+    border-radius: var(--radius-l);
+    overflow: hidden;
+    background: var(--color-surface-sunk);
+  }
+  .fp__portrait .u-plate { aspect-ratio: 3 / 4; }
+  .fp__portrait figcaption { padding: var(--space-3xs) var(--space-2xs); background: var(--color-surface); }
   .fp__name { font-size: var(--step-4); margin-block: var(--space-2xs); }
   .fp__aka { font-family: var(--font-ui); font-size: var(--step--1); color: var(--color-text-muted); margin: 0 0 var(--space-s); }
   .fp__line { font-size: var(--step-1); color: var(--color-text); margin-bottom: var(--space-2xs); }

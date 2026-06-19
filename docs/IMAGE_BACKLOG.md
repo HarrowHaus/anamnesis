@@ -32,3 +32,22 @@ an unverified licence** (E2/E3 legal gate).
 | symbols | shell-logo | TM | Active trademark — do not reproduce. Lead: a PD pilgrim's scallop (Coquille St-Jacques) engraving as the antecedent. |
 | symbols | starbucks-siren | TM | Active trademark — do not reproduce. Lead: a PD medieval twin-tailed siren/Melusine woodcut as the antecedent. |
 | symbols | time-warner-eye | TM | Active trademark — do not reproduce. Lead: a PD Eye of Providence antecedent (the real all-seeing-eye plate covers the root). |
+| figures | david-icke | LIVING | No freely-licensed portrait; living figure. Lead: a CC-BY conference/event photo if one is uploaded. |
+| figures | peter-joseph | LIVING | No freely-licensed portrait found. Lead: a CC-BY photo from a talk. |
+| figures | robert-sepehr | LIVING | No freely-licensed portrait found. |
+| figures | mark-passio | LIVING | Pseudonymous; no freely-licensed portrait. |
+| figures | michael-tsarion | LIVING | Pseudonymous; no freely-licensed portrait. |
+| figures | freeman-fly | LIVING | Pseudonymous; no freely-licensed portrait. |
+| figures | santos-bonacci | LIVING | No freely-licensed portrait found. |
+| figures | jordan-maxwell | NOFREE | Died 2022; photos in copyright. Lead: a CC-BY photo or estate release. |
+| figures | william-cooper | NOFREE | Died 2001; photos in copyright. |
+| figures | d-m-murdock | NOFREE | Died 2015; photos in copyright. |
+| figures | jim-marrs | NOFREE | Died 2017; photos in copyright. |
+| figures | texe-marrs | NOFREE | Died 2019; photos in copyright. |
+| figures | frances-yates | NOFREE | Died 1981; no PD/CC portrait found. |
+| figures | mircea-eliade | NOFREE | Died 1986; no PD/CC portrait found. |
+| figures | roland-barthes | NOFREE | Died 1980; no PD/CC portrait found. |
+| figures | gerald-massey | NOFREE | Died 1907 (PD-eligible) but no portrait raster surfaced; only his poetry PDFs. Lead: a PD frontispiece engraving. |
+| figures | godfrey-higgins | NOFREE | Died 1833 (PD-eligible) but only book scans surfaced. Lead: the Yorkshire-worthies portrait plate (currently inside a PDF). |
+| figures | manly-p-hall | NOFREE | Died 1990; photos in copyright. Lead: a CC-BY PRS-released portrait. |
+| figures | alvin-boyd-kuhn | NOFREE | Died 1963; no PD/CC portrait found. |
