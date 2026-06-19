@@ -184,9 +184,11 @@ After any batch: `compliance-reviewer` reviews stance/attribution; fix; then `co
 
 **E4 — Processing.** Normalize each plate to the aspect ratio its components expect (confirm from the components: specimen ~1:1, entry plate ~4:5, hero full-bleed, timeline node ratio). Emit optimized WebP via `astro:assets`; keep a **grayscale-neutral master** so the Phase-F duotone applies cleanly over it. Watch file sizes for the Lighthouse gate.
 
-**E5 — Wire + replace.** Point every entry at its real plate; remove all placeholder repeats; write descriptive **alt text** per image from the entry. **Retire the seed mapping here** (the deferred half of E1): once real plates are in, drop the 9 seed plates; any entry still without a sourced image now falls back to the single neutral `.u-plate-fallback` hatch (never a seed repeat, never a broken `<img>`) and is added to `docs/IMAGE_BACKLOG.md`.
+**E5 — Subject-aware crop & QA pass.** After sourcing, run the automated crop + verification pass (`docs/IMAGE_SOURCING.md §7`) — local, open-source Python. **Face-detect** portraits (figures) and crop to the target ratio with headroom so the face sits in the upper third and is never clipped; **saliency smart-crop** every other plate (engravings, artifacts, posters) to keep the salient region. **QA:** flag any plate where no face is found in a portrait, or the subject touches a crop edge, into a manual-review report — never silently ship a bad crop. **Non-destructive:** keep full-size masters in `src/assets/plates/_originals/`; the pass writes the cropped/optimized WebP derivatives, so re-cropping never loses the source. Runs here deliberately — **before E6 (seed-retire) and before Phase F** — because the duotone and motion are tuned to the final framed plate.
 
-**E6 — Verify + commit.** `npm run build` clean; no shared placeholder remains except the explicit fallback; `npm run validate:content` green; credits present. Commit `feat(images): real per-entry plates via astro:assets + license capture; retire placeholders`.
+**E6 — Wire + replace.** Point every entry at its real plate; remove all placeholder repeats; write descriptive **alt text** per image from the entry. **Retire the seed mapping here** (the deferred half of E1): once real plates are in, drop the 9 seed plates; any entry still without a sourced image now falls back to the single neutral `.u-plate-fallback` hatch (never a seed repeat, never a broken `<img>`) and is added to `docs/IMAGE_BACKLOG.md`.
+
+**E7 — Verify + commit.** `npm run build` clean; no shared placeholder remains except the explicit fallback; `npm run validate:content` green; credits present. Commit `feat(images): real per-entry plates via astro:assets + license capture; retire placeholders`.
 
 ---
 
