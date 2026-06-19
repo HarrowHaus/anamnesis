@@ -24,16 +24,14 @@ function asAsset(plate?: ImageMetadata | string | null): { src: string } | null 
 
 export function plateUrl(
   plate?: ImageMetadata | string | null,
-  seedGlyph?: string | null
+  _seedGlyph?: string | null
 ): string | null {
-  // 1. Real astro:assets plate wins (raster object or SVG component).
+  // Real astro:assets plate (raster object or SVG component). The transitional
+  // seed-glyph fallback was retired in E6 — unsourced entries now resolve to
+  // null so the UI renders the neutral `.u-plate-fallback` hatch (never a seed
+  // repeat). `_seedGlyph` is kept only for call-site compatibility.
   const asset = asAsset(plate);
-  if (asset) return asset.src;
-  // 2. Transitional seed fallback (basename under /plates).
-  const glyph = typeof plate === "string" ? plate : seedGlyph;
-  if (!glyph) return null;
-  const base = glyph.split(/[\\/]/).pop();
-  return base ? `/plates/${base}` : null;
+  return asset ? asset.src : null;
 }
 
 /**

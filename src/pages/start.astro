@@ -12,6 +12,12 @@
 import { getCollection } from "astro:content";
 import SiteLayout from "../layouts/SiteLayout.astro";
 import { plateUrl, isSeedPlate } from "../lib/plates";
+// Real Phase-E beat plates (seeds retired in E6), each matched to its beat:
+import beatClaim from "../assets/plates/pillars/the-engineering-of-consent.webp";   // representation is power
+import beatDecode from "../assets/plates/symbols/all-seeing-eye.webp";              // turn over a dollar
+import beatKeystone from "../assets/plates/timeline/plato-banishes-the-poets.webp"; // Plato banned the poets
+import beatPattern from "../assets/plates/pillars/the-war-on-images.webp";          // every power fights over images
+import beatUnsee from "../assets/plates/pillars/astrotheology-and-the-sky-code.webp"; // the archive opens
 
 const humanize = (s: string) => s.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
 
@@ -26,7 +32,7 @@ const lineage = (seal?.data.symbol_lineage ?? []).map((slug) => {
 const beats = [
   {
     id: "claim",
-    plate: "/plates/hero.jpg",
+    plate: beatClaim.src,
     eyebrow: "The claim",
     headline: "Representation is power.",
     body:
@@ -34,7 +40,7 @@ const beats = [
   },
   {
     id: "decode",
-    plate: "/plates/kircher.jpg",
+    plate: beatDecode.src,
     eyebrow: "One decode",
     headline: "You've held this and never read it.",
     body:
@@ -43,7 +49,7 @@ const beats = [
   },
   {
     id: "keystone",
-    plate: "/plates/fludd.jpg",
+    plate: beatKeystone.src,
     eyebrow: "The keystone",
     headline: "Plato banned the poets.",
     body:
@@ -51,7 +57,7 @@ const beats = [
   },
   {
     id: "pattern",
-    plate: "/plates/fluddmind.jpg",
+    plate: beatPattern.src,
     eyebrow: "The pattern",
     headline: "Every power fights over images first.",
     body:
@@ -59,7 +65,7 @@ const beats = [
   },
   {
     id: "unsee",
-    plate: "/plates/cosmos.jpg",
+    plate: beatUnsee.src,
     eyebrow: "Now you can't unsee it",
     headline: "You can't unsee it now.",
     body:

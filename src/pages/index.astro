@@ -8,10 +8,15 @@ import SiteLayout from "../layouts/SiteLayout.astro";
 import FeatureBlock from "../components/FeatureBlock.astro";
 import SpecimenCard from "../components/SpecimenCard.astro";
 import PathwayCard from "../components/PathwayCard.astro";
+// Real Phase-E hero plate (seeds retired in E6). Fludd's Integrae Naturae —
+// the cosmic chain, on-theme for "learn to read the symbols." Phase F (F5)
+// treats this plate with the datamosh.
+import heroPlateImg from "../assets/plates/symbols/as-above-so-below.webp";
 
 const symbols = (await getCollection("symbols")).map((e) => e.data);
 const casebook = (await getCollection("casebook")).map((e) => e.data);
-const featured = casebook[0];
+// Feature a decode that actually has a real plate (else the lead would hatch).
+const featured = casebook.find((c) => c.plate) ?? casebook[0];
 
 // the dictionary shelf — a small curated set, into the flagship
 const shelf = symbols.slice(0, 3);
@@ -19,7 +24,7 @@ const shelf = symbols.slice(0, 3);
 // curated routes (the invisible-guidance layer, blueprint L3) — the authored
 // Pathways: guided themed walks across the taxonomy.
 const pathways = (await getCollection("pathways")).map((e) => e.data).sort((a, b) => a.title.localeCompare(b.title));
-const heroPlate = "/plates/hero.jpg";
+const heroPlate = heroPlateImg.src;
 ---
 
 <SiteLayout
