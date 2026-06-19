@@ -132,7 +132,13 @@
     "credit_source": "Wikimedia Commons",
     "source_url": "https://commons.wikimedia.org/wiki/File:Jung_1910.jpg",
     "local_path": "src/assets/plates/figures/carl-jung.webp",
-    "crop": "flagged"
+    "crop": "manual",
+    "crop_box": [
+      590,
+      382,
+      1160,
+      1142
+    ]
   },
   "figures/charles-francois-dupuis": {
     "collection": "figures",
@@ -163,7 +169,8 @@
     "source_url": "https://commons.wikimedia.org/wiki/File:Portret_van_Constantin-Fran%C3%A7ois_Volney,_RP-P-1910-6139.jpg",
     "license_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
     "local_path": "src/assets/plates/figures/constantin-volney.webp",
-    "crop": "flagged"
+    "crop": "flagged",
+    "crop_note": "no face detected (it is an engraving) \u2014 saliency crop, acceptable"
   },
   "figures/edward-bernays": {
     "collection": "figures",

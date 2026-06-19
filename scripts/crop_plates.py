@@ -43,7 +43,13 @@ LONG_EDGE = 1280
 WEBP_Q = 82
 FORCE = "--force" in sys.argv
 
-flags = []  # QA review entries: (collection, slug, reason)
+flags = []  # this-run log: (collection, slug, reason)
+
+
+def flag(rec, collection, slug, reason):
+    rec["crop"] = "flagged"
+    rec["crop_note"] = reason
+    flags.append((collection, slug, reason))
 
 
 def load_manifest():
@@ -183,42 +189,51 @@ def process(path, collection, slug, rec):
         return
     ratio = RATIOS.get(collection, (3, 2))
 
-    # Preserve the full-size master.
+    # Preserve / locate the full-size master. The master keeps its original
+    # extension, which differs from the live .webp after the first pass — so
+    # find it by stem rather than by the (now-webp) live name.
     orig_dir = ORIGINALS / collection
     orig_dir.mkdir(parents=True, exist_ok=True)
-    master = orig_dir / path.name
-    if not master.exists():
+    existing = [m for m in orig_dir.glob(f"{slug}.*") if m.suffix.lower() != ".webp"] \
+        or list(orig_dir.glob(f"{slug}.*"))
+    if existing:
+        master = existing[0]
+    else:
+        master = orig_dir / path.name
         shutil.copy2(path, master)
 
     try:
         im = Image.open(master).convert("RGB")
     except Exception as e:  # noqa: BLE001
-        flags.append((collection, slug, f"failed to open ({e})"))
-        rec["crop"] = "flagged"
+        flag(rec, collection, slug, f"failed to open ({e})")
         return
     W, H = im.size
 
-    if collection in PORTRAIT:
+    manual = rec.get("crop_box")
+    if manual:
+        box = tuple(int(v) for v in manual)
+        rec["crop"] = "manual"
+        rec.pop("crop_note", None)
+    elif collection in PORTRAIT:
         face = detect_face(master)
         if face is None:
-            flags.append((collection, slug, "no face detected — used saliency crop"))
             box = saliency_box(im, ratio)
-            rec["crop"] = "flagged"
+            flag(rec, collection, slug, "no face detected — used saliency crop")
         else:
             box, clipped = portrait_crop_box(W, H, face, ratio)
             if clipped:
-                flags.append((collection, slug, "face near crop edge — headroom tight"))
-                rec["crop"] = "flagged"
+                flag(rec, collection, slug, "face near crop edge — headroom tight")
             else:
                 rec["crop"] = "done"
+                rec.pop("crop_note", None)
     else:
         try:
             box = saliency_box(im, ratio)
             rec["crop"] = "done"
+            rec.pop("crop_note", None)
         except Exception as e:  # noqa: BLE001
-            flags.append((collection, slug, f"saliency failed ({e})"))
             box = (0, 0, W, H)
-            rec["crop"] = "flagged"
+            flag(rec, collection, slug, f"saliency failed ({e})")
 
     cropped = resize_long_edge(im.crop(box), LONG_EDGE)
     out = path.with_suffix(".webp")
@@ -253,28 +268,32 @@ def main():
                    "local_path": str(Path("src/assets/plates") / collection / path.name).replace("\\", "/")}
             m[key] = rec
             backfilled += 1
-        if not FORCE and rec.get("crop") in ("done", "passthrough", "flagged"):
+        if not FORCE and rec.get("crop") in ("done", "passthrough", "flagged", "manual"):
             continue
         process(path, collection, slug, rec)
         processed += 1
         print(f"  {rec.get('crop','?'):11} {collection}/{slug}")
     save_manifest(m)
 
-    # QA report.
+    # QA report — built from the manifest so it reflects ALL currently-flagged
+    # plates, not just this run (partial re-runs stay accurate).
+    flagged = sorted((r["collection"], r["slug"], r.get("crop_note", "flagged"))
+                     for r in m.values() if r.get("crop") == "flagged")
     lines = ["# Crop & QA review (Phase E5)", "",
              "Plates flagged by the subject-aware crop pass (`scripts/crop_plates.py`).",
              "Each was still cropped (saliency fallback) but needs a human eye before",
-             "Phase F. Re-run after fixing; full-size masters are in",
-             "`src/assets/plates/_originals/`.", "",
-             f"**Processed this run:** {processed}  ·  **back-filled into manifest:** {backfilled}  ·  **flagged:** {len(flags)}",
+             "Phase F. To fix one: set its `crop_box` (l,t,r,b) in",
+             "`data/plate-manifest.json`, set `crop` to `pending`, and re-run.",
+             "Full-size masters are in `src/assets/plates/_originals/`.", "",
+             f"**Processed this run:** {processed}  ·  **back-filled:** {backfilled}  ·  **currently flagged:** {len(flagged)}",
              "", "| Collection | Slug | Issue |", "|---|---|---|"]
-    for c, s, r in sorted(flags):
+    for c, s, r in flagged:
         lines.append(f"| {c} | {s} | {r} |")
-    if not flags:
+    if not flagged:
         lines.append("| — | — | none flagged |")
     (ROOT / "docs" / "CROP_REVIEW.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
-    print(f"\nprocessed {processed}, back-filled {backfilled}, flagged {len(flags)} "
-          f"(see docs/CROP_REVIEW.md)")
+    print(f"\nprocessed {processed}, back-filled {backfilled}, currently flagged "
+          f"{len(flagged)} (see docs/CROP_REVIEW.md)")
 
 
 if __name__ == "__main__":

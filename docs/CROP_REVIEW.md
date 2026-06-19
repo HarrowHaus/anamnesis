@@ -2,12 +2,12 @@
 
 Plates flagged by the subject-aware crop pass (`scripts/crop_plates.py`).
 Each was still cropped (saliency fallback) but needs a human eye before
-Phase F. Re-run after fixing; full-size masters are in
-`src/assets/plates/_originals/`.
+Phase F. To fix one: set its `crop_box` (l,t,r,b) in
+`data/plate-manifest.json`, set `crop` to `pending`, and re-run.
+Full-size masters are in `src/assets/plates/_originals/`.
 
-**Processed this run:** 81  ·  **back-filled into manifest:** 34  ·  **flagged:** 2
+**Processed this run:** 1  ·  **back-filled:** 0  ·  **currently flagged:** 1
 
 | Collection | Slug | Issue |
 |---|---|---|
-| figures | carl-jung | no face detected — used saliency crop |
-| figures | constantin-volney | no face detected — used saliency crop |
+| figures | constantin-volney | no face detected (it is an engraving) — saliency crop, acceptable |
