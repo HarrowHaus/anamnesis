@@ -71,3 +71,4 @@ an unverified licence** (E2/E3 legal gate).
 | casebook | solar-branding | NOFREE | About a family of modern logos (trademarks); no single PD artifact. Assemble shows sun-cross / winged-sun-disk. |
 | casebook | holy-wood | NOFREE | Word-magic decode — no single artifact (empty symbol_lineage). Keep the neutral fallback. |
 | casebook | fasces | NOFREE | No clean PD fasces image surfaced (also backlogged as a symbol). Lead: a Met Roman relief or the Mercury-dime reverse. |
+| symbols | fasces | NOFREE | No clean PD fasces depiction surfaced (Met 'fasces' hits were tangential — verified, not shipped). Lead: a PD lictor relief, the Mercury-dime reverse, or the Lincoln Memorial fasces. |

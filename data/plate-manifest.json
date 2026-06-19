@@ -351,6 +351,20 @@
     "credit_source": "Original diagram — ANAMNESIS",
     "local_path": "src/assets/plates/symbols/sun-cross.svg"
   },
+  "symbols/the-eagle-as-phoenix": {
+    "collection": "symbols",
+    "slug": "the-eagle-as-phoenix",
+    "status": "downloaded",
+    "host": "commons",
+    "ref": "File:Great Seal of the United States (Graham Lithograph).png",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Great_Seal_of_the_United_States_%28Graham_Lithograph%29.png/1280px-Great_Seal_of_the_United_States_%28Graham_Lithograph%29.png",
+    "kind": "PD/CC0",
+    "license": "Public Domain",
+    "creator": "Richard Patterson and Richardson Dougall",
+    "credit_source": "Wikimedia Commons",
+    "source_url": "https://commons.wikimedia.org/wiki/File:Great_Seal_of_the_United_States_(Graham_Lithograph).png",
+    "local_path": "src/assets/plates/symbols/the-eagle-as-phoenix.png"
+  },
   "symbols/tria-prima": {
     "collection": "symbols",
     "slug": "tria-prima",
@@ -368,6 +382,20 @@
     "license": "CC0",
     "credit_source": "Original diagram — ANAMNESIS",
     "local_path": "src/assets/plates/symbols/vesica-piscis.svg"
+  },
+  "symbols/washington-monument": {
+    "collection": "symbols",
+    "slug": "washington-monument",
+    "status": "downloaded",
+    "host": "commons",
+    "ref": "File:Washington Monument detroit.jpg",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/3/38/Washington_Monument_detroit.jpg",
+    "kind": "PD/CC0",
+    "license": "Public Domain",
+    "creator": "Detroit Photo",
+    "credit_source": "Wikimedia Commons",
+    "source_url": "https://commons.wikimedia.org/wiki/File:Washington_Monument_detroit.jpg",
+    "local_path": "src/assets/plates/symbols/washington-monument.jpg"
   },
   "timeline/akhenaten-image-reform": {
     "collection": "timeline",
