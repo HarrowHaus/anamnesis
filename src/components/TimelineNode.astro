@@ -4,6 +4,7 @@
 // enter. Reduced-motion / no-JS → present, no motion.
 import type { ImageMetadata } from "astro";
 import { plateUrl, isSeedPlate } from "../lib/plates";
+import PlateCredit from "./PlateCredit.astro";
 
 interface Props {
   date: string;
@@ -11,10 +12,11 @@ interface Props {
   why_it_matters: string;
   era?: "sacred" | "mechanical" | "algorithmic";
   plate?: ImageMetadata;
+  plateCredit?: { source: string; creator?: string; license: string; license_url?: string; source_url?: string };
   glyph?: string;
   links?: { label: string; href: string }[];
 }
-const { date, event, why_it_matters, era, plate, glyph, links = [] } = Astro.props;
+const { date, event, why_it_matters, era, plate, plateCredit, glyph, links = [] } = Astro.props;
 const img = plateUrl(plate, glyph);
 const seed = isSeedPlate(plate);
 const eraLabel = era ? { sacred: "Sacred image-control", mechanical: "Mechanical reproduction", algorithmic: "Algorithmic / synthetic" }[era] : null;
@@ -22,11 +24,12 @@ const eraLabel = era ? { sacred: "Sacred image-control", mechanical: "Mechanical
 
 <article class="node" data-reveal>
   <div class="node__rail" aria-hidden="true"><span class="node__dot"></span></div>
-  <div class="node__plate">
+  <figure class="node__plate">
     {img
       ? <img class="u-plate" src={img} data-plate={seed ? "seed" : "real"} alt="" loading="lazy" />
       : <div class="u-plate-fallback" role="presentation"></div>}
-  </div>
+    {!seed && plateCredit && <figcaption class="node__credit"><PlateCredit credit={plateCredit} align="end" /></figcaption>}
+  </figure>
   <div class="node__body">
     <p class="u-eyebrow">{date}{eraLabel ? ` · ${eraLabel}` : ""}</p>
     <h3 class="node__event">{event}</h3>
@@ -56,11 +59,19 @@ const eraLabel = era ? { sacred: "Sacred image-control", mechanical: "Mechanical
   }
   .node__plate {
     grid-column: 2;
+    position: relative;
     aspect-ratio: 16 / 9;
     border-radius: var(--radius-m);
     overflow: hidden;
     background: var(--color-surface-sunk);
-    margin-bottom: var(--space-s);
+    margin: 0 0 var(--space-s);
+  }
+  .node__credit {
+    position: absolute;
+    inset-inline: 0;
+    inset-block-end: 0;
+    padding: var(--space-3xs) var(--space-2xs);
+    background: linear-gradient(to top, color-mix(in srgb, var(--color-bg) 78%, transparent), transparent);
   }
   .node__event { font-size: var(--step-2); margin-bottom: var(--space-2xs); }
   .node__why { color: var(--color-text-muted); }

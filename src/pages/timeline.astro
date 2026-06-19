@@ -61,7 +61,7 @@ const acts = ACTS.map((a) => ({ ...a, nodes: nodes.filter((n) => n.era === a.era
         </div>
         <div class="tl-act__nodes">
           {a.nodes.map((n) => (
-            <TimelineNode date={n.date} event={n.event} why_it_matters={n.why_it_matters} era={n.era} plate={n.plate} glyph={n.glyph} links={linksFor(n)} />
+            <TimelineNode date={n.date} event={n.event} why_it_matters={n.why_it_matters} era={n.era} plate={n.plate} plateCredit={n.plate_credit} glyph={n.glyph} links={linksFor(n)} />
           ))}
         </div>
       </section>
