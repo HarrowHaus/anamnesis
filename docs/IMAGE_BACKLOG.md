@@ -61,3 +61,13 @@ an unverified licence** (E2/E3 legal gate).
 | timeline | social-media-feeds | NOFREE | Contemporary; no PD imagery. |
 | timeline | deepfakes | NOFREE | Contemporary; no PD imagery. |
 | timeline | ai-image-generation | NOFREE | Contemporary; no PD imagery. |
+| casebook | cbs-eye | TM | Active trademark — do not reproduce. Decode renders the component-symbol assemble (all-seeing-eye/eye-of-horus plates) instead. |
+| casebook | starbucks-siren | TM | Active trademark — do not reproduce. Assemble shows the antecedent symbols. |
+| casebook | apple-logo | TM | Active trademark — do not reproduce. Assemble shows serpent/apple-of-knowledge. |
+| casebook | columbia-pictures | TM | Active trademark — do not reproduce. Assemble shows statue-of-liberty/halo antecedents. |
+| casebook | shell-logo | TM | Active trademark — do not reproduce. Assemble shows the pilgrim scallop / sun-cross. |
+| casebook | high-profile-ritual | TM | Stage/broadcast imagery is rights-encumbered + performer-sensitive. Assemble shows the staged symbols (eye, checkerboard, phoenix). |
+| casebook | torches-of-freedom | NOFREE | No PD photo of the 1929 Easter-parade campaign found. Lead: a PD news photo, or reuse the statue-of-liberty torch. |
+| casebook | solar-branding | NOFREE | About a family of modern logos (trademarks); no single PD artifact. Assemble shows sun-cross / winged-sun-disk. |
+| casebook | holy-wood | NOFREE | Word-magic decode — no single artifact (empty symbol_lineage). Keep the neutral fallback. |
+| casebook | fasces | NOFREE | No clean PD fasces image surfaced (also backlogged as a symbol). Lead: a Met Roman relief or the Mercury-dime reverse. |
