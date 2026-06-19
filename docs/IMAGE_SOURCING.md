@@ -70,11 +70,14 @@ A large part of the backlog is **pure geometry or typographic form**, not a spec
 - Render as ink-on-transparent line art at the standard plate ratio, tonally neutral so the Phase-F duotone applies cleanly. Mark `status: svg`, `license: "original-cc0"`, `credit: "Original diagram — ANAMNESIS"`.
 This clears roughly half the no-PD-raster backlog with **zero downloads, zero licensing risk**, and better visual consistency than scrounged scans. Prefer SVG recreation for any geometric/diagrammatic symbol even when a raster exists.
 
+**SVG recreation is symbol-dictionary entries ONLY.** A figure needs a real portrait, a timeline node a real documentary image, a casebook decode the actual artifact, a pillar a real plate — never substitute a diagram for these. For every non-symbol collection, **exhaust the full multi-host search first** (alternate search terms, related PD depictions, every host in §3) before an entry goes to backlog. SVG is never a fallback outside symbols.
+
 ---
 
 ## 5. Exclusions & trademarks (unchanged, restated)
 - **Live corporate logos** (Apple, Starbucks, CBS, etc.): never reproduce the trademark. Source the **antecedent** image (the historical symbol the logo descends from) or commission an original; `status: backlog` with a note until done.
-- **Extremist-glorifying imagery** (e.g. black-sun): deliberately **not sourced**. `status: excluded`, with the reason. The entry's text still stands; the plate stays the neutral fallback.
+- **Dangerous-history imagery** (e.g. black-sun, Nazi-era material): documentation is *not* glorification — but the site's advocacy/fascination voice is not automatically encyclopedic, so the framing is what makes the difference, not the public-domain status of the file. These are **deferred** (`status: deferred-documentary`), included only once the entry adopts a plainly **documentary register**: what it is, who used it, what it meant, and **how it is used today**, stated neutrally, with the image as documentation under that frame — not aestheticized. The Nazi-spectacle/propaganda material is on-thesis (a regime engineering mass image-power) and the easiest to frame; the black-sun is the hardest and needs explicit present-day-use context. Until the documentary pass, the neutral fallback renders.
+- **Unconditional, never subject to any exception:** nothing sexualizing minors.
 - Anything whose license can't be verified PD/CC0/CC-BY(-SA): `status: backlog`, never ship on a guess.
 
 ---
@@ -88,5 +91,13 @@ This clears roughly half the no-PD-raster backlog with **zero downloads, zero li
 
 ---
 
-## 7. What stays in the backlog file
+## 7. Subject-aware crop & QA pass (end of E, before F and G)
+After all plates are sourced, run one automated crop + verification pass — open-source Python, local. It runs before Design/Motion because the duotone and choreography are tuned to the final framed plate.
+- **Portraits (figures):** detect the face (MediaPipe Face Detection or OpenCV DNN/RetinaFace); crop to the target ratio with headroom so the face sits in the upper third and is never clipped.
+- **Non-portraits (engravings, artifacts):** saliency smart-crop (`smartcrop.py` or OpenCV saliency) to keep the important region.
+- **Verification (the QA half):** flag any plate where no face is found in a portrait, or the subject touches a crop edge, into a report for manual review — don't silently ship a bad crop.
+- **Non-destructive:** keep full-size originals in `src/assets/plates/_originals/`; the pass writes the cropped/optimized WebP derivatives, so re-cropping never loses the source.
+- Stack: `opencv-python` + `mediapipe` + `smartcrop` + `Pillow`.
+
+## 8. What stays in the backlog file
 `docs/IMAGE_BACKLOG.md` tracks every `backlog`/`excluded` entry with: slug, reason (no clean PD raster / trademark / ethics), and the best lead found. The neutral `.u-plate-fallback` hatch renders for these until resolved — never a seed repeat (post-E5), never a broken image.
