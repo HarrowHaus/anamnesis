@@ -1,0 +1,65 @@
+{
+  "symbols/blazing-star": {
+    "collection": "symbols",
+    "slug": "blazing-star",
+    "status": "svg",
+    "host": "original",
+    "license": "CC0",
+    "credit_source": "Original diagram — ANAMNESIS",
+    "local_path": "src/assets/plates/symbols/blazing-star.svg"
+  },
+  "symbols/checkerboard-floor": {
+    "collection": "symbols",
+    "slug": "checkerboard-floor",
+    "status": "svg",
+    "host": "original",
+    "license": "CC0",
+    "credit_source": "Original diagram — ANAMNESIS",
+    "local_path": "src/assets/plates/symbols/checkerboard-floor.svg"
+  },
+  "symbols/hexagram": {
+    "collection": "symbols",
+    "slug": "hexagram",
+    "status": "svg",
+    "host": "original",
+    "license": "CC0",
+    "credit_source": "Original diagram — ANAMNESIS",
+    "local_path": "src/assets/plates/symbols/hexagram.svg"
+  },
+  "symbols/letter-g": {
+    "collection": "symbols",
+    "slug": "letter-g",
+    "status": "svg",
+    "host": "original",
+    "license": "CC0",
+    "credit_source": "Original diagram — ANAMNESIS",
+    "local_path": "src/assets/plates/symbols/letter-g.svg"
+  },
+  "symbols/sun-cross": {
+    "collection": "symbols",
+    "slug": "sun-cross",
+    "status": "svg",
+    "host": "original",
+    "license": "CC0",
+    "credit_source": "Original diagram — ANAMNESIS",
+    "local_path": "src/assets/plates/symbols/sun-cross.svg"
+  },
+  "symbols/tria-prima": {
+    "collection": "symbols",
+    "slug": "tria-prima",
+    "status": "svg",
+    "host": "original",
+    "license": "CC0",
+    "credit_source": "Original diagram — ANAMNESIS",
+    "local_path": "src/assets/plates/symbols/tria-prima.svg"
+  },
+  "symbols/vesica-piscis": {
+    "collection": "symbols",
+    "slug": "vesica-piscis",
+    "status": "svg",
+    "host": "original",
+    "license": "CC0",
+    "credit_source": "Original diagram — ANAMNESIS",
+    "local_path": "src/assets/plates/symbols/vesica-piscis.svg"
+  }
+}

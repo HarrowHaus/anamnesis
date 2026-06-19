@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" role="img" aria-label="Solar cross — an equal-armed cross within a circle">
+  <rect width="1000" height="1000" fill="#e9e4d6"/>
+  <g fill="none" stroke="#1a1612" stroke-width="8" stroke-linecap="round">
+    <circle cx="500" cy="500" r="300"/>
+    <line x1="500" y1="150" x2="500" y2="850"/>
+    <line x1="150" y1="500" x2="850" y2="500"/>
+  </g>
+</svg>

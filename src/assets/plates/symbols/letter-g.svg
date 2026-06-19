@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" role="img" aria-label="The Masonic letter G within the square and compasses">
+  <rect width="1000" height="1000" fill="#e9e4d6"/>
+  <g fill="none" stroke="#1a1612" stroke-width="13" stroke-linecap="round" stroke-linejoin="round">
+    <!-- compasses (points down) -->
+    <circle cx="500" cy="208" r="20" fill="#1a1612" stroke="none"/>
+    <path d="M500 224 L372 712"/>
+    <path d="M500 224 L628 712"/>
+    <path d="M360 700 l24 30 24 -34"/>
+    <path d="M640 700 l-24 30 -24 -34"/>
+    <!-- square (right angle, opening up) -->
+    <path d="M300 560 L500 792 L700 560"/>
+    <!-- letter G -->
+    <path d="M566 470 a86 86 0 1 0 0 112 M566 526 H520" stroke-width="15"/>
+  </g>
+</svg>

@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" role="img" aria-label="Blazing star — a five-pointed star within a glory of rays">
+  <rect width="1000" height="1000" fill="#e9e4d6"/>
+  <g stroke="#1a1612" stroke-width="6" fill="none" stroke-linejoin="round">
+    <!-- glory rays at the five points -->
+    <g stroke-width="4" opacity="0.6">
+      <line x1="500" y1="245" x2="500" y2="120"/>
+      <line x1="742.5" y1="421.2" x2="842.4" y2="388.7"/>
+      <line x1="649.9" y1="706.3" x2="708.6" y2="787.2"/>
+      <line x1="350.1" y1="706.3" x2="291.4" y2="787.2"/>
+      <line x1="257.5" y1="421.2" x2="157.6" y2="388.7"/>
+    </g>
+    <!-- the five-pointed star -->
+    <polygon points="500,270 554.1,425.6 718.7,428.9 587.5,528.4 635.2,686.1 500,592 364.8,686.1 412.5,528.4 281.3,428.9 445.9,425.6"/>
+    <circle cx="500" cy="500" r="14" fill="#1a1612" stroke="none"/>
+  </g>
+</svg>
