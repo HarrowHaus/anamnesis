@@ -17,3 +17,6 @@ npm-debug.log*
 # os / editor
 .DS_Store
 Thumbs.db
+
+.venv-crop/
+scripts/models/

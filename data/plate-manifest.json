@@ -11,7 +11,8 @@
     "creator": "Constantino Brumidi",
     "credit_source": "Wikimedia Commons",
     "source_url": "https://commons.wikimedia.org/wiki/File:Constantino_Brumidi_-_Study_for_the_Apotheosis_of_Washington_in_the_Rotunda_of_the_United_States_Capitol_Building_-_2012.15_-_Smithsonian_American_Art_Museum.jpg",
-    "local_path": "src/assets/plates/casebook/capitol-dome.jpg"
+    "local_path": "src/assets/plates/casebook/capitol-dome.webp",
+    "crop": "done"
   },
   "casebook/great-seal-eagle": {
     "collection": "casebook",
@@ -25,7 +26,8 @@
     "creator": "Photo courtesy of the National Archives.",
     "credit_source": "Wikimedia Commons",
     "source_url": "https://commons.wikimedia.org/wiki/File:1885_US_Great_Seal_die_impression.jpg",
-    "local_path": "src/assets/plates/casebook/great-seal-eagle.jpg"
+    "local_path": "src/assets/plates/casebook/great-seal-eagle.webp",
+    "crop": "done"
   },
   "casebook/great-seal-pyramid": {
     "collection": "casebook",
@@ -36,24 +38,26 @@
     "image_url": "https://upload.wikimedia.org/wikipedia/commons/3/3d/Dollarnote_siegel_hq.jpg",
     "kind": "PD/CC0",
     "license": "Public Domain",
-    "creator": "de:Benutzer:Verwüstung",
+    "creator": "de:Benutzer:Verw\u00fcstung",
     "credit_source": "Wikimedia Commons",
     "source_url": "https://commons.wikimedia.org/wiki/File:Dollarnote_siegel_hq.jpg",
-    "local_path": "src/assets/plates/casebook/great-seal-pyramid.jpg"
+    "local_path": "src/assets/plates/casebook/great-seal-pyramid.webp",
+    "crop": "done"
   },
   "casebook/statue-of-liberty": {
     "collection": "casebook",
     "slug": "statue-of-liberty",
     "status": "downloaded",
     "host": "commons",
-    "ref": "File:3 illus.- 1. Official presentation of the Statue of \"Liberty enlightening the world,\" Paris, July 4th, 1884 - 2. M. Frédéric-Auguste Bartholdi (head and shoulders) - 3. Sectional view of LCCN2001696501.jpg",
+    "ref": "File:3 illus.- 1. Official presentation of the Statue of \"Liberty enlightening the world,\" Paris, July 4th, 1884 - 2. M. Fr\u00e9d\u00e9ric-Auguste Bartholdi (head and shoulders) - 3. Sectional view of LCCN2001696501.jpg",
     "image_url": "https://upload.wikimedia.org/wikipedia/commons/2/28/3_illus.-_1._Official_presentation_of_the_Statue_of_%22Liberty_enlightening_the_world%2C%22_Paris%2C_July_4th%2C_1884_-_2._M._Fr%C3%A9d%C3%A9ric-Auguste_Bartholdi_%28head_and_shoulders%29_-_3._Sectional_view_of_LCCN2001696501.jpg",
     "kind": "PD/CC0",
     "license": "Public Domain",
     "creator": "Miscellaneous Items in High Demand, PPOC, Library of Congress",
     "credit_source": "Wikimedia Commons",
     "source_url": "https://commons.wikimedia.org/wiki/File:3_illus.-_1._Official_presentation_of_the_Statue_of_%22Liberty_enlightening_the_world,%22_Paris,_July_4th,_1884_-_2._M._Fr%C3%A9d%C3%A9ric-Auguste_Bartholdi_(head_and_shoulders)_-_3._Sectional_view_of_LCCN2001696501.jpg",
-    "local_path": "src/assets/plates/casebook/statue-of-liberty.jpg"
+    "local_path": "src/assets/plates/casebook/statue-of-liberty.webp",
+    "crop": "done"
   },
   "casebook/vatican-obelisk": {
     "collection": "casebook",
@@ -68,7 +72,8 @@
     "credit_source": "Wikimedia Commons",
     "source_url": "https://commons.wikimedia.org/wiki/File:Vaticaanse_Obelisk_Obelisco_a_S._Pietro_in_Vaticano_(titel_op_object)_Moderne_en_antieke_monumenten_en_bouwwerken_in_Rome_(serietitel)_Ornamenti_di_fabriche_antichi_et_moderni_dell%27_alma_citta_di_Roma_(serietitel),_RP-P-1908-42.jpg",
     "license_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
-    "local_path": "src/assets/plates/casebook/vatican-obelisk.jpg"
+    "local_path": "src/assets/plates/casebook/vatican-obelisk.webp",
+    "crop": "done"
   },
   "casebook/washington-dc-layout": {
     "collection": "casebook",
@@ -82,7 +87,8 @@
     "creator": "Related names: Klugh, T, transmitter",
     "credit_source": "Wikimedia Commons",
     "source_url": "https://commons.wikimedia.org/wiki/File:L%27Enfant-McMillan_Plan_of_Washington,_DC,_Washington,_District_of_Columbia,_DC_HABS_DC,WASH,612-_(sheet_6_of_32).tif",
-    "local_path": "src/assets/plates/casebook/washington-dc-layout.jpg"
+    "local_path": "src/assets/plates/casebook/washington-dc-layout.webp",
+    "crop": "done"
   },
   "casebook/washington-monument": {
     "collection": "casebook",
@@ -96,7 +102,8 @@
     "creator": "Detroit Photo",
     "credit_source": "Wikimedia Commons",
     "source_url": "https://commons.wikimedia.org/wiki/File:Washington_Monument_detroit.jpg",
-    "local_path": "src/assets/plates/casebook/washington-monument.jpg"
+    "local_path": "src/assets/plates/casebook/washington-monument.webp",
+    "crop": "done"
   },
   "figures/albert-pike": {
     "collection": "figures",
@@ -110,7 +117,8 @@
     "creator": "painting: unknown; file: James Steakley",
     "credit_source": "Wikimedia Commons",
     "source_url": "https://commons.wikimedia.org/wiki/File:Albert_Pike_portrait.jpg",
-    "local_path": "src/assets/plates/figures/albert-pike.jpg"
+    "local_path": "src/assets/plates/figures/albert-pike.webp",
+    "crop": "done"
   },
   "figures/carl-jung": {
     "collection": "figures",
@@ -123,28 +131,30 @@
     "license": "Public Domain",
     "credit_source": "Wikimedia Commons",
     "source_url": "https://commons.wikimedia.org/wiki/File:Jung_1910.jpg",
-    "local_path": "src/assets/plates/figures/carl-jung.jpg"
+    "local_path": "src/assets/plates/figures/carl-jung.webp",
+    "crop": "flagged"
   },
   "figures/charles-francois-dupuis": {
     "collection": "figures",
     "slug": "charles-francois-dupuis",
     "status": "downloaded",
     "host": "commons",
-    "ref": "File:Charles-François Dupuis.JPG",
+    "ref": "File:Charles-Fran\u00e7ois Dupuis.JPG",
     "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Charles-Fran%C3%A7ois_Dupuis.JPG/1280px-Charles-Fran%C3%A7ois_Dupuis.JPG",
     "kind": "PD/CC0",
     "license": "Public Domain",
-    "creator": "Charles-François Dupuis",
+    "creator": "Charles-Fran\u00e7ois Dupuis",
     "credit_source": "Wikimedia Commons",
     "source_url": "https://commons.wikimedia.org/wiki/File:Charles-Fran%C3%A7ois_Dupuis.JPG",
-    "local_path": "src/assets/plates/figures/charles-francois-dupuis.jpg"
+    "local_path": "src/assets/plates/figures/charles-francois-dupuis.webp",
+    "crop": "done"
   },
   "figures/constantin-volney": {
     "collection": "figures",
     "slug": "constantin-volney",
     "status": "downloaded",
     "host": "commons",
-    "ref": "File:Portret van Constantin-François Volney, RP-P-1910-6139.jpg",
+    "ref": "File:Portret van Constantin-Fran\u00e7ois Volney, RP-P-1910-6139.jpg",
     "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Portret_van_Constantin-Fran%C3%A7ois_Volney%2C_RP-P-1910-6139.jpg/1280px-Portret_van_Constantin-Fran%C3%A7ois_Volney%2C_RP-P-1910-6139.jpg",
     "kind": "PD/CC0",
     "license": "CC0",
@@ -152,7 +162,8 @@
     "credit_source": "Wikimedia Commons",
     "source_url": "https://commons.wikimedia.org/wiki/File:Portret_van_Constantin-Fran%C3%A7ois_Volney,_RP-P-1910-6139.jpg",
     "license_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
-    "local_path": "src/assets/plates/figures/constantin-volney.jpg"
+    "local_path": "src/assets/plates/figures/constantin-volney.webp",
+    "crop": "flagged"
   },
   "figures/edward-bernays": {
     "collection": "figures",
@@ -166,7 +177,8 @@
     "creator": "Bain News Service",
     "credit_source": "Wikimedia Commons",
     "source_url": "https://commons.wikimedia.org/wiki/File:Edward_Bernays_cropped.png",
-    "local_path": "src/assets/plates/figures/edward-bernays.png"
+    "local_path": "src/assets/plates/figures/edward-bernays.webp",
+    "crop": "done"
   },
   "figures/eliphas-levi": {
     "collection": "figures",
@@ -180,7 +192,8 @@
     "creator": "Charles Revel",
     "credit_source": "Wikimedia Commons",
     "source_url": "https://commons.wikimedia.org/wiki/File:Eliphas_Levi_1874.jpg",
-    "local_path": "src/assets/plates/figures/eliphas-levi.jpg"
+    "local_path": "src/assets/plates/figures/eliphas-levi.webp",
+    "crop": "done"
   },
   "figures/helena-blavatsky": {
     "collection": "figures",
@@ -193,7 +206,8 @@
     "license": "Public Domain",
     "credit_source": "Wikimedia Commons",
     "source_url": "https://commons.wikimedia.org/wiki/File:Helena-Blavatsky-c.1875.jpg",
-    "local_path": "src/assets/plates/figures/helena-blavatsky.jpg"
+    "local_path": "src/assets/plates/figures/helena-blavatsky.webp",
+    "crop": "done"
   },
   "figures/joseph-campbell": {
     "collection": "figures",
@@ -207,7 +221,8 @@
     "creator": "Folkstory",
     "credit_source": "Wikimedia Commons",
     "source_url": "https://commons.wikimedia.org/wiki/File:JosephCampbell_JonathanYoung_(cropped).jpg",
-    "local_path": "src/assets/plates/figures/joseph-campbell.jpg"
+    "local_path": "src/assets/plates/figures/joseph-campbell.webp",
+    "crop": "done"
   },
   "figures/kersey-graves": {
     "collection": "figures",
@@ -221,7 +236,8 @@
     "creator": "Kersey Graves",
     "credit_source": "Wikimedia Commons",
     "source_url": "https://commons.wikimedia.org/wiki/File:Kersey_Graves.jpg",
-    "local_path": "src/assets/plates/figures/kersey-graves.jpg"
+    "local_path": "src/assets/plates/figures/kersey-graves.webp",
+    "crop": "done"
   },
   "figures/marshall-mcluhan": {
     "collection": "figures",
@@ -235,7 +251,8 @@
     "creator": "Gotfryd, Bernard, photographer",
     "credit_source": "Wikimedia Commons",
     "source_url": "https://commons.wikimedia.org/wiki/File:Marshall_McLuhan_with_and_on_television_(cropped).jpg",
-    "local_path": "src/assets/plates/figures/marshall-mcluhan.jpg"
+    "local_path": "src/assets/plates/figures/marshall-mcluhan.webp",
+    "crop": "done"
   },
   "pillars/astrotheology-and-the-sky-code": {
     "collection": "pillars",
@@ -249,7 +266,8 @@
     "creator": "Jan van Loon",
     "credit_source": "Wikimedia Commons",
     "source_url": "https://commons.wikimedia.org/wiki/File:Cellarius_ptolemaic_system.jpg",
-    "local_path": "src/assets/plates/pillars/astrotheology-and-the-sky-code.jpg"
+    "local_path": "src/assets/plates/pillars/astrotheology-and-the-sky-code.webp",
+    "crop": "done"
   },
   "pillars/symbolic-illiteracy-and-the-ai-image-age": {
     "collection": "pillars",
@@ -263,7 +281,8 @@
     "credit_source": "Wellcome Collection (via Wikimedia Commons)",
     "source_url": "https://commons.wikimedia.org/wiki/File:Optics;_the_principle_of_the_camera_obscura._Engraving._Wellcome_V0025358.jpg",
     "license_url": "https://creativecommons.org/licenses/by/4.0",
-    "local_path": "src/assets/plates/pillars/symbolic-illiteracy-and-the-ai-image-age.jpg"
+    "local_path": "src/assets/plates/pillars/symbolic-illiteracy-and-the-ai-image-age.webp",
+    "crop": "done"
   },
   "pillars/the-engineering-of-consent": {
     "collection": "pillars",
@@ -277,7 +296,8 @@
     "creator": "Savile Lumley / Johnson, Riddle &amp; Co. Ltd. / Adam Cuerden",
     "credit_source": "Wikimedia Commons",
     "source_url": "https://commons.wikimedia.org/wiki/File:Daddy,_what_did_You_do_in_the_Great_War%3F.jpg",
-    "local_path": "src/assets/plates/pillars/the-engineering-of-consent.jpg"
+    "local_path": "src/assets/plates/pillars/the-engineering-of-consent.webp",
+    "crop": "done"
   },
   "pillars/the-war-on-images": {
     "collection": "pillars",
@@ -290,7 +310,8 @@
     "license": "Public Domain",
     "credit_source": "Wikimedia Commons",
     "source_url": "https://commons.wikimedia.org/wiki/File:Crucifixion_with_iconoclasts,_Chludov_Psalter,_folio_67r.jpg",
-    "local_path": "src/assets/plates/pillars/the-war-on-images.jpg"
+    "local_path": "src/assets/plates/pillars/the-war-on-images.webp",
+    "crop": "done"
   },
   "pillars/who-controls-the-image": {
     "collection": "pillars",
@@ -304,7 +325,48 @@
     "creator": "Jan Saenredam / After Cornelis van Haarlem",
     "credit_source": "Wikimedia Commons",
     "source_url": "https://commons.wikimedia.org/wiki/File:Platon_Cave_Sanraedam_1604.jpg",
-    "local_path": "src/assets/plates/pillars/who-controls-the-image.jpg"
+    "local_path": "src/assets/plates/pillars/who-controls-the-image.webp",
+    "crop": "done"
+  },
+  "symbols/agnus-dei": {
+    "collection": "symbols",
+    "slug": "agnus-dei",
+    "status": "downloaded",
+    "host": "(pre-manifest)",
+    "local_path": "src/assets/plates/symbols/agnus-dei.webp",
+    "crop": "done"
+  },
+  "symbols/all-seeing-eye": {
+    "collection": "symbols",
+    "slug": "all-seeing-eye",
+    "status": "downloaded",
+    "host": "(pre-manifest)",
+    "local_path": "src/assets/plates/symbols/all-seeing-eye.webp",
+    "crop": "done"
+  },
+  "symbols/ankh": {
+    "collection": "symbols",
+    "slug": "ankh",
+    "status": "downloaded",
+    "host": "(pre-manifest)",
+    "local_path": "src/assets/plates/symbols/ankh.webp",
+    "crop": "done"
+  },
+  "symbols/as-above-so-below": {
+    "collection": "symbols",
+    "slug": "as-above-so-below",
+    "status": "downloaded",
+    "host": "(pre-manifest)",
+    "local_path": "src/assets/plates/symbols/as-above-so-below.webp",
+    "crop": "done"
+  },
+  "symbols/baphomet": {
+    "collection": "symbols",
+    "slug": "baphomet",
+    "status": "downloaded",
+    "host": "(pre-manifest)",
+    "local_path": "src/assets/plates/symbols/baphomet.webp",
+    "crop": "done"
   },
   "symbols/blazing-star": {
     "collection": "symbols",
@@ -312,8 +374,17 @@
     "status": "svg",
     "host": "original",
     "license": "CC0",
-    "credit_source": "Original diagram — ANAMNESIS",
-    "local_path": "src/assets/plates/symbols/blazing-star.svg"
+    "credit_source": "Original diagram \u2014 ANAMNESIS",
+    "local_path": "src/assets/plates/symbols/blazing-star.svg",
+    "crop": "passthrough"
+  },
+  "symbols/capitol-dome": {
+    "collection": "symbols",
+    "slug": "capitol-dome",
+    "status": "downloaded",
+    "host": "(pre-manifest)",
+    "local_path": "src/assets/plates/symbols/capitol-dome.webp",
+    "crop": "done"
   },
   "symbols/checkerboard-floor": {
     "collection": "symbols",
@@ -321,8 +392,49 @@
     "status": "svg",
     "host": "original",
     "license": "CC0",
-    "credit_source": "Original diagram — ANAMNESIS",
-    "local_path": "src/assets/plates/symbols/checkerboard-floor.svg"
+    "credit_source": "Original diagram \u2014 ANAMNESIS",
+    "local_path": "src/assets/plates/symbols/checkerboard-floor.svg",
+    "crop": "passthrough"
+  },
+  "symbols/double-headed-eagle": {
+    "collection": "symbols",
+    "slug": "double-headed-eagle",
+    "status": "downloaded",
+    "host": "(pre-manifest)",
+    "local_path": "src/assets/plates/symbols/double-headed-eagle.webp",
+    "crop": "done"
+  },
+  "symbols/eye-of-horus": {
+    "collection": "symbols",
+    "slug": "eye-of-horus",
+    "status": "downloaded",
+    "host": "(pre-manifest)",
+    "local_path": "src/assets/plates/symbols/eye-of-horus.webp",
+    "crop": "done"
+  },
+  "symbols/flower-of-life": {
+    "collection": "symbols",
+    "slug": "flower-of-life",
+    "status": "downloaded",
+    "host": "(pre-manifest)",
+    "local_path": "src/assets/plates/symbols/flower-of-life.webp",
+    "crop": "done"
+  },
+  "symbols/golden-ratio": {
+    "collection": "symbols",
+    "slug": "golden-ratio",
+    "status": "downloaded",
+    "host": "(pre-manifest)",
+    "local_path": "src/assets/plates/symbols/golden-ratio.webp",
+    "crop": "done"
+  },
+  "symbols/great-seal": {
+    "collection": "symbols",
+    "slug": "great-seal",
+    "status": "downloaded",
+    "host": "(pre-manifest)",
+    "local_path": "src/assets/plates/symbols/great-seal.webp",
+    "crop": "done"
   },
   "symbols/hexagram": {
     "collection": "symbols",
@@ -330,8 +442,41 @@
     "status": "svg",
     "host": "original",
     "license": "CC0",
-    "credit_source": "Original diagram — ANAMNESIS",
-    "local_path": "src/assets/plates/symbols/hexagram.svg"
+    "credit_source": "Original diagram \u2014 ANAMNESIS",
+    "local_path": "src/assets/plates/symbols/hexagram.svg",
+    "crop": "passthrough"
+  },
+  "symbols/ichthys": {
+    "collection": "symbols",
+    "slug": "ichthys",
+    "status": "downloaded",
+    "host": "(pre-manifest)",
+    "local_path": "src/assets/plates/symbols/ichthys.webp",
+    "crop": "done"
+  },
+  "symbols/ihs-monogram": {
+    "collection": "symbols",
+    "slug": "ihs-monogram",
+    "status": "downloaded",
+    "host": "(pre-manifest)",
+    "local_path": "src/assets/plates/symbols/ihs-monogram.webp",
+    "crop": "done"
+  },
+  "symbols/inverted-pentagram": {
+    "collection": "symbols",
+    "slug": "inverted-pentagram",
+    "status": "downloaded",
+    "host": "(pre-manifest)",
+    "local_path": "src/assets/plates/symbols/inverted-pentagram.webp",
+    "crop": "done"
+  },
+  "symbols/jachin-and-boaz": {
+    "collection": "symbols",
+    "slug": "jachin-and-boaz",
+    "status": "downloaded",
+    "host": "(pre-manifest)",
+    "local_path": "src/assets/plates/symbols/jachin-and-boaz.webp",
+    "crop": "done"
   },
   "symbols/letter-g": {
     "collection": "symbols",
@@ -339,8 +484,113 @@
     "status": "svg",
     "host": "original",
     "license": "CC0",
-    "credit_source": "Original diagram — ANAMNESIS",
-    "local_path": "src/assets/plates/symbols/letter-g.svg"
+    "credit_source": "Original diagram \u2014 ANAMNESIS",
+    "local_path": "src/assets/plates/symbols/letter-g.svg",
+    "crop": "passthrough"
+  },
+  "symbols/liberty-cap": {
+    "collection": "symbols",
+    "slug": "liberty-cap",
+    "status": "downloaded",
+    "host": "(pre-manifest)",
+    "local_path": "src/assets/plates/symbols/liberty-cap.webp",
+    "crop": "done"
+  },
+  "symbols/metatrons-cube": {
+    "collection": "symbols",
+    "slug": "metatrons-cube",
+    "status": "downloaded",
+    "host": "(pre-manifest)",
+    "local_path": "src/assets/plates/symbols/metatrons-cube.webp",
+    "crop": "done"
+  },
+  "symbols/obelisk": {
+    "collection": "symbols",
+    "slug": "obelisk",
+    "status": "downloaded",
+    "host": "(pre-manifest)",
+    "local_path": "src/assets/plates/symbols/obelisk.webp",
+    "crop": "done"
+  },
+  "symbols/ouroboros": {
+    "collection": "symbols",
+    "slug": "ouroboros",
+    "status": "downloaded",
+    "host": "(pre-manifest)",
+    "local_path": "src/assets/plates/symbols/ouroboros.webp",
+    "crop": "done"
+  },
+  "symbols/pentagram": {
+    "collection": "symbols",
+    "slug": "pentagram",
+    "status": "downloaded",
+    "host": "(pre-manifest)",
+    "local_path": "src/assets/plates/symbols/pentagram.webp",
+    "crop": "done"
+  },
+  "symbols/philosophers-stone": {
+    "collection": "symbols",
+    "slug": "philosophers-stone",
+    "status": "downloaded",
+    "host": "(pre-manifest)",
+    "local_path": "src/assets/plates/symbols/philosophers-stone.webp",
+    "crop": "done"
+  },
+  "symbols/rebis": {
+    "collection": "symbols",
+    "slug": "rebis",
+    "status": "downloaded",
+    "host": "(pre-manifest)",
+    "local_path": "src/assets/plates/symbols/rebis.webp",
+    "crop": "done"
+  },
+  "symbols/rod-of-asclepius": {
+    "collection": "symbols",
+    "slug": "rod-of-asclepius",
+    "status": "downloaded",
+    "host": "(pre-manifest)",
+    "local_path": "src/assets/plates/symbols/rod-of-asclepius.webp",
+    "crop": "done"
+  },
+  "symbols/sol-invictus": {
+    "collection": "symbols",
+    "slug": "sol-invictus",
+    "status": "downloaded",
+    "host": "(pre-manifest)",
+    "local_path": "src/assets/plates/symbols/sol-invictus.webp",
+    "crop": "done"
+  },
+  "symbols/square-and-compasses": {
+    "collection": "symbols",
+    "slug": "square-and-compasses",
+    "status": "downloaded",
+    "host": "(pre-manifest)",
+    "local_path": "src/assets/plates/symbols/square-and-compasses.webp",
+    "crop": "done"
+  },
+  "symbols/squared-circle": {
+    "collection": "symbols",
+    "slug": "squared-circle",
+    "status": "downloaded",
+    "host": "(pre-manifest)",
+    "local_path": "src/assets/plates/symbols/squared-circle.webp",
+    "crop": "done"
+  },
+  "symbols/sri-yantra": {
+    "collection": "symbols",
+    "slug": "sri-yantra",
+    "status": "downloaded",
+    "host": "(pre-manifest)",
+    "local_path": "src/assets/plates/symbols/sri-yantra.webp",
+    "crop": "done"
+  },
+  "symbols/statue-of-liberty": {
+    "collection": "symbols",
+    "slug": "statue-of-liberty",
+    "status": "downloaded",
+    "host": "(pre-manifest)",
+    "local_path": "src/assets/plates/symbols/statue-of-liberty.webp",
+    "crop": "done"
   },
   "symbols/sun-cross": {
     "collection": "symbols",
@@ -348,8 +598,33 @@
     "status": "svg",
     "host": "original",
     "license": "CC0",
-    "credit_source": "Original diagram — ANAMNESIS",
-    "local_path": "src/assets/plates/symbols/sun-cross.svg"
+    "credit_source": "Original diagram \u2014 ANAMNESIS",
+    "local_path": "src/assets/plates/symbols/sun-cross.svg",
+    "crop": "passthrough"
+  },
+  "symbols/swastika": {
+    "collection": "symbols",
+    "slug": "swastika",
+    "status": "downloaded",
+    "host": "(pre-manifest)",
+    "local_path": "src/assets/plates/symbols/swastika.webp",
+    "crop": "done"
+  },
+  "symbols/the-cross": {
+    "collection": "symbols",
+    "slug": "the-cross",
+    "status": "downloaded",
+    "host": "(pre-manifest)",
+    "local_path": "src/assets/plates/symbols/the-cross.webp",
+    "crop": "done"
+  },
+  "symbols/the-dove": {
+    "collection": "symbols",
+    "slug": "the-dove",
+    "status": "downloaded",
+    "host": "(pre-manifest)",
+    "local_path": "src/assets/plates/symbols/the-dove.webp",
+    "crop": "done"
   },
   "symbols/the-eagle-as-phoenix": {
     "collection": "symbols",
@@ -363,7 +638,8 @@
     "creator": "Richard Patterson and Richardson Dougall",
     "credit_source": "Wikimedia Commons",
     "source_url": "https://commons.wikimedia.org/wiki/File:Great_Seal_of_the_United_States_(Graham_Lithograph).png",
-    "local_path": "src/assets/plates/symbols/the-eagle-as-phoenix.png"
+    "local_path": "src/assets/plates/symbols/the-eagle-as-phoenix.webp",
+    "crop": "done"
   },
   "symbols/tria-prima": {
     "collection": "symbols",
@@ -371,8 +647,25 @@
     "status": "svg",
     "host": "original",
     "license": "CC0",
-    "credit_source": "Original diagram — ANAMNESIS",
-    "local_path": "src/assets/plates/symbols/tria-prima.svg"
+    "credit_source": "Original diagram \u2014 ANAMNESIS",
+    "local_path": "src/assets/plates/symbols/tria-prima.svg",
+    "crop": "passthrough"
+  },
+  "symbols/triple-spiral": {
+    "collection": "symbols",
+    "slug": "triple-spiral",
+    "status": "downloaded",
+    "host": "(pre-manifest)",
+    "local_path": "src/assets/plates/symbols/triple-spiral.webp",
+    "crop": "done"
+  },
+  "symbols/vatican-papal": {
+    "collection": "symbols",
+    "slug": "vatican-papal",
+    "status": "downloaded",
+    "host": "(pre-manifest)",
+    "local_path": "src/assets/plates/symbols/vatican-papal.webp",
+    "crop": "done"
   },
   "symbols/vesica-piscis": {
     "collection": "symbols",
@@ -380,8 +673,9 @@
     "status": "svg",
     "host": "original",
     "license": "CC0",
-    "credit_source": "Original diagram — ANAMNESIS",
-    "local_path": "src/assets/plates/symbols/vesica-piscis.svg"
+    "credit_source": "Original diagram \u2014 ANAMNESIS",
+    "local_path": "src/assets/plates/symbols/vesica-piscis.svg",
+    "crop": "passthrough"
   },
   "symbols/washington-monument": {
     "collection": "symbols",
@@ -395,7 +689,16 @@
     "creator": "Detroit Photo",
     "credit_source": "Wikimedia Commons",
     "source_url": "https://commons.wikimedia.org/wiki/File:Washington_Monument_detroit.jpg",
-    "local_path": "src/assets/plates/symbols/washington-monument.jpg"
+    "local_path": "src/assets/plates/symbols/washington-monument.webp",
+    "crop": "done"
+  },
+  "symbols/winged-sun-disk": {
+    "collection": "symbols",
+    "slug": "winged-sun-disk",
+    "status": "downloaded",
+    "host": "(pre-manifest)",
+    "local_path": "src/assets/plates/symbols/winged-sun-disk.webp",
+    "crop": "done"
   },
   "timeline/akhenaten-image-reform": {
     "collection": "timeline",
@@ -409,7 +712,8 @@
     "credit_source": "The Metropolitan Museum of Art",
     "source_url": "https://www.metmuseum.org/art/collection/search/545873",
     "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
-    "local_path": "src/assets/plates/timeline/akhenaten-image-reform.jpg"
+    "local_path": "src/assets/plates/timeline/akhenaten-image-reform.webp",
+    "crop": "done"
   },
   "timeline/augustus-imperial-cult": {
     "collection": "timeline",
@@ -423,7 +727,8 @@
     "credit_source": "The Metropolitan Museum of Art",
     "source_url": "https://www.metmuseum.org/art/collection/search/254473",
     "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
-    "local_path": "src/assets/plates/timeline/augustus-imperial-cult.jpg"
+    "local_path": "src/assets/plates/timeline/augustus-imperial-cult.webp",
+    "crop": "done"
   },
   "timeline/birth-of-photography": {
     "collection": "timeline",
@@ -437,7 +742,8 @@
     "creator": "Louis Daguerre",
     "credit_source": "Wikimedia Commons",
     "source_url": "https://commons.wikimedia.org/wiki/File:Boulevard_du_Temple_by_Daguerre.jpg",
-    "local_path": "src/assets/plates/timeline/birth-of-photography.jpg"
+    "local_path": "src/assets/plates/timeline/birth-of-photography.webp",
+    "crop": "done"
   },
   "timeline/byzantine-iconoclasm": {
     "collection": "timeline",
@@ -451,7 +757,8 @@
     "creator": "Chludov 9th century",
     "credit_source": "Wikimedia Commons",
     "source_url": "https://commons.wikimedia.org/wiki/File:Clasm_Chludov_detail_9th_century.jpg",
-    "local_path": "src/assets/plates/timeline/byzantine-iconoclasm.jpg"
+    "local_path": "src/assets/plates/timeline/byzantine-iconoclasm.webp",
+    "crop": "done"
   },
   "timeline/council-of-trent": {
     "collection": "timeline",
@@ -465,7 +772,8 @@
     "creator": "Formerly attributed to Titian",
     "credit_source": "Wikimedia Commons",
     "source_url": "https://commons.wikimedia.org/wiki/File:Tridentinum.jpg",
-    "local_path": "src/assets/plates/timeline/council-of-trent.jpg"
+    "local_path": "src/assets/plates/timeline/council-of-trent.webp",
+    "crop": "done"
   },
   "timeline/gutenberg-printing-press": {
     "collection": "timeline",
@@ -479,7 +787,8 @@
     "creator": "Original by Johannes Gutenberg (printer), Scan by Jossi",
     "credit_source": "Wikimedia Commons",
     "source_url": "https://commons.wikimedia.org/wiki/File:Gutenberg_Bible_B42_Genesis.JPG",
-    "local_path": "src/assets/plates/timeline/gutenberg-printing-press.jpg"
+    "local_path": "src/assets/plates/timeline/gutenberg-printing-press.webp",
+    "crop": "done"
   },
   "timeline/hall-secret-teachings": {
     "collection": "timeline",
@@ -493,7 +802,8 @@
     "creator": "J. Augustus Knapp",
     "credit_source": "Wikimedia Commons",
     "source_url": "https://commons.wikimedia.org/wiki/File:An_Idealistic_Depiction_of_the_Atlantean_Mystery_Temple.jpg",
-    "local_path": "src/assets/plates/timeline/hall-secret-teachings.jpg"
+    "local_path": "src/assets/plates/timeline/hall-secret-teachings.webp",
+    "crop": "done"
   },
   "timeline/hebrew-aniconism": {
     "collection": "timeline",
@@ -507,7 +817,8 @@
     "creator": "Rembrandt",
     "credit_source": "Wikimedia Commons",
     "source_url": "https://commons.wikimedia.org/wiki/File:Rembrandt_-_Moses_with_the_Ten_Commandments_-_Google_Art_Project.jpg",
-    "local_path": "src/assets/plates/timeline/hebrew-aniconism.jpg"
+    "local_path": "src/assets/plates/timeline/hebrew-aniconism.webp",
+    "crop": "done"
   },
   "timeline/islamic-aniconism": {
     "collection": "timeline",
@@ -521,21 +832,23 @@
     "credit_source": "The Metropolitan Museum of Art",
     "source_url": "https://www.metmuseum.org/art/collection/search/453563",
     "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
-    "local_path": "src/assets/plates/timeline/islamic-aniconism.jpg"
+    "local_path": "src/assets/plates/timeline/islamic-aniconism.webp",
+    "crop": "done"
   },
   "timeline/lithography-mass-poster": {
     "collection": "timeline",
     "slug": "lithography-mass-poster",
     "status": "downloaded",
     "host": "commons",
-    "ref": "File:(Albi) Bal au Moulin Rouge place Blanche 1889 - Jules Chéret.jpg",
+    "ref": "File:(Albi) Bal au Moulin Rouge place Blanche 1889 - Jules Ch\u00e9ret.jpg",
     "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/%28Albi%29_Bal_au_Moulin_Rouge_place_Blanche_1889_-_Jules_Ch%C3%A9ret.jpg/1280px-%28Albi%29_Bal_au_Moulin_Rouge_place_Blanche_1889_-_Jules_Ch%C3%A9ret.jpg",
     "kind": "PD/CC0",
     "license": "Public Domain",
     "creator": "Didier Descouens",
     "credit_source": "Wikimedia Commons",
     "source_url": "https://commons.wikimedia.org/wiki/File:(Albi)_Bal_au_Moulin_Rouge_place_Blanche_1889_-_Jules_Ch%C3%A9ret.jpg",
-    "local_path": "src/assets/plates/timeline/lithography-mass-poster.jpg"
+    "local_path": "src/assets/plates/timeline/lithography-mass-poster.webp",
+    "crop": "done"
   },
   "timeline/nazi-spectacle-benjamin": {
     "collection": "timeline",
@@ -546,10 +859,11 @@
     "image_url": "https://upload.wikimedia.org/wikipedia/commons/c/cc/Walter_Benjamin_vers_1928.jpg",
     "kind": "PD/CC0",
     "license": "Public Domain",
-    "creator": "Photo d'identité sans auteur, 1928",
+    "creator": "Photo d'identit\u00e9 sans auteur, 1928",
     "credit_source": "Wikimedia Commons",
     "source_url": "https://commons.wikimedia.org/wiki/File:Walter_Benjamin_vers_1928.jpg",
-    "local_path": "src/assets/plates/timeline/nazi-spectacle-benjamin.jpg"
+    "local_path": "src/assets/plates/timeline/nazi-spectacle-benjamin.webp",
+    "crop": "done"
   },
   "timeline/paleolithic-symbol-making": {
     "collection": "timeline",
@@ -563,7 +877,8 @@
     "creator": "EU",
     "credit_source": "Wikimedia Commons",
     "source_url": "https://commons.wikimedia.org/wiki/File:Lascaux_painting.jpg",
-    "local_path": "src/assets/plates/timeline/paleolithic-symbol-making.jpg"
+    "local_path": "src/assets/plates/timeline/paleolithic-symbol-making.webp",
+    "crop": "done"
   },
   "timeline/plato-banishes-the-poets": {
     "collection": "timeline",
@@ -578,7 +893,8 @@
     "credit_source": "Wikimedia Commons",
     "source_url": "https://commons.wikimedia.org/wiki/File:Marble_bust_of_the_Greek_philosopher_Plato._Roman_copy_(1st_century_CE)_of_an_original_(350-340_BCE)._Altes_Museum,_Berlin.jpg",
     "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
-    "local_path": "src/assets/plates/timeline/plato-banishes-the-poets.jpg"
+    "local_path": "src/assets/plates/timeline/plato-banishes-the-poets.webp",
+    "crop": "done"
   },
   "timeline/roman-damnatio-memoriae": {
     "collection": "timeline",
@@ -593,7 +909,8 @@
     "credit_source": "Wikimedia Commons",
     "source_url": "https://commons.wikimedia.org/wiki/File:Tondo_showing_the_Severan_dynasty_Septimius_Severus_with_Julia_Domna,_Caracalla_and_Geta,_whose_face_has_been_erased,_probably_because_of_the_damnatio_memoriae_put_against_him_by_Caracalla,_from_Djemila_(Algeria),_circa_AD_199-200.jpg",
     "license_url": "https://creativecommons.org/licenses/by-sa/2.0",
-    "local_path": "src/assets/plates/timeline/roman-damnatio-memoriae.jpg"
+    "local_path": "src/assets/plates/timeline/roman-damnatio-memoriae.webp",
+    "crop": "done"
   },
   "timeline/second-council-of-nicaea": {
     "collection": "timeline",
@@ -606,14 +923,15 @@
     "license": "Public Domain",
     "credit_source": "Wikimedia Commons",
     "source_url": "https://commons.wikimedia.org/wiki/File:The_Restoration_of_the_Icons_-_Google_Art_Project.jpg",
-    "local_path": "src/assets/plates/timeline/second-council-of-nicaea.jpg"
+    "local_path": "src/assets/plates/timeline/second-council-of-nicaea.webp",
+    "crop": "done"
   },
   "timeline/volney-dupuis-astrotheology": {
     "collection": "timeline",
     "slug": "volney-dupuis-astrotheology",
     "status": "downloaded",
     "host": "commons",
-    "ref": "File:Zodiaque de Dendéra - Musée du Louvre Antiquités Egyptiennes D 38 ; E 13482.jpg",
+    "ref": "File:Zodiaque de Dend\u00e9ra - Mus\u00e9e du Louvre Antiquit\u00e9s Egyptiennes D 38 ; E 13482.jpg",
     "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Zodiaque_de_Dend%C3%A9ra_-_Mus%C3%A9e_du_Louvre_Antiquit%C3%A9s_Egyptiennes_D_38_%3B_E_13482.jpg/1280px-Zodiaque_de_Dend%C3%A9ra_-_Mus%C3%A9e_du_Louvre_Antiquit%C3%A9s_Egyptiennes_D_38_%3B_E_13482.jpg",
     "kind": "PD/CC0",
     "license": "CC0",
@@ -621,6 +939,7 @@
     "credit_source": "Wikimedia Commons",
     "source_url": "https://commons.wikimedia.org/wiki/File:Zodiaque_de_Dend%C3%A9ra_-_Mus%C3%A9e_du_Louvre_Antiquit%C3%A9s_Egyptiennes_D_38_;_E_13482.jpg",
     "license_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
-    "local_path": "src/assets/plates/timeline/volney-dupuis-astrotheology.jpg"
+    "local_path": "src/assets/plates/timeline/volney-dupuis-astrotheology.webp",
+    "crop": "done"
   }
 }
