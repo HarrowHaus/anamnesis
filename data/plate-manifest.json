@@ -172,6 +172,22 @@
     "crop": "flagged",
     "crop_note": "no face detected (it is an engraving) \u2014 saliency crop, acceptable"
   },
+  "figures/david-icke": {
+    "collection": "figures",
+    "slug": "david-icke",
+    "status": "downloaded",
+    "host": "commons",
+    "ref": "File:David Icke, 7 June 2013 (1), cropped.jpg",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/7/7c/David_Icke%2C_7_June_2013_%281%29%2C_cropped.jpg",
+    "kind": "CC-BY",
+    "license": "CC BY 2.0",
+    "creator": "Tyler Merbler",
+    "credit_source": "Wikimedia Commons",
+    "source_url": "https://commons.wikimedia.org/wiki/File:David_Icke,_7_June_2013_(1),_cropped.jpg",
+    "license_url": "https://creativecommons.org/licenses/by/2.0",
+    "local_path": "src/assets/plates/figures/david-icke.webp",
+    "crop": "done"
+  },
   "figures/edward-bernays": {
     "collection": "figures",
     "slug": "edward-bernays",
@@ -202,6 +218,48 @@
     "local_path": "src/assets/plates/figures/eliphas-levi.webp",
     "crop": "done"
   },
+  "figures/frances-yates": {
+    "collection": "figures",
+    "slug": "frances-yates",
+    "status": "downloaded",
+    "host": "commons",
+    "ref": "File:Frances Yates 1924.jpg",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/b/ba/Frances_Yates_1924.jpg",
+    "kind": "PD/CC0",
+    "license": "Public Domain",
+    "credit_source": "Wikimedia Commons",
+    "source_url": "https://commons.wikimedia.org/wiki/File:Frances_Yates_1924.jpg",
+    "local_path": "src/assets/plates/figures/frances-yates.webp",
+    "crop": "done"
+  },
+  "figures/gerald-massey": {
+    "collection": "figures",
+    "slug": "gerald-massey",
+    "status": "downloaded",
+    "host": "commons",
+    "ref": "File:Gerald Massey 1856.jpg",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/b/b1/Gerald_Massey_1856.jpg",
+    "kind": "PD/CC0",
+    "license": "Public Domain",
+    "credit_source": "Wikimedia Commons",
+    "source_url": "https://commons.wikimedia.org/wiki/File:Gerald_Massey_1856.jpg",
+    "local_path": "src/assets/plates/figures/gerald-massey.webp",
+    "crop": "done"
+  },
+  "figures/godfrey-higgins": {
+    "collection": "figures",
+    "slug": "godfrey-higgins",
+    "status": "downloaded",
+    "host": "commons",
+    "ref": "File:Godfrey Higgins.jpg",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/8/8c/Godfrey_Higgins.jpg",
+    "kind": "PD/CC0",
+    "license": "Public Domain",
+    "credit_source": "Wikimedia Commons",
+    "source_url": "https://commons.wikimedia.org/wiki/File:Godfrey_Higgins.jpg",
+    "local_path": "src/assets/plates/figures/godfrey-higgins.webp",
+    "crop": "done"
+  },
   "figures/helena-blavatsky": {
     "collection": "figures",
     "slug": "helena-blavatsky",
@@ -214,6 +272,22 @@
     "credit_source": "Wikimedia Commons",
     "source_url": "https://commons.wikimedia.org/wiki/File:Helena-Blavatsky-c.1875.jpg",
     "local_path": "src/assets/plates/figures/helena-blavatsky.webp",
+    "crop": "done"
+  },
+  "figures/jim-marrs": {
+    "collection": "figures",
+    "slug": "jim-marrs",
+    "status": "downloaded",
+    "host": "commons",
+    "ref": "File:Jim PR 2010.jpg",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/e/e9/Jim_PR_2010.jpg",
+    "kind": "CC-BY-SA",
+    "license": "CC BY-SA 3.0",
+    "creator": "Maritha for Jim Marrs",
+    "credit_source": "Wikimedia Commons",
+    "source_url": "https://commons.wikimedia.org/wiki/File:Jim_PR_2010.jpg",
+    "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
+    "local_path": "src/assets/plates/figures/jim-marrs.webp",
     "crop": "done"
   },
   "figures/joseph-campbell": {
@@ -246,6 +320,20 @@
     "local_path": "src/assets/plates/figures/kersey-graves.webp",
     "crop": "done"
   },
+  "figures/manly-p-hall": {
+    "collection": "figures",
+    "slug": "manly-p-hall",
+    "status": "downloaded",
+    "host": "commons",
+    "ref": "File:Manly P. Hall.jpg",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/0/05/Manly_P._Hall.jpg",
+    "kind": "PD/CC0",
+    "license": "Public Domain",
+    "credit_source": "Wikimedia Commons",
+    "source_url": "https://commons.wikimedia.org/wiki/File:Manly_P._Hall.jpg",
+    "local_path": "src/assets/plates/figures/manly-p-hall.webp",
+    "crop": "done"
+  },
   "figures/marshall-mcluhan": {
     "collection": "figures",
     "slug": "marshall-mcluhan",
@@ -259,6 +347,36 @@
     "credit_source": "Wikimedia Commons",
     "source_url": "https://commons.wikimedia.org/wiki/File:Marshall_McLuhan_with_and_on_television_(cropped).jpg",
     "local_path": "src/assets/plates/figures/marshall-mcluhan.webp",
+    "crop": "done"
+  },
+  "figures/peter-joseph": {
+    "collection": "figures",
+    "slug": "peter-joseph",
+    "status": "downloaded",
+    "host": "commons",
+    "ref": "File:Peter Joseph.jpg",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/9/90/Peter_Joseph.jpg",
+    "kind": "CC-BY-SA",
+    "license": "CC BY-SA 3.0",
+    "creator": "iTomath",
+    "credit_source": "Wikimedia Commons",
+    "source_url": "https://commons.wikimedia.org/wiki/File:Peter_Joseph.jpg",
+    "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
+    "local_path": "src/assets/plates/figures/peter-joseph.webp",
+    "crop": "done"
+  },
+  "figures/roland-barthes": {
+    "collection": "figures",
+    "slug": "roland-barthes",
+    "status": "downloaded",
+    "host": "commons",
+    "ref": "File:Roland Barthes 1969 (cropped).jpg",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/7/72/Roland_Barthes_1969_%28cropped%29.jpg",
+    "kind": "PD/CC0",
+    "license": "Public Domain",
+    "credit_source": "Wikimedia Commons",
+    "source_url": "https://commons.wikimedia.org/wiki/File:Roland_Barthes_1969_(cropped).jpg",
+    "local_path": "src/assets/plates/figures/roland-barthes.webp",
     "crop": "done"
   },
   "pillars/astrotheology-and-the-sky-code": {
