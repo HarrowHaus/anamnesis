@@ -45,7 +45,7 @@ const plateCredit = z.object({
   creator: z.string().optional(),
   license: z.string(),
   license_url: z.string().url().optional(),
-  source_url: z.string().url(),
+  source_url: z.string().url().optional(), // omitted only for original ANAMNESIS diagrams
 });
 
 // SEO + social fields shared by every shareable entry.

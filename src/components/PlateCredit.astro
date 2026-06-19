@@ -7,7 +7,7 @@ interface Credit {
   creator?: string;
   license: string;
   license_url?: string;
-  source_url: string;
+  source_url?: string;
 }
 interface Props {
   credit?: Credit;
@@ -18,7 +18,9 @@ const { credit, align = "start" } = Astro.props;
 {credit && (
   <p class={`plate-credit plate-credit--${align}`}>
     {credit.creator && <span>{credit.creator} · </span>}
-    <a href={credit.source_url} target="_blank" rel="noopener noreferrer">{credit.source}</a>
+    {credit.source_url
+      ? <a href={credit.source_url} target="_blank" rel="noopener noreferrer">{credit.source}</a>
+      : <span>{credit.source}</span>}
     {" · "}
     {credit.license_url
       ? <a href={credit.license_url} target="_blank" rel="noopener noreferrer">{credit.license}</a>

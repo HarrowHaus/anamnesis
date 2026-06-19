@@ -12,12 +12,23 @@ import type { ImageMetadata } from "astro";
  * Back-compatible: a lone string argument is treated as a seed glyph, so legacy
  * `plateUrl(data.glyph)` calls keep working unchanged.
  */
+// A processed astro:assets plate. Raster imports are objects; SVG imports come
+// back as a renderable *component* (a function) with `.src` attached — so accept
+// both object and function shapes that carry a `src`.
+function asAsset(plate?: ImageMetadata | string | null): { src: string } | null {
+  if (plate && (typeof plate === "object" || typeof plate === "function") && "src" in plate) {
+    return plate as unknown as { src: string };
+  }
+  return null;
+}
+
 export function plateUrl(
   plate?: ImageMetadata | string | null,
   seedGlyph?: string | null
 ): string | null {
-  // 1. Real astro:assets plate wins.
-  if (plate && typeof plate === "object" && "src" in plate) return plate.src;
+  // 1. Real astro:assets plate wins (raster object or SVG component).
+  const asset = asAsset(plate);
+  if (asset) return asset.src;
   // 2. Transitional seed fallback (basename under /plates).
   const glyph = typeof plate === "string" ? plate : seedGlyph;
   if (!glyph) return null;
@@ -31,5 +42,5 @@ export function plateUrl(
  * as provisional (and can be swept up when E5 retires the seed mapping).
  */
 export function isSeedPlate(plate?: ImageMetadata | string | null): boolean {
-  return !(plate && typeof plate === "object" && "src" in plate);
+  return !asAsset(plate);
 }

@@ -13,7 +13,7 @@ import PlateCredit from "./PlateCredit.astro";
 import { plateUrl, isSeedPlate } from "../lib/plates";
 
 interface Source { title: string; author?: string; year?: number; tier: "A" | "B" | "C"; type?: string; url?: string }
-interface Credit { source: string; creator?: string; license: string; license_url?: string; source_url: string }
+interface Credit { source: string; creator?: string; license: string; license_url?: string; source_url?: string }
 interface Props {
   name: string;
   one_line: string;
