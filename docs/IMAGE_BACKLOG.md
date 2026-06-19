@@ -51,3 +51,13 @@ an unverified licence** (E2/E3 legal gate).
 | figures | godfrey-higgins | NOFREE | Died 1833 (PD-eligible) but only book scans surfaced. Lead: the Yorkshire-worthies portrait plate (currently inside a PDF). |
 | figures | manly-p-hall | NOFREE | Died 1990; photos in copyright. Lead: a CC-BY PRS-released portrait. |
 | figures | alvin-boyd-kuhn | NOFREE | Died 1963; no PD/CC portrait found. |
+| timeline | reformation-iconoclasm | NOFREE | Beeldenstorm engraving not surfaced via search. Lead: a Frans Hogenberg 1566 iconoclasm print (Rijksmuseum). |
+| timeline | english-reformation-iconoclasm | NOFREE | No clean PD image of Edwardian/Puritan defacement surfaced. Lead: a PD defaced rood-screen photo or a Foxe woodcut. |
+| timeline | bernays-engineering-consent | NOFREE | Torches-of-Freedom photo not found; pillar P4 (propaganda poster) + the Bernays figure portrait cover the theme. Lead: a PD 1929 Easter-parade news photo. |
+| timeline | blavatsky-theosophy | NOFREE | No clean PD Theosophy emblem/event image (the helena-blavatsky figure portrait covers her). Lead: a PD Theosophical seal engraving. |
+| timeline | television-advertising | NOFREE | No verifiable PD 1950s television image (US ads risk un-renewed-copyright ambiguity). |
+| timeline | debord-spectacle | NOFREE | Modern (1967); no PD imagery. Society of the Spectacle is in copyright. |
+| timeline | astrotheology-transmission | LIVING | Maxwell/Tsarion/Freeman + modern web; no freely-licensed imagery. |
+| timeline | social-media-feeds | NOFREE | Contemporary; no PD imagery. |
+| timeline | deepfakes | NOFREE | Contemporary; no PD imagery. |
+| timeline | ai-image-generation | NOFREE | Contemporary; no PD imagery. |
