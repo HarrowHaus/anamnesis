@@ -8,6 +8,8 @@ import Breadcrumbs from "../../components/Breadcrumbs.astro";
 import PrevNext from "../../components/PrevNext.astro";
 import SourceRow from "../../components/SourceRow.astro";
 import WhereNext from "../../components/WhereNext.astro";
+import PlateCredit from "../../components/PlateCredit.astro";
+import { plateUrl, isSeedPlate } from "../../lib/plates";
 import { buildPool } from "../../lib/graph";
 import type { WhereNextItem } from "../../lib/relations";
 
@@ -39,6 +41,9 @@ const relatedSymbols: WhereNextItem[] = (d.related_symbols ?? [])
 
 const prev = pillars[(idx - 1 + pillars.length) % pillars.length];
 const next = pillars[(idx + 1) % pillars.length];
+
+const heroImg = plateUrl(d.plate, d.glyph);
+const heroSeed = isSeedPlate(d.plate);
 ---
 
 <SiteLayout title={d.seo_title} description={d.seo_description} active="pillars">
@@ -52,6 +57,13 @@ const next = pillars[(idx + 1) % pillars.length];
       <h1 class="pl__title">{d.title}</h1>
       {d.thesis && <p class="pl__thesis u-measure">{d.thesis}</p>}
     </header>
+
+    {heroImg && !heroSeed && (
+      <figure class="pl__plate">
+        <img class="u-plate" src={heroImg} data-plate="real" alt={`Plate for ${d.title}`} />
+        {d.plate_credit && <figcaption><PlateCredit credit={d.plate_credit} align="end" /></figcaption>}
+      </figure>
+    )}
 
     <div class="pl__body u-measure"><Content /></div>
 
@@ -122,6 +134,15 @@ const next = pillars[(idx + 1) % pillars.length];
   .pl { padding-block: var(--space-l) var(--space-xl); display: flex; flex-direction: column; gap: var(--space-2xl); }
   .pl__title { font-size: var(--step-4); margin-block: var(--space-2xs); }
   .pl__thesis { font-size: var(--step-1); color: var(--color-text-muted); }
+  .pl__plate {
+    margin: 0;
+    border: var(--border-w) solid var(--color-border);
+    border-radius: var(--radius-l);
+    overflow: hidden;
+    background: var(--color-surface-sunk);
+  }
+  .pl__plate .u-plate { aspect-ratio: 16 / 7; }
+  .pl__plate figcaption { padding: var(--space-3xs) var(--space-s); background: var(--color-surface); }
   .pl__body :global(h2) { font-size: var(--step-2); margin-block: var(--space-xl) var(--space-2xs); }
   .pl__body :global(h3) { font-size: var(--step-1); margin-block: var(--space-l) var(--space-2xs); }
   .pl__body :global(p) { margin-bottom: var(--space-m); }
