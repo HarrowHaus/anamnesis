@@ -215,6 +215,8 @@ Shadow pole = `--color-text` (ink), highlight pole = vellum, so the whole site r
 
 **F4 — Chrome + wayfinding.** Facet chips, active states, the category eyebrow/label, the per-section "you are here" use the same `--way-*` color (slightly brighter allowed in chrome for legibility). The L8 wayfinding the blueprint deferred — now delivered.
 
+**F4b — Decode annotation/markup.** Decode pages need an annotation/markup treatment — callout lines, numbered hotspots over the mark + antecedent — styled in the brutalist-grimoire system. (The logo decodes already render the actual mark via `object-fit:contain` under `data-mark`; this layers the analysis on top: numbered hotspots keyed to the symbol-lineage, ink callout rules, on both the trademark mark and its PD antecedent.)
+
 **F5 — Datamosh hero (the one bold motion).** Treat the **real hero plate from Phase E** so it channel-splits / slips on load — the engineered image caught being engineered. GSAP, runs once, **freezes to a clean static plate under `prefers-reduced-motion`**. The only place datamosh appears.
 
 **F6 — Acceptance.** Side-by-side against `mockup_E`; every plate duotoned by category; eight categories distinguishable but unified; AA contrast on text + chrome over vellum; reduced-motion freezes the mosh; `npm run build` clean. Commit `feat(design): apply brutalist-grimoire skin + category duotone (from mockup_E)`.
