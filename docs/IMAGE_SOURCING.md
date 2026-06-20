@@ -62,6 +62,18 @@ Keys: Met/AIC/Cleveland/LoC need none. Rijksmuseum, NYPL, Smithsonian, Europeana
 
 **Rotation rule:** within a batch, alternate hosts so consecutive requests rarely hit the same domain. If one host 429s, mark its queued items `status: sourced` and keep going on other hosts; circle back in Pass B.
 
+### Living-figure portraits — usable-photo search ladder
+Living people rarely have a PD portrait, but many have a genuinely **usable** (free-licensed or permissioned) photo. For each living figure work this ladder in order, stop at the first verified hit:
+1. **Wikipedia / Wikimedia Commons infobox photo** — if the person has a Wikipedia article with a photo it is already free-licensed (Wikipedia hosts only free images for living people). Fastest win.
+2. **Openverse** (openverse.org) — aggregates CC across Flickr, Wikimedia, museums; filter to CC0 / CC-BY / CC-BY-SA.
+3. **Flickr Creative Commons search** — filter to CC-BY / CC-BY-SA; conference, podcast, and event photos of public figures are common.
+4. **Public-domain government / public-record sources** — US federal works (testimony, official events) are PD; verify the specific source's license.
+5. **Official press kit / direct permission** — the figure's own site may offer a press photo or grant use on request; if granted, record who/when/scope as the credit and treat as licensed.
+
+Two hard checks on every candidate before it ships: (a) the **license is genuinely** PD/CC0/CC-BY/CC-BY-SA or explicitly permissioned, and (b) the **subject is unambiguously the right person** — cross-check against a second known image; never a look-alike or a same-name different-person. Full `plate_credit` always. Anything failing either check stays backlog and the figure falls to the designed no-portrait / illustration treatment.
+
+**Never use for a living figure:** social-media or YouTube grabs, unlicensed "editorial" stock, or AI-generated likenesses.
+
 ---
 
 ## 4. Draw what you can't (or shouldn't) download
@@ -75,7 +87,11 @@ This clears roughly half the no-PD-raster backlog with **zero downloads, zero li
 ---
 
 ## 5. Exclusions & trademarks (unchanged, restated)
-- **Live corporate logos** (Apple, Starbucks, CBS, etc.): never reproduce the trademark. Source the **antecedent** image (the historical symbol the logo descends from) or commission an original; `status: backlog` with a note until done.
+- **Live corporate logos** (Apple, Starbucks, CBS, etc.) — purpose decides it:
+  - **On casebook decode pages** (the page analyzes/criticizes the mark): show the **actual logo, used as the analysis** — annotated, exploded, marked up — alongside its public-domain **antecedent**. This is commentary/criticism (nominative + fair use), the strongest posture, and a better decode than a bare repro. Minimum-necessary resolution, kept in the editorial decode frame. Credit honestly: `license: "trademark-commentary"`, `plate_credit` = e.g. "Trademark of <company>; shown for commentary & criticism" — never claim a free license. `status: downloaded`.
+  - **Everywhere else** (a plain corporate-symbol dictionary entry, decoration, headers): **no trademark use** — antecedent image only, or backlog. Decorative use is the weak case; don't.
+  - **Recreating/redrawing a logo does not avoid copyright or trademark** and hurts decode accuracy — use the real mark, annotated, in the decode context.
+  - Not legal advice; fair use is a defense, not a guarantee. If a specific mark feels high-risk, flag it rather than guess.
 - **Dangerous-history imagery** (e.g. black-sun, Nazi-era material): documentation is *not* glorification — but the site's advocacy/fascination voice is not automatically encyclopedic, so the framing is what makes the difference, not the public-domain status of the file. These are **deferred** (`status: deferred-documentary`), included only once the entry adopts a plainly **documentary register**: what it is, who used it, what it meant, and **how it is used today**, stated neutrally, with the image as documentation under that frame — not aestheticized. The Nazi-spectacle/propaganda material is on-thesis (a regime engineering mass image-power) and the easiest to frame; the black-sun is the hardest and needs explicit present-day-use context. Until the documentary pass, the neutral fallback renders.
 - **Unconditional, never subject to any exception:** nothing sexualizing minors.
 - Anything whose license can't be verified PD/CC0/CC-BY(-SA): `status: backlog`, never ship on a guess.
