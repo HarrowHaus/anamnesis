@@ -127,6 +127,9 @@ button {
 [data-cat="fraternal-masonic"] { --way: var(--way-masonic); }
 [data-cat="alchemical"]        { --way: var(--way-alchem); }
 [data-cat="occult"]            { --way: var(--way-occult); }
+/* AA-safe ink-mixed variant for category-coloured TEXT over vellum (the bright
+   --way stays for plate duotone + borders). 62% way + ink clears AA for all 8. */
+[data-cat] { --way-ink: color-mix(in srgb, var(--way) 62%, var(--color-text)); }
 
 /* §F4 — the no-image hatch, designed as an engraved cartouche (ink rule +
    fine cross-hatch + a fleuron) so it reads intentional, never broken. */
