@@ -41,7 +41,6 @@ an unverified licence** (E2/E3 legal gate).
 | figures | william-cooper | NOFREE | Died 2001; photos in copyright. |
 | figures | d-m-murdock | NOFREE | Died 2015; photos in copyright. |
 | figures | texe-marrs | NOFREE | Died 2019; photos in copyright. |
-| figures | mircea-eliade | NOFREE | Died 1986; no PD/CC portrait found. |
 | figures | alvin-boyd-kuhn | NOFREE | Died 1963; no PD/CC portrait found. |
 | timeline | reformation-iconoclasm | NOFREE | Beeldenstorm engraving not surfaced via search. Lead: a Frans Hogenberg 1566 iconoclasm print (Rijksmuseum). |
 | timeline | english-reformation-iconoclasm | NOFREE | No clean PD image of Edwardian/Puritan defacement surfaced. Lead: a PD defaced rood-screen photo or a Foxe woodcut. |

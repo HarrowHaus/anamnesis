@@ -6,7 +6,7 @@ Phase F. To fix one: set its `crop_box` (l,t,r,b) in
 `data/plate-manifest.json`, set `crop` to `pending`, and re-run.
 Full-size masters are in `src/assets/plates/_originals/`.
 
-**Processed this run:** 8  ·  **back-filled:** 0  ·  **currently flagged:** 1
+**Processed this run:** 1  ·  **back-filled:** 0  ·  **currently flagged:** 1
 
 | Collection | Slug | Issue |
 |---|---|---|

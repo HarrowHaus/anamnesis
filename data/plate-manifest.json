@@ -349,6 +349,20 @@
     "local_path": "src/assets/plates/figures/marshall-mcluhan.webp",
     "crop": "done"
   },
+  "figures/mircea-eliade": {
+    "collection": "figures",
+    "slug": "mircea-eliade",
+    "status": "downloaded",
+    "host": "commons",
+    "ref": "File:Mircea Eliade young.jpg",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/5/59/Mircea_Eliade_young.jpg",
+    "kind": "PD/CC0",
+    "license": "Public Domain",
+    "credit_source": "Wikimedia Commons",
+    "source_url": "https://commons.wikimedia.org/wiki/File:Mircea_Eliade_young.jpg",
+    "local_path": "src/assets/plates/figures/mircea-eliade.webp",
+    "crop": "done"
+  },
   "figures/peter-joseph": {
     "collection": "figures",
     "slug": "peter-joseph",
