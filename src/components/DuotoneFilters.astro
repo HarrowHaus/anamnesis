@@ -142,5 +142,12 @@
         <feFuncB type="table" tableValues="0.322 0.839"/>
       </feComponentTransfer>
     </filter>
+    <!-- §F5 — channel isolation for the datamosh hero split -->
+    <filter id="ds-r" color-interpolation-filters="sRGB">
+      <feColorMatrix type="matrix" values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0"/>
+    </filter>
+    <filter id="ds-c" color-interpolation-filters="sRGB">
+      <feColorMatrix type="matrix" values="0 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 1 0"/>
+    </filter>
   </defs>
 </svg>

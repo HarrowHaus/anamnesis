@@ -34,8 +34,10 @@ const heroPlate = heroPlateImg.src;
 >
   <!-- THE HOOK -->
   <section class="hook">
-    <div class="hook__plate" aria-hidden="true">
-      <img class="u-plate" src={heroPlate} alt="" fetchpriority="high" />
+    <div class="hook__plate" aria-hidden="true" data-datamosh>
+      <img class="u-plate hook__base" src={heroPlate} alt="" fetchpriority="high" />
+      <img class="u-plate hook__chan hook__chan--r" src={heroPlate} alt="" />
+      <img class="u-plate hook__chan hook__chan--c" src={heroPlate} alt="" />
     </div>
     <div class="hook__scrim" aria-hidden="true"></div>
     <div class="hook__inner u-container">
@@ -111,7 +113,13 @@ const heroPlate = heroPlateImg.src;
   /* the hook */
   .hook { position: relative; isolation: isolate; min-height: 78vh; display: flex; align-items: center; }
   .hook__plate { position: absolute; inset: 0; z-index: -2; background: var(--color-bg); }
-  .hook__plate .u-plate { opacity: 0.42; }
+  .hook__plate .u-plate { position: absolute; inset: 0; }
+  /* §F5 — datamosh hero. CSS default = clean dimmed base, channels hidden
+     (the reduced-motion + no-JS state). GSAP slips the channels in on load. */
+  .hook__base { opacity: 0.42; }
+  .hook__chan { opacity: 0; mix-blend-mode: screen; pointer-events: none; will-change: transform, opacity; }
+  .hook__chan--r { filter: url(#ds-r); }
+  .hook__chan--c { filter: url(#ds-c); }
   /* neutral scrim floor so the type stays readable over any plate, no hue */
   .hook__scrim {
     position: absolute; inset: 0; z-index: -1;
@@ -157,3 +165,32 @@ const heroPlate = heroPlateImg.src;
   .home-arg__h { font-size: var(--step-3); margin-block: var(--space-2xs) var(--space-s); }
   .home-arg__body { color: var(--color-text-muted); font-size: var(--step-1); margin-bottom: var(--space-l); }
 </style>
+
+<script>
+  // §F5 — the datamosh hero: the one bold motion. The engineered image caught
+  // being engineered. RGB channel-split slips into alignment on load, then
+  // dissolves to the clean plate. Runs once; frozen (no-op) under reduced motion.
+  import { gsap } from "gsap";
+
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const stage = document.querySelector<HTMLElement>("[data-datamosh]");
+  if (!reduce && stage) {
+    const r = stage.querySelector<HTMLElement>(".hook__chan--r");
+    const c = stage.querySelector<HTMLElement>(".hook__chan--c");
+    if (r && c) {
+      const run = () => {
+        gsap.set([r, c], { opacity: 0.55 });
+        const tl = gsap.timeline();
+        tl.fromTo(r, { xPercent: -7, yPercent: 2.5 }, { xPercent: 0, yPercent: 0, duration: 1.0, ease: "power3.out" }, 0)
+          .fromTo(c, { xPercent: 7, yPercent: -2.5 }, { xPercent: 0, yPercent: 0, duration: 1.0, ease: "power3.out" }, 0)
+          // a few datamosh jolts early in the slip
+          .to([r, c], { xPercent: "+=3", duration: 0.04, repeat: 5, yoyo: true }, 0.06)
+          // dissolve the split into the clean base
+          .to([r, c], { opacity: 0, duration: 0.55, ease: "power2.in" }, 0.55);
+      };
+      // run after the hero image is painted
+      if (document.readyState === "complete") run();
+      else window.addEventListener("load", run, { once: true });
+    }
+  }
+</script>
