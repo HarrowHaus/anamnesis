@@ -92,19 +92,72 @@ button {
        "provisional" signal (reads as placeholder, not finished art). The
        Phase-F duotone keys off the category; E5 retires every seed. */
 .u-plate {
-  filter: grayscale(1) contrast(1.02);
+  /* §F3 — default neutral duotone (ink → warm-gray → vellum). Symbol plates
+     override with their category duotone via data-way; the geometric SVGs use
+     the 2-tone category-stroke filter via data-svg. */
+  filter: url(#duo-neutral);
   object-fit: cover;
   width: 100%;
   height: 100%;
   display: block;
 }
+.u-plate[data-way="solar"]   { filter: url(#duo-solar); }
+.u-plate[data-way="civic"]   { filter: url(#duo-civic); }
+.u-plate[data-way="corp"]    { filter: url(#duo-corp); }
+.u-plate[data-way="relig"]   { filter: url(#duo-relig); }
+.u-plate[data-way="sacred"]  { filter: url(#duo-sacred); }
+.u-plate[data-way="masonic"] { filter: url(#duo-masonic); }
+.u-plate[data-way="alchem"]  { filter: url(#duo-alchem); }
+.u-plate[data-way="occult"]  { filter: url(#duo-occult); }
+.u-plate[data-svg][data-way="solar"]   { filter: url(#svg-solar); }
+.u-plate[data-svg][data-way="civic"]   { filter: url(#svg-civic); }
+.u-plate[data-svg][data-way="corp"]    { filter: url(#svg-corp); }
+.u-plate[data-svg][data-way="relig"]   { filter: url(#svg-relig); }
+.u-plate[data-svg][data-way="sacred"]  { filter: url(#svg-sacred); }
+.u-plate[data-svg][data-way="masonic"] { filter: url(#svg-masonic); }
+.u-plate[data-svg][data-way="alchem"]  { filter: url(#svg-alchem); }
+.u-plate[data-svg][data-way="occult"]  { filter: url(#svg-occult); }
+/* §F4 — category → --way mapping. Any chrome inside a [data-cat] element reads
+   var(--way) for its facet colour. */
+[data-cat="solar-astro"]       { --way: var(--way-solar); }
+[data-cat="civic-national"]    { --way: var(--way-civic); }
+[data-cat="corporate"]         { --way: var(--way-corp); }
+[data-cat="religious"]         { --way: var(--way-relig); }
+[data-cat="sacred-geometry"]   { --way: var(--way-sacred); }
+[data-cat="fraternal-masonic"] { --way: var(--way-masonic); }
+[data-cat="alchemical"]        { --way: var(--way-alchem); }
+[data-cat="occult"]            { --way: var(--way-occult); }
+
+/* §F4 — the no-image hatch, designed as an engraved cartouche (ink rule +
+   fine cross-hatch + a fleuron) so it reads intentional, never broken. */
 .u-plate-fallback {
   width: 100%; height: 100%;
-  background:
-    repeating-linear-gradient(45deg,
-      var(--color-surface-sunk) 0 10px,
-      var(--color-border) 10px 20px);
+  display: grid; place-items: center;
+  background-color: var(--color-surface);
+  background-image:
+    repeating-linear-gradient(45deg, transparent 0 7px, color-mix(in srgb, var(--color-text) 9%, transparent) 7px 8px),
+    repeating-linear-gradient(-45deg, transparent 0 7px, color-mix(in srgb, var(--color-text) 9%, transparent) 7px 8px);
 }
+.u-plate-fallback::after {
+  content: "❦";
+  font-family: var(--font-body);
+  font-size: clamp(1.25rem, 5vw, 2.25rem);
+  color: var(--color-text-muted);
+}
+/* Figure cartouche: the no-portrait hatch carries the name + role. */
+.u-cartouche {
+  width: 100%; height: 100%;
+  display: flex; flex-direction: column; justify-content: center; gap: var(--space-2xs);
+  padding: var(--space-s);
+  text-align: center;
+  background-color: var(--color-surface);
+  background-image:
+    repeating-linear-gradient(45deg, transparent 0 7px, color-mix(in srgb, var(--color-text) 7%, transparent) 7px 8px);
+  border-block-end: var(--border-w) solid var(--color-border);
+}
+.u-cartouche__mark { font-family: var(--font-body); font-size: var(--step-2); color: var(--color-text-muted); line-height: 1; }
+.u-cartouche__name { font-family: var(--font-display); font-weight: 700; font-size: var(--step-0); line-height: var(--leading-tight); }
+.u-cartouche__role { font-family: var(--font-ui); font-size: var(--step--1); letter-spacing: var(--tracking-wide); text-transform: uppercase; color: var(--color-text-muted); }
 
 /* Reduced-motion backstop: neutralize all animation/transition/scroll motion
    regardless of what any component declares. JS set-pieces also check

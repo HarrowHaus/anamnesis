@@ -33,7 +33,13 @@ const tierLabel = {
     <div class="fig__portrait">
       {img
         ? <img class="u-plate" src={img} data-plate={seed ? "seed" : "real"} alt={`Portrait of ${figure.name}`} loading="lazy" />
-        : <div class="u-plate-fallback" role="presentation"></div>}
+        : (
+          <div class="u-cartouche" role="img" aria-label={`${figure.name} — portrait pending`}>
+            <span class="u-cartouche__mark">❧</span>
+            <span class="u-cartouche__name">{figure.name}</span>
+            <span class="u-cartouche__role">{tierLabel}</span>
+          </div>
+        )}
     </div>
     <div class="fig__body">
       <p class="u-eyebrow">{tierLabel}{figure.dates ? ` · ${figure.dates}` : ""}</p>

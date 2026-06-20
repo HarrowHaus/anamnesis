@@ -1,0 +1,146 @@
+---
+// §F3 — category duotone filters (generated from the locked --way-* hexes).
+// Tritone (ink → category → vellum) for raster plates; 2-tone (category →
+// vellum) for the geometric SVG plates so their ink strokes take the category
+// colour. Injected once in Base.astro; referenced via base.css filter: url(#id).
+---
+<svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute">
+  <defs>
+    <filter id="duo-neutral" color-interpolation-filters="sRGB">
+      <feColorMatrix type="matrix" values="0.299 0.587 0.114 0 0  0.299 0.587 0.114 0 0  0.299 0.587 0.114 0 0  0 0 0 1 0"/>
+      <feComponentTransfer>
+        <feFuncR type="table" tableValues="0.102 0.541 0.945"/>
+        <feFuncG type="table" tableValues="0.086 0.502 0.914"/>
+        <feFuncB type="table" tableValues="0.071 0.451 0.839"/>
+      </feComponentTransfer>
+    </filter>
+    <filter id="duo-solar" color-interpolation-filters="sRGB">
+      <feColorMatrix type="matrix" values="0.299 0.587 0.114 0 0  0.299 0.587 0.114 0 0  0.299 0.587 0.114 0 0  0 0 0 1 0"/>
+      <feComponentTransfer>
+        <feFuncR type="table" tableValues="0.102 0.784 0.945"/>
+        <feFuncG type="table" tableValues="0.086 0.573 0.914"/>
+        <feFuncB type="table" tableValues="0.071 0.180 0.839"/>
+      </feComponentTransfer>
+    </filter>
+    <filter id="duo-civic" color-interpolation-filters="sRGB">
+      <feColorMatrix type="matrix" values="0.299 0.587 0.114 0 0  0.299 0.587 0.114 0 0  0.299 0.587 0.114 0 0  0 0 0 1 0"/>
+      <feComponentTransfer>
+        <feFuncR type="table" tableValues="0.102 0.204 0.945"/>
+        <feFuncG type="table" tableValues="0.086 0.314 0.914"/>
+        <feFuncB type="table" tableValues="0.071 0.769 0.839"/>
+      </feComponentTransfer>
+    </filter>
+    <filter id="duo-corp" color-interpolation-filters="sRGB">
+      <feColorMatrix type="matrix" values="0.299 0.587 0.114 0 0  0.299 0.587 0.114 0 0  0.299 0.587 0.114 0 0  0 0 0 1 0"/>
+      <feComponentTransfer>
+        <feFuncR type="table" tableValues="0.102 0.847 0.945"/>
+        <feFuncG type="table" tableValues="0.086 0.271 0.914"/>
+        <feFuncB type="table" tableValues="0.071 0.180 0.839"/>
+      </feComponentTransfer>
+    </filter>
+    <filter id="duo-relig" color-interpolation-filters="sRGB">
+      <feColorMatrix type="matrix" values="0.299 0.587 0.114 0 0  0.299 0.587 0.114 0 0  0.299 0.587 0.114 0 0  0 0 0 1 0"/>
+      <feComponentTransfer>
+        <feFuncR type="table" tableValues="0.102 0.557 0.945"/>
+        <feFuncG type="table" tableValues="0.086 0.475 0.914"/>
+        <feFuncB type="table" tableValues="0.071 0.788 0.839"/>
+      </feComponentTransfer>
+    </filter>
+    <filter id="duo-sacred" color-interpolation-filters="sRGB">
+      <feColorMatrix type="matrix" values="0.299 0.587 0.114 0 0  0.299 0.587 0.114 0 0  0.299 0.587 0.114 0 0  0 0 0 1 0"/>
+      <feComponentTransfer>
+        <feFuncR type="table" tableValues="0.102 0.243 0.945"/>
+        <feFuncG type="table" tableValues="0.086 0.420 0.914"/>
+        <feFuncB type="table" tableValues="0.071 0.620 0.839"/>
+      </feComponentTransfer>
+    </filter>
+    <filter id="duo-masonic" color-interpolation-filters="sRGB">
+      <feColorMatrix type="matrix" values="0.299 0.587 0.114 0 0  0.299 0.587 0.114 0 0  0.299 0.587 0.114 0 0  0 0 0 1 0"/>
+      <feComponentTransfer>
+        <feFuncR type="table" tableValues="0.102 0.184 0.945"/>
+        <feFuncG type="table" tableValues="0.086 0.431 0.914"/>
+        <feFuncB type="table" tableValues="0.071 0.416 0.839"/>
+      </feComponentTransfer>
+    </filter>
+    <filter id="duo-alchem" color-interpolation-filters="sRGB">
+      <feColorMatrix type="matrix" values="0.299 0.587 0.114 0 0  0.299 0.587 0.114 0 0  0.299 0.587 0.114 0 0  0 0 0 1 0"/>
+      <feComponentTransfer>
+        <feFuncR type="table" tableValues="0.102 0.235 0.945"/>
+        <feFuncG type="table" tableValues="0.086 0.478 0.914"/>
+        <feFuncB type="table" tableValues="0.071 0.333 0.839"/>
+      </feComponentTransfer>
+    </filter>
+    <filter id="duo-occult" color-interpolation-filters="sRGB">
+      <feColorMatrix type="matrix" values="0.299 0.587 0.114 0 0  0.299 0.587 0.114 0 0  0.299 0.587 0.114 0 0  0 0 0 1 0"/>
+      <feComponentTransfer>
+        <feFuncR type="table" tableValues="0.102 0.557 0.945"/>
+        <feFuncG type="table" tableValues="0.086 0.231 0.914"/>
+        <feFuncB type="table" tableValues="0.071 0.322 0.839"/>
+      </feComponentTransfer>
+    </filter>
+    <filter id="svg-solar" color-interpolation-filters="sRGB">
+      <feColorMatrix type="matrix" values="0.299 0.587 0.114 0 0  0.299 0.587 0.114 0 0  0.299 0.587 0.114 0 0  0 0 0 1 0"/>
+      <feComponentTransfer>
+        <feFuncR type="table" tableValues="0.784 0.945"/>
+        <feFuncG type="table" tableValues="0.573 0.914"/>
+        <feFuncB type="table" tableValues="0.180 0.839"/>
+      </feComponentTransfer>
+    </filter>
+    <filter id="svg-civic" color-interpolation-filters="sRGB">
+      <feColorMatrix type="matrix" values="0.299 0.587 0.114 0 0  0.299 0.587 0.114 0 0  0.299 0.587 0.114 0 0  0 0 0 1 0"/>
+      <feComponentTransfer>
+        <feFuncR type="table" tableValues="0.204 0.945"/>
+        <feFuncG type="table" tableValues="0.314 0.914"/>
+        <feFuncB type="table" tableValues="0.769 0.839"/>
+      </feComponentTransfer>
+    </filter>
+    <filter id="svg-corp" color-interpolation-filters="sRGB">
+      <feColorMatrix type="matrix" values="0.299 0.587 0.114 0 0  0.299 0.587 0.114 0 0  0.299 0.587 0.114 0 0  0 0 0 1 0"/>
+      <feComponentTransfer>
+        <feFuncR type="table" tableValues="0.847 0.945"/>
+        <feFuncG type="table" tableValues="0.271 0.914"/>
+        <feFuncB type="table" tableValues="0.180 0.839"/>
+      </feComponentTransfer>
+    </filter>
+    <filter id="svg-relig" color-interpolation-filters="sRGB">
+      <feColorMatrix type="matrix" values="0.299 0.587 0.114 0 0  0.299 0.587 0.114 0 0  0.299 0.587 0.114 0 0  0 0 0 1 0"/>
+      <feComponentTransfer>
+        <feFuncR type="table" tableValues="0.557 0.945"/>
+        <feFuncG type="table" tableValues="0.475 0.914"/>
+        <feFuncB type="table" tableValues="0.788 0.839"/>
+      </feComponentTransfer>
+    </filter>
+    <filter id="svg-sacred" color-interpolation-filters="sRGB">
+      <feColorMatrix type="matrix" values="0.299 0.587 0.114 0 0  0.299 0.587 0.114 0 0  0.299 0.587 0.114 0 0  0 0 0 1 0"/>
+      <feComponentTransfer>
+        <feFuncR type="table" tableValues="0.243 0.945"/>
+        <feFuncG type="table" tableValues="0.420 0.914"/>
+        <feFuncB type="table" tableValues="0.620 0.839"/>
+      </feComponentTransfer>
+    </filter>
+    <filter id="svg-masonic" color-interpolation-filters="sRGB">
+      <feColorMatrix type="matrix" values="0.299 0.587 0.114 0 0  0.299 0.587 0.114 0 0  0.299 0.587 0.114 0 0  0 0 0 1 0"/>
+      <feComponentTransfer>
+        <feFuncR type="table" tableValues="0.184 0.945"/>
+        <feFuncG type="table" tableValues="0.431 0.914"/>
+        <feFuncB type="table" tableValues="0.416 0.839"/>
+      </feComponentTransfer>
+    </filter>
+    <filter id="svg-alchem" color-interpolation-filters="sRGB">
+      <feColorMatrix type="matrix" values="0.299 0.587 0.114 0 0  0.299 0.587 0.114 0 0  0.299 0.587 0.114 0 0  0 0 0 1 0"/>
+      <feComponentTransfer>
+        <feFuncR type="table" tableValues="0.235 0.945"/>
+        <feFuncG type="table" tableValues="0.478 0.914"/>
+        <feFuncB type="table" tableValues="0.333 0.839"/>
+      </feComponentTransfer>
+    </filter>
+    <filter id="svg-occult" color-interpolation-filters="sRGB">
+      <feColorMatrix type="matrix" values="0.299 0.587 0.114 0 0  0.299 0.587 0.114 0 0  0.299 0.587 0.114 0 0  0 0 0 1 0"/>
+      <feComponentTransfer>
+        <feFuncR type="table" tableValues="0.557 0.945"/>
+        <feFuncG type="table" tableValues="0.231 0.914"/>
+        <feFuncB type="table" tableValues="0.322 0.839"/>
+      </feComponentTransfer>
+    </filter>
+  </defs>
+</svg>

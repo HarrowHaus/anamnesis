@@ -20,46 +20,46 @@
   --c-paper-0:  #ffffff;
 
   /* --- Semantic surface roles (point components at these, not the ramp) - */
-  --color-bg:            var(--c-paper-50);
-  --color-surface:       var(--c-paper-0);
-  --color-surface-sunk:  var(--c-ink-100);
-  --color-text:          var(--c-ink-900);
-  --color-text-muted:    var(--c-ink-500);
-  --color-border:        var(--c-ink-100);
-  --color-border-strong: var(--c-ink-300);
+  /* §F2 — brutalist-grimoire base palette (from mockup_E). */
+  --color-bg:            #F1E9D6; /* vellum */
+  --color-surface:       #FAF3E2;
+  --color-surface-sunk:  #E7DCC2; /* sunk vellum behind plates */
+  --color-text:          #1A1612; /* oak-gall ink */
+  --color-text-muted:    #6B655A;
+  --color-border:        #1A1612; /* structural rules are ink */
+  --color-border-strong: #1A1612;
 
-  /* Single neutral accent — a true accent hue is part of the deferred palette. */
-  --color-accent:        var(--c-ink-800);
-  --color-accent-text:   var(--c-paper-0);
+  /* Ink accent (brutalist): primary actions are ink on vellum. */
+  --color-accent:        #1A1612;
+  --color-accent-text:   #F1E9D6;
 
-  /* Dark surfaces behind full-bleed plates + the drawer scrim. */
-  --color-plate-bg:      var(--c-ink-900);
-  --color-scrim:         var(--c-ink-900);
+  --color-plate-bg:      #1A1612;
+  --color-scrim:         #1A1612;
 
-  /* Sourcing-tier badge tints (quiet; final colors set at palette phase). */
-  --color-tier-a: var(--c-ink-700); /* asserted */
-  --color-tier-b: var(--c-ink-500); /* attributed */
-  --color-tier-c: var(--c-ink-300); /* sparing */
+  /* Sourcing-tier badge tints (ink-weighted). */
+  --color-tier-a: #1A1612; /* asserted */
+  --color-tier-b: #6B655A; /* attributed */
+  --color-tier-c: #A89F8B; /* sparing */
 
-  /* Wayfinding hooks — one slot per section, all neutral for now. Swapping
-     the duotone later means assigning real hues to these eight. */
-  --way-dictionary: var(--c-ink-700);
-  --way-figures:    var(--c-ink-700);
-  --way-pillars:    var(--c-ink-700);
-  --way-casebook:   var(--c-ink-700);
-  --way-timeline:   var(--c-ink-700);
-  --way-library:    var(--c-ink-700);
-  --way-pathways:   var(--c-ink-700);
-  --way-start:      var(--c-ink-700);
+  /* §F3 — the eight category wayfinding colours (low-chroma, ink-weighted).
+     They drive both the plate duotone and the chrome facet. */
+  --way-solar:   #C8922E; /* solar-astro */
+  --way-civic:   #3450C4; /* civic-national */
+  --way-corp:    #D8452E; /* corporate */
+  --way-relig:   #8E79C9; /* religious */
+  --way-sacred:  #3E6B9E; /* sacred-geometry */
+  --way-masonic: #2F6E6A; /* fraternal-masonic */
+  --way-alchem:  #3C7A55; /* alchemical */
+  --way-occult:  #8E3B52; /* occult */
 
   /* --- Typography (placeholder system stacks; real faces chosen later) -- */
   --font-serif: Georgia, "Times New Roman", "Iowan Old Style", serif;
   --font-sans:  system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --font-mono:  ui-monospace, "Cascadia Code", "SFMono-Regular", Menlo, Consolas, monospace;
 
-  --font-display: var(--font-serif); /* headings / mastheads */
-  --font-body:    var(--font-serif); /* editorial reading body */
-  --font-ui:      var(--font-sans);  /* nav, facets, labels, badges */
+  --font-display: "Archivo", system-ui, sans-serif;            /* headings / masthead (700/900) */
+  --font-body:    "Spectral", Georgia, "Times New Roman", serif; /* editorial reading body */
+  --font-ui:      "Space Mono", ui-monospace, Menlo, monospace;  /* nav, facets, labels, badges */
 
   /* Fluid type scale (mobile-first; clamps grow to a desktop ceiling). */
   --step--1: clamp(0.80rem, 0.76rem + 0.18vw, 0.89rem);
@@ -94,12 +94,13 @@
   --gutter: clamp(1rem, 4vw, 2.5rem);
 
   /* --- Radius, border, shadow ------------------------------------------ */
-  --radius-s: 4px;
-  --radius-m: 8px;
-  --radius-l: 14px;
-  --border-w: 1px;
-  --shadow-card: 0 1px 2px rgba(20, 21, 26, 0.06), 0 4px 16px rgba(20, 21, 26, 0.08);
-  --shadow-sheet: 0 -2px 24px rgba(20, 21, 26, 0.18); /* bottom-sheet drawer */
+  /* §F2 — zero radius on structural elements; ink rules; hard offset shadow. */
+  --radius-s: 0;
+  --radius-m: 0;
+  --radius-l: 0;
+  --border-w: 2.5px;
+  --shadow-card: 5px 5px 0 var(--color-text);  /* hard offset, no blur */
+  --shadow-sheet: 5px 5px 0 var(--color-text);
 
   /* --- Motion (docs/02 §5; honor prefers-reduced-motion globally) ------ */
   --ease-reveal: cubic-bezier(0.2, 0.7, 0.2, 1); /* enter-reveals */

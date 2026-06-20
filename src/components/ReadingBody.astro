@@ -10,7 +10,7 @@ import type { ImageMetadata } from "astro";
 import TierBadge from "./TierBadge.astro";
 import SourceRow from "./SourceRow.astro";
 import PlateCredit from "./PlateCredit.astro";
-import { plateUrl, isSeedPlate } from "../lib/plates";
+import { plateUrl, isSeedPlate, wayFor, isSvgPlate } from "../lib/plates";
 
 interface Source { title: string; author?: string; year?: number; tier: "A" | "B" | "C"; type?: string; url?: string }
 interface Credit { source: string; creator?: string; license: string; license_url?: string; source_url?: string }
@@ -48,7 +48,7 @@ const facts = [
     {showLevels && <p class="u-eyebrow">RL-0 · the lead</p>}
     {heroImg && (
       <figure class="rb__hero">
-        <img class="u-plate" src={heroImg} data-plate={heroSeed ? "seed" : "real"} alt={`Plate for ${name}`} />
+        <img class="u-plate" src={heroImg} data-plate={heroSeed ? "seed" : "real"} data-way={wayFor(category)} data-svg={isSvgPlate(plate) ? "" : undefined} alt={`Plate for ${name}`} />
         {!heroSeed && plateCredit && <figcaption><PlateCredit credit={plateCredit} /></figcaption>}
       </figure>
     )}

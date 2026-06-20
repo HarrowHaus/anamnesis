@@ -42,3 +42,25 @@ export function plateUrl(
 export function isSeedPlate(plate?: ImageMetadata | string | null): boolean {
   return !asAsset(plate);
 }
+
+/** Map a symbol's category (the canonical eight, §0.2) to its --way-* key —
+ *  the value the F3 duotone filter + chrome facet key off. */
+export function wayFor(category?: string | null): string | undefined {
+  if (!category) return undefined;
+  const c = category.toLowerCase();
+  if (/solar|astro/.test(c)) return "solar";
+  if (/sacred|geometr/.test(c)) return "sacred";
+  if (/alchem/.test(c)) return "alchem";
+  if (/mason|fraternal/.test(c)) return "masonic";
+  if (/corp/.test(c)) return "corp";
+  if (/civic|national/.test(c)) return "civic";
+  if (/relig/.test(c)) return "relig";
+  if (/occult/.test(c)) return "occult";
+  return undefined;
+}
+
+/** True when the plate is a processed SVG (the 7 geometric symbols) — they take
+ *  the 2-tone category-stroke filter rather than the raster tritone. */
+export function isSvgPlate(plate?: ImageMetadata | string | null): boolean {
+  return !!(plate && typeof plate !== "string" && (plate as { format?: string }).format === "svg");
+}

@@ -3,6 +3,7 @@
 // Mobile-first viewport + the SEO/OG metadata each shareable entry needs.
 import "../styles/tokens.css";
 import "../styles/base.css";
+import DuotoneFilters from "../components/DuotoneFilters.astro";
 
 interface Props {
   title?: string;
@@ -29,6 +30,14 @@ const canonical = Astro.url?.pathname ?? "/";
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
 
+    <!-- §F1 — brutalist-grimoire type: Archivo (display), Spectral (body), Space Mono (ui) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;700;900&family=Spectral:ital,wght@0,400;0,600;1,400&family=Space+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+
     <meta property="og:type" content="website" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
@@ -36,6 +45,7 @@ const canonical = Astro.url?.pathname ?? "/";
     <meta name="twitter:card" content={image ? "summary_large_image" : "summary"} />
   </head>
   <body>
+    <DuotoneFilters />
     <slot />
   </body>
 </html>

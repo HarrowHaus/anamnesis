@@ -5,7 +5,7 @@
 //   search        — grid tile + a matched-context line
 //   pathway-stop  — grid tile carrying a step ordinal + connective note
 import type { ImageMetadata } from "astro";
-import { plateUrl, isSeedPlate } from "../lib/plates";
+import { plateUrl, isSeedPlate, wayFor, isSvgPlate } from "../lib/plates";
 import TierBadge from "./TierBadge.astro";
 
 interface Symbol {
@@ -36,7 +36,7 @@ const seed = isSeedPlate(symbol.plate);
   <a class="spec__link" href={url} data-open={openDrawer}>
     <div class="spec__plate">
       {img
-        ? <img class="u-plate" src={img} data-plate={seed ? "seed" : "real"} alt={`Plate for ${symbol.name}`} loading="lazy" />
+        ? <img class="u-plate" src={img} data-plate={seed ? "seed" : "real"} data-way={wayFor(symbol.category)} data-svg={isSvgPlate(symbol.plate) ? "" : undefined} alt={`Plate for ${symbol.name}`} loading="lazy" />
         : <div class="u-plate-fallback" role="presentation"></div>}
       {step != null && <span class="spec__step" aria-hidden="true">{step}</span>}
     </div>
@@ -90,7 +90,7 @@ const seed = isSeedPlate(symbol.plate);
     font-weight: 700;
   }
   .spec__body { padding: var(--space-s); }
-  .spec__cat { margin-bottom: var(--space-3xs); }
+  .spec__cat { margin-bottom: var(--space-3xs); color: var(--way, var(--color-text-muted)); }
   .spec__name { font-size: var(--step-1); margin-bottom: var(--space-3xs); }
   .spec__line { color: var(--color-text-muted); margin-bottom: var(--space-2xs); }
   .spec__note {
