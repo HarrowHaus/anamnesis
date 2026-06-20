@@ -83,7 +83,7 @@ const heroImg = plateUrl(data.plate, data.glyph);
     <header class="cb-hero">
       <figure class="cb-hero__plate">
         {heroImg
-          ? <img class="u-plate" src={heroImg} data-plate={isSeedPlate(data.plate) ? "seed" : "real"} alt={`The ${data.artifact}`} />
+          ? <img class="u-plate" src={heroImg} data-plate={isSeedPlate(data.plate) ? "seed" : "real"} data-mark={data.plate_credit?.license === "trademark-commentary" ? "true" : undefined} alt={`The ${data.artifact}`} />
           : <div class="u-plate-fallback" role="presentation"></div>}
         {!isSeedPlate(data.plate) && data.plate_credit && <figcaption><PlateCredit credit={data.plate_credit} /></figcaption>}
       </figure>
@@ -129,11 +129,25 @@ const heroImg = plateUrl(data.plate, data.glyph);
   .cb-head { padding-block: var(--space-l) 0; }
   .cb { padding-block: var(--space-l) var(--space-2xl); display: flex; flex-direction: column; gap: var(--space-2xl); }
   .cb-hero__plate {
+    position: relative;
     margin: 0 0 var(--space-m);
     aspect-ratio: 16 / 10;
     border-radius: var(--radius-l);
     overflow: hidden;
     background: var(--color-surface-sunk);
+  }
+  /* Trademark-commentary marks: show the whole logo (contain), framed — never
+     cover-cropped. The annotation/markup treatment is layered on in Phase F. */
+  .cb-hero__plate .u-plate[data-mark] {
+    object-fit: contain;
+    background: var(--color-surface);
+    padding: clamp(var(--space-l), 6vw, var(--space-2xl));
+  }
+  .cb-hero__plate figcaption {
+    position: absolute;
+    inset-inline: 0;
+    inset-block-end: 0;
+    padding: var(--space-3xs) var(--space-s);
   }
   .cb-hero__title { font-size: var(--step-4); margin-block: var(--space-2xs); }
   .cb-hero__essence { font-size: var(--step-1); color: var(--color-text-muted); }

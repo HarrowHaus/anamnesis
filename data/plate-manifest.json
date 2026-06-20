@@ -1,4 +1,15 @@
 {
+  "casebook/apple-logo": {
+    "collection": "casebook",
+    "slug": "apple-logo",
+    "status": "downloaded",
+    "host": "commons-trademark",
+    "license": "trademark-commentary",
+    "credit_source": "Trademark of Apple Inc. (via Wikimedia Commons)",
+    "source_url": "https://commons.wikimedia.org/wiki/File:Apple_logo_black.svg",
+    "local_path": "src/assets/plates/casebook/apple-logo.png",
+    "crop": "passthrough"
+  },
   "casebook/capitol-dome": {
     "collection": "casebook",
     "slug": "capitol-dome",
@@ -13,6 +24,28 @@
     "source_url": "https://commons.wikimedia.org/wiki/File:Constantino_Brumidi_-_Study_for_the_Apotheosis_of_Washington_in_the_Rotunda_of_the_United_States_Capitol_Building_-_2012.15_-_Smithsonian_American_Art_Museum.jpg",
     "local_path": "src/assets/plates/casebook/capitol-dome.webp",
     "crop": "done"
+  },
+  "casebook/cbs-eye": {
+    "collection": "casebook",
+    "slug": "cbs-eye",
+    "status": "downloaded",
+    "host": "commons-trademark",
+    "license": "trademark-commentary",
+    "credit_source": "Trademark of CBS Broadcasting Inc. (via Wikimedia Commons)",
+    "source_url": "https://commons.wikimedia.org/wiki/File:CBS_Eye_(Didot).svg",
+    "local_path": "src/assets/plates/casebook/cbs-eye.png",
+    "crop": "passthrough"
+  },
+  "casebook/columbia-pictures": {
+    "collection": "casebook",
+    "slug": "columbia-pictures",
+    "status": "downloaded",
+    "host": "commons-trademark",
+    "license": "trademark-commentary",
+    "credit_source": "Trademark of Columbia Pictures Industries, Inc. (via Wikimedia Commons)",
+    "source_url": "https://commons.wikimedia.org/wiki/File:Columbia_Pictures_1936.png",
+    "local_path": "src/assets/plates/casebook/columbia-pictures.png",
+    "crop": "passthrough"
   },
   "casebook/great-seal-eagle": {
     "collection": "casebook",
@@ -38,18 +71,40 @@
     "image_url": "https://upload.wikimedia.org/wikipedia/commons/3/3d/Dollarnote_siegel_hq.jpg",
     "kind": "PD/CC0",
     "license": "Public Domain",
-    "creator": "de:Benutzer:Verw\u00fcstung",
+    "creator": "de:Benutzer:Verwüstung",
     "credit_source": "Wikimedia Commons",
     "source_url": "https://commons.wikimedia.org/wiki/File:Dollarnote_siegel_hq.jpg",
     "local_path": "src/assets/plates/casebook/great-seal-pyramid.webp",
     "crop": "done"
+  },
+  "casebook/shell-logo": {
+    "collection": "casebook",
+    "slug": "shell-logo",
+    "status": "downloaded",
+    "host": "commons-trademark",
+    "license": "trademark-commentary",
+    "credit_source": "Trademark of Shell plc (via Wikimedia Commons)",
+    "source_url": "https://commons.wikimedia.org/wiki/File:Shell_logo_1900.png",
+    "local_path": "src/assets/plates/casebook/shell-logo.png",
+    "crop": "passthrough"
+  },
+  "casebook/starbucks-siren": {
+    "collection": "casebook",
+    "slug": "starbucks-siren",
+    "status": "downloaded",
+    "host": "commons-trademark",
+    "license": "trademark-commentary",
+    "credit_source": "Trademark of Starbucks Corporation (via Wikimedia Commons)",
+    "source_url": "https://commons.wikimedia.org/wiki/File:STARBUCKS_logo_(monochrome).jpg",
+    "local_path": "src/assets/plates/casebook/starbucks-siren.jpg",
+    "crop": "passthrough"
   },
   "casebook/statue-of-liberty": {
     "collection": "casebook",
     "slug": "statue-of-liberty",
     "status": "downloaded",
     "host": "commons",
-    "ref": "File:3 illus.- 1. Official presentation of the Statue of \"Liberty enlightening the world,\" Paris, July 4th, 1884 - 2. M. Fr\u00e9d\u00e9ric-Auguste Bartholdi (head and shoulders) - 3. Sectional view of LCCN2001696501.jpg",
+    "ref": "File:3 illus.- 1. Official presentation of the Statue of \"Liberty enlightening the world,\" Paris, July 4th, 1884 - 2. M. Frédéric-Auguste Bartholdi (head and shoulders) - 3. Sectional view of LCCN2001696501.jpg",
     "image_url": "https://upload.wikimedia.org/wikipedia/commons/2/28/3_illus.-_1._Official_presentation_of_the_Statue_of_%22Liberty_enlightening_the_world%2C%22_Paris%2C_July_4th%2C_1884_-_2._M._Fr%C3%A9d%C3%A9ric-Auguste_Bartholdi_%28head_and_shoulders%29_-_3._Sectional_view_of_LCCN2001696501.jpg",
     "kind": "PD/CC0",
     "license": "Public Domain",
@@ -145,11 +200,11 @@
     "slug": "charles-francois-dupuis",
     "status": "downloaded",
     "host": "commons",
-    "ref": "File:Charles-Fran\u00e7ois Dupuis.JPG",
+    "ref": "File:Charles-François Dupuis.JPG",
     "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Charles-Fran%C3%A7ois_Dupuis.JPG/1280px-Charles-Fran%C3%A7ois_Dupuis.JPG",
     "kind": "PD/CC0",
     "license": "Public Domain",
-    "creator": "Charles-Fran\u00e7ois Dupuis",
+    "creator": "Charles-François Dupuis",
     "credit_source": "Wikimedia Commons",
     "source_url": "https://commons.wikimedia.org/wiki/File:Charles-Fran%C3%A7ois_Dupuis.JPG",
     "local_path": "src/assets/plates/figures/charles-francois-dupuis.webp",
@@ -160,7 +215,7 @@
     "slug": "constantin-volney",
     "status": "downloaded",
     "host": "commons",
-    "ref": "File:Portret van Constantin-Fran\u00e7ois Volney, RP-P-1910-6139.jpg",
+    "ref": "File:Portret van Constantin-François Volney, RP-P-1910-6139.jpg",
     "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Portret_van_Constantin-Fran%C3%A7ois_Volney%2C_RP-P-1910-6139.jpg/1280px-Portret_van_Constantin-Fran%C3%A7ois_Volney%2C_RP-P-1910-6139.jpg",
     "kind": "PD/CC0",
     "license": "CC0",
@@ -170,7 +225,7 @@
     "license_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
     "local_path": "src/assets/plates/figures/constantin-volney.webp",
     "crop": "flagged",
-    "crop_note": "no face detected (it is an engraving) \u2014 saliency crop, acceptable"
+    "crop_note": "no face detected (it is an engraving) — saliency crop, acceptable"
   },
   "figures/david-icke": {
     "collection": "figures",
@@ -513,7 +568,7 @@
     "status": "svg",
     "host": "original",
     "license": "CC0",
-    "credit_source": "Original diagram \u2014 ANAMNESIS",
+    "credit_source": "Original diagram — ANAMNESIS",
     "local_path": "src/assets/plates/symbols/blazing-star.svg",
     "crop": "passthrough"
   },
@@ -531,7 +586,7 @@
     "status": "svg",
     "host": "original",
     "license": "CC0",
-    "credit_source": "Original diagram \u2014 ANAMNESIS",
+    "credit_source": "Original diagram — ANAMNESIS",
     "local_path": "src/assets/plates/symbols/checkerboard-floor.svg",
     "crop": "passthrough"
   },
@@ -581,7 +636,7 @@
     "status": "svg",
     "host": "original",
     "license": "CC0",
-    "credit_source": "Original diagram \u2014 ANAMNESIS",
+    "credit_source": "Original diagram — ANAMNESIS",
     "local_path": "src/assets/plates/symbols/hexagram.svg",
     "crop": "passthrough"
   },
@@ -623,7 +678,7 @@
     "status": "svg",
     "host": "original",
     "license": "CC0",
-    "credit_source": "Original diagram \u2014 ANAMNESIS",
+    "credit_source": "Original diagram — ANAMNESIS",
     "local_path": "src/assets/plates/symbols/letter-g.svg",
     "crop": "passthrough"
   },
@@ -737,7 +792,7 @@
     "status": "svg",
     "host": "original",
     "license": "CC0",
-    "credit_source": "Original diagram \u2014 ANAMNESIS",
+    "credit_source": "Original diagram — ANAMNESIS",
     "local_path": "src/assets/plates/symbols/sun-cross.svg",
     "crop": "passthrough"
   },
@@ -786,7 +841,7 @@
     "status": "svg",
     "host": "original",
     "license": "CC0",
-    "credit_source": "Original diagram \u2014 ANAMNESIS",
+    "credit_source": "Original diagram — ANAMNESIS",
     "local_path": "src/assets/plates/symbols/tria-prima.svg",
     "crop": "passthrough"
   },
@@ -812,7 +867,7 @@
     "status": "svg",
     "host": "original",
     "license": "CC0",
-    "credit_source": "Original diagram \u2014 ANAMNESIS",
+    "credit_source": "Original diagram — ANAMNESIS",
     "local_path": "src/assets/plates/symbols/vesica-piscis.svg",
     "crop": "passthrough"
   },
@@ -979,7 +1034,7 @@
     "slug": "lithography-mass-poster",
     "status": "downloaded",
     "host": "commons",
-    "ref": "File:(Albi) Bal au Moulin Rouge place Blanche 1889 - Jules Ch\u00e9ret.jpg",
+    "ref": "File:(Albi) Bal au Moulin Rouge place Blanche 1889 - Jules Chéret.jpg",
     "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/%28Albi%29_Bal_au_Moulin_Rouge_place_Blanche_1889_-_Jules_Ch%C3%A9ret.jpg/1280px-%28Albi%29_Bal_au_Moulin_Rouge_place_Blanche_1889_-_Jules_Ch%C3%A9ret.jpg",
     "kind": "PD/CC0",
     "license": "Public Domain",
@@ -998,7 +1053,7 @@
     "image_url": "https://upload.wikimedia.org/wikipedia/commons/c/cc/Walter_Benjamin_vers_1928.jpg",
     "kind": "PD/CC0",
     "license": "Public Domain",
-    "creator": "Photo d'identit\u00e9 sans auteur, 1928",
+    "creator": "Photo d'identité sans auteur, 1928",
     "credit_source": "Wikimedia Commons",
     "source_url": "https://commons.wikimedia.org/wiki/File:Walter_Benjamin_vers_1928.jpg",
     "local_path": "src/assets/plates/timeline/nazi-spectacle-benjamin.webp",
@@ -1070,7 +1125,7 @@
     "slug": "volney-dupuis-astrotheology",
     "status": "downloaded",
     "host": "commons",
-    "ref": "File:Zodiaque de Dend\u00e9ra - Mus\u00e9e du Louvre Antiquit\u00e9s Egyptiennes D 38 ; E 13482.jpg",
+    "ref": "File:Zodiaque de Dendéra - Musée du Louvre Antiquités Egyptiennes D 38 ; E 13482.jpg",
     "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Zodiaque_de_Dend%C3%A9ra_-_Mus%C3%A9e_du_Louvre_Antiquit%C3%A9s_Egyptiennes_D_38_%3B_E_13482.jpg/1280px-Zodiaque_de_Dend%C3%A9ra_-_Mus%C3%A9e_du_Louvre_Antiquit%C3%A9s_Egyptiennes_D_38_%3B_E_13482.jpg",
     "kind": "PD/CC0",
     "license": "CC0",
